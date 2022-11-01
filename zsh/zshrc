@@ -1,0 +1,131 @@
+# zsh behaviour
+	ZSH_DISABLE_COMPFIX="true"
+	HYPHEN_INSENSITIVE="true"
+	ENABLE_CORRECTION="false"
+	DISABLE_AUTO_UPDATE="true"
+	DISABLE_AUTO_TITLE="true"
+	HYPHEN_INSENSITIVE="true"
+	CASE_SENSITIVE="false"
+	unsetopt correct_all
+	unsetopt correct
+
+plugins=(
+  git
+)
+
+# theme
+	ZSH_THEME="eastwood"
+	# ZSH_THEME="random"
+	ZSH_THEME_RANDOM_CANDIDATES=( \ 
+		"bureau" \
+		"kardan" \
+		"eastwood" \
+		"terminalparty_edited" \
+		"simple" \
+		"fishy" \
+		"kolo" \
+		"wezm" )
+
+# cursor
+	# source: https://unix.stackexchange.com/questions/433273/changing-cursor-style-based-on-mode-in-both-zsh-and-vim
+	function zle-keymap-select {
+		if [[ ${KEYMAP} == vicmd ]] ||
+			[[ $1 = 'block' ]]; then
+				echo -ne '\e[1 q'
+
+			elif [[ ${KEYMAP} == main ]] ||
+				[[ ${KEYMAP} == viins ]] ||
+				[[ ${KEYMAP} = '' ]] ||
+				[[ $1 = 'beam' ]]; then
+						echo -ne '\e[5 q'
+		fi
+	}
+	zle -N zle-keymap-select
+
+	# Use beam shape cursor on startup.
+	echo -ne '\e[5 q'
+
+	# Use beam shape cursor for each new prompt.
+	precmd() {
+		echo -ne '\e[5 q'
+	}
+
+# functions
+	function cd {
+		builtin cd "$@" && ls --color=auto 
+	}
+
+	function handwriting {
+		binpath="$HOME/bin"
+		sourceUrl="http://www.styluslabs.com/download/write-tgz"
+		gzipPath="$binpath/write.tar.gz"
+		exePath="$binpath/Write/Write"
+		if [ ! -x "$exePath" ]; then
+			if [ ! -d $binpath ]; then
+				mkdir "$binpath"
+			fi
+			cd $binpath > /dev/null
+			curl -L "$sourceUrl" -o "$gzipPath"
+			gunzip "$gzipPath"
+			tar -xf "${gzipPath%.gz}"
+		fi
+		$exePath $@ &!
+	}
+
+	function escapeLine() {
+		charactersToEscape=('\' '"' '$' '!' '`')
+		terminalLine="$BUFFER"
+		for char in "${charactersToEscape[@]}"; do
+			i=1
+			split=("${(@ps/$char/)terminalLine}")
+			terminalLine="${split[$i]}"
+			while [ $i -lt ${#split} ]; do
+				i=$((i+1))
+				terminalLine+="\\${char}${split[$i]}"
+			done
+		done
+		BUFFER="\"$terminalLine\""
+	}
+
+    function installOMZ() {
+        if [ ! -d "$ZSH" ]; then
+            pathInstall="$XDG_CONFIG_HOME/zsh/install.sh"
+            urlOMZ = "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh"
+            curl -fsSL $urlOMZ  --output "$pathInstall"
+            ZSH="$ZSH" sh "$pathInstall"
+        fi
+    }
+
+    function sourceOMZ() {
+        source "$ZSH/oh-my-zsh.sh"
+    }
+
+# enviornment variables
+	editor="/usr/bin/nvim"
+	export TERM="xterm"
+
+	$(which "go" &> /dev/null) && {
+		goWorkspace="$HOME/goWorkspace"
+		GOPATH="$(go env GOPATH)"
+		if [ -d "$goWorkspace" ]; then
+			GOPATH+=":$goWorkspace"
+		fi
+		export GOPATH
+	}
+
+	export XDG_CONFIG_HOME="$HOME/.config"
+	export ZSH="$XDG_CONFIG_HOME/zsh/oh-my-zsh"
+	export SUDO_EDITOR="$editor"
+	export EDITOR="$editor"
+	export XDG_RUNTIME_DIR="/run/user/$UID"
+	export DBUS_SESSION_DBUS_ADDRESS="unix:path=${XDG_RUNTIME_DIR}/bus"
+
+# mappings
+	zle -N escapeLine
+	bindkey -M vicmd '^e' escapeLine
+    bindkey -v
+
+if [ -d "$ZSH" ]; then
+    sourceOMZ
+fi
+
