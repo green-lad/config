@@ -51,11 +51,11 @@ plugins=(
 	}
 
 # functions
-	function cd {
+    cd() {
 		builtin cd "$@" && ls --color=auto 
 	}
 
-	function handwriting {
+    handwriting() {
 		binpath="$HOME/bin"
 		sourceUrl="http://www.styluslabs.com/download/write-tgz"
 		gzipPath="$binpath/write.tar.gz"
@@ -72,7 +72,7 @@ plugins=(
 		$exePath $@ &!
 	}
 
-	function escapeLine() {
+	escapeLine() {
 		charactersToEscape=('\' '"' '$' '!' '`')
 		terminalLine="$BUFFER"
 		for char in "${charactersToEscape[@]}"; do
@@ -87,16 +87,45 @@ plugins=(
 		BUFFER="\"$terminalLine\""
 	}
 
-    function installOMZ() {
+    installOMZ() {
         pathInstall="$XDG_CONFIG_HOME/zsh/install.sh"
         urlOMZ="https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh"
         curl -fsSL "$urlOMZ" | ZSH="$ZSH" sh -s -- "--keep-zshrc"
         zsh
     }
 
-    function sourceOMZ() {
+    sourceOMZ() {
         source "$ZSH/oh-my-zsh.sh"
     }
+
+    build_path_piped() {
+        new_path="$PATH"
+        while read -r path_to_add; do
+            case ":$new_path:" in
+                *:"$path_to_add":*)
+                    ;;
+                *)
+                    new_path="${new_path:+$new_path:}$path_to_add"
+            esac
+        done
+        echo "$new_path"
+    }
+
+    append_path_rec () {
+        # see: https://zsh.sourceforge.io/Doc/Release/Expansion.html#Parameter-Expansion
+        p="${1:-.}"
+        maxdepth="${2:-4}"
+
+        [[ ! -e "$p" ]] && return
+
+        # find $p -maxdepth $maxdepth -executable -type f
+        export PATH=$(find $p -maxdepth $maxdepth -executable -type f | \
+            xargs dirname | \
+            sort | \
+            uniq | \
+            build_path_piped)
+    }
+
 
 # enviornment variables
 	editor="/usr/bin/nvim"
@@ -117,6 +146,7 @@ plugins=(
 	export EDITOR="$editor"
 	export XDG_RUNTIME_DIR="/run/user/$UID"
 	export DBUS_SESSION_DBUS_ADDRESS="unix:path=${XDG_RUNTIME_DIR}/bus"
+    append_path_rec "$HOME/bin"
 
 # mappings
 	zle -N escapeLine
