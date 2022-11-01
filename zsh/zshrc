@@ -88,12 +88,10 @@ plugins=(
 	}
 
     function installOMZ() {
-        if [ ! -d "$ZSH" ]; then
-            pathInstall="$XDG_CONFIG_HOME/zsh/install.sh"
-            urlOMZ = "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh"
-            curl -fsSL $urlOMZ  --output "$pathInstall"
-            ZSH="$ZSH" sh "$pathInstall"
-        fi
+        pathInstall="$XDG_CONFIG_HOME/zsh/install.sh"
+        urlOMZ="https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh"
+        curl -fsSL "$urlOMZ" | ZSH="$ZSH" sh -s -- "--keep-zshrc"
+        zsh
     }
 
     function sourceOMZ() {
