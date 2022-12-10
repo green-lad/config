@@ -1,12 +1,16 @@
+" TODO
+" - folding behaves by inproduceable closing folds when pasting / editing
+
 " plugins
-    let s:vimrcFolder=fnamemodify($MYVIMRC, ":p:h")
-    let s:pluginFolder=s:vimrcFolder . "/plugs"
+    " vim-plug setup
+        let s:vimrcFolder=fnamemodify($MYVIMRC, ":p:h")
+        let s:pluginFolder=s:vimrcFolder . "/plugs"
 
-    let s:customPluginName="vim-custom-misc"
-    let s:customPlugin = s:pluginFolder . "/" . s:customPluginName
+        let s:customPluginName="vim-custom-misc"
+        let s:customPlugin = s:pluginFolder . "/" . s:customPluginName
 
-    let s:pluginManagerFolder=s:vimrcFolder . "/autoload"
-    let &rtp .= ','.expand(s:pluginManagerFolder)
+        let s:pluginManagerFolder=s:vimrcFolder . "/autoload"
+        let &rtp .= ','.expand(s:pluginManagerFolder)
 
     let s:plugins = [
         \   {
@@ -26,11 +30,22 @@
         \       "root": "https://github.com/neomake"
         \   },
         \   {
+        \       "name": "wilder.nvim",
+        \       "root": "https://github.com/gelguy",
+        \       "func": "UpdateRemotePlugins"
+        \   },
+        \   {
         \       "name": s:customPluginName,
         \       "root": s:pluginFolder
-        \   }
+        \   },
         \]
-    let s:onlyUseLocal = 1
+    let s:onlyUseLocal = 0
+
+    function! UpdateRemotePlugins(...)
+        " Needed to refresh runtime files
+        let &rtp=&rtp
+        UpdateRemotePlugins
+    endfunction
 
     function! UseVimPlug(pluginFolder, pluginManagerFolder, plugins, onlyUseLocal)
         let l:url = 
@@ -44,9 +59,17 @@
             call plug#begin(a:pluginFolder)
                 for plugin in a:plugins
                     if a:onlyUseLocal
-                        exec "Plug '" . a:pluginFolder . "/" . plugin['name'] . "'"
+                        if has_key(plugin, 'func')
+                            exec "Plug '" . a:pluginFolder . "/" . plugin['name'] . "', {'do': function('" . plugin['func'] . "') }"
+                        else
+                            exec "Plug '" . a:pluginFolder . "/" . plugin['name'] . "'"
+                        endif
                     else
-                        exec "Plug '" . plugin['root'] . "/" . plugin['name']
+                        if has_key(plugin, 'func')
+                            exec "Plug '" . plugin['root'] . "/" . plugin['name'] . "', {'do': function('" . plugin['func'] . "') }"
+                        else
+                            exec "Plug '" . plugin['root'] . "/" . plugin['name'] . "'"
+                        endif
                     endif
                 endfor
             call plug#end()
@@ -92,15 +115,22 @@
             \ )
 
         nnoremap <leader>f :ED<CR>
+    " wilder
+        call wilder#setup({
+            \ 'modes': [':', '/', '?'],
+            \ 'next_key': '<Tab>',
+            \ 'previous_key': '<S-Tab>',
+            \ 'accept_key': '/',
+            \ 'reject_key': '.',
+            \ })
 
 " indent
-    set softtabstop=4
     set shiftwidth=0
     set shiftround
     set expandtab
-    set tabstop=4
-    set foldnestmax=5
+    set tabstop=2
 
+" folding
     function! FoldByIndent(lnum)
         function! IndentLevel(lnum)
             let l:spacesPerIndent = &shiftwidth
@@ -137,14 +167,17 @@
         return &foldnestmax
     endfunction
 
+    set foldnestmax=5
     set foldexpr=FoldByIndent(v:lnum)
     set foldmethod=expr
+    set nofoldenable
 
-" tab completion
+" completion
     set suffixes=.bak,~,.swp,.o,.info,.aux,.log,.dvi,.bbl,.blg,.brf,.cb,.ind
     set suffixes+=.idx,.ilg,.inx,.out,.toc,.png,.jpg
-    set nowildmenu
-    set wildmode=list:longest,full
+    set wildmenu
+    set wildmode=full
+    set wildoptions-=pum
 
 " searching
     set fileignorecase
@@ -154,9 +187,9 @@
 
 " cmdwin
     set cmdwinheight=5
-    execute printf('nnoremap : :%s', &cedit)
-    execute printf('nnoremap / /%s', &cedit)
-    execute printf('nnoremap ? ?%s', &cedit)
+    " execute printf('nnoremap : :%s', &cedit)
+    " execute printf('nnoremap / /%s', &cedit)
+    " execute printf('nnoremap ? ?%s', &cedit)
     au CmdwinEnter * startinsert
     au CmdwinEnter * nnoremap <buffer> <ESC> <C-\><C-N>
     au CmdwinEnter * nnoremap <buffer> <C-c> <C-\><C-N>
@@ -171,9 +204,14 @@
     noremap <leader>. :s::g<Left><Left>
     noremap <leader>w :%s:\(<c-r>=expand("<cword>")<cr>\)::g<Left><Left>
     noremap <leader>% :%s::g<Left><Left>
-    noremap <leader>i :sp $MYVIMRC<Cr>
+    noremap <leader>i :e $MYVIMRC<Cr>
     noremap <leader>r :source $MYVIMRC<Cr>
     noremap <leader>h :set hlsearch!<Cr>
+
+    noremap <leader>e :e <C-R>=expand("%:p:h") . "/" <CR><CR>
+    noremap <leader>t :tabe <C-R>=expand("%:p:h") . "/" <CR><CR>
+    noremap <leader>s :split <C-R>=expand("%:p:h") . "/" <CR><CR>
+
     function! PasteFromExtern()
         let l:pasteSetting = &paste
         set paste
@@ -181,7 +219,7 @@
         let &paste = l:pasteSetting
     endfunction
     noremap <leader>p :call PasteFromExtern()<Cr>
-    execute printf('nnoremap <silent> <leader>e :execute printf(''sp %s/ftplugin/%%s.vim'', &ft)<Cr>', s:customPlugin)
+    execute printf('nnoremap <silent> <leader>c :execute printf(''e %s/ftplugin/%%s.vim'', &ft)<Cr>', s:customPlugin)
     cmap <leader>( \(\)<Left><Left>
     map <C-h> <C-w>h
     map <C-j> <C-w>j
@@ -204,7 +242,7 @@
 
     " colors
         syntax on
-        set colorcolumn=80
+        set colorcolumn=100
         colorscheme nocolor
         " TODO: implement following function
         function! s:getPathToColorschemesByName()
@@ -231,3 +269,6 @@
         cnoremap <C-z> <nop>
         onoremap <C-z> <nop>
     endif
+
+" ideas
+    " - move to last character like in this plugin: https://www.vim.org/scripts/script.php?script_id=3386 (eg via d-f/ or d-2f/)
