@@ -50,7 +50,6 @@
         pathInstall="$XDG_CONFIG_HOME/zsh/install.sh"
         urlOMZ="https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh"
         curl -fsSL "$urlOMZ" | ZSH="$ZSH" sh -s -- "--keep-zshrc"
-        zsh
     }
 
     sourceOMZ() {
@@ -105,7 +104,8 @@
 	export XDG_RUNTIME_DIR="/run/user/$UID"
 	export DBUS_SESSION_DBUS_ADDRESS="unix:path=${XDG_RUNTIME_DIR}/bus"
 	export JAVA_HOME="/usr/lib/jvm/java-17-openjdk"
-    append_path_rec "$HOME/bin"
+  append_path_rec "$HOME/bin"
+  append_path_rec "$HOME/est_ad11ezol_ir59exot" 1
 
 # OMZ
     plugins=(
@@ -125,9 +125,10 @@
             "terminalparty_edited" \
             "wezm" )
 
-    if [ -d "$ZSH" ]; then
-        sourceOMZ
+    if [ ! -d "$ZSH" ]; then
+      installOMZ
     fi
+    sourceOMZ
 
 # cursor
 	# source: https://unix.stackexchange.com/questions/433273/changing-cursor-style-based-on-mode-in-both-zsh-and-vim

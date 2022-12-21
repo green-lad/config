@@ -1,0 +1,10 @@
+#!/bin/sh
+
+#echo "Xft.dpi: 200" | xrdb -merge
+setxkbmap -option caps:swapescape
+xset r rate 200 50
+xset -dpms
+xbindkeys
+if [ ! "$(ps -e | grep 'i3status')" ]; then
+  exec i3
+fi

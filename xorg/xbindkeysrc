@@ -1,0 +1,23 @@
+# Increase volume
+"amixer set Master '1%+'"
+  XF86AudioRaiseVolume
+
+# Decrease volume
+"amixer set Master '1%-'"
+  XF86AudioLowerVolume
+
+# Mute volume
+"amixer set Master 'toggle'"
+  XF86AudioMute
+
+# Un-/toggle play
+"sh -c '[ "$(mocp -i)" = "State: STOP" ] && mocp --play || mocp --toggle-pause'"
+  XF86AudioPlay
+
+# mocp: next song
+"sh -c '[ "$(mocp -i)" = "State: STOP" ] && mocp --play || mocp --next'"
+  XF86AudioNext
+
+# mocp: previous song
+"sh -c '[ "$(mocp -i)" = "State: STOP" ] && mocp --play || mocp --previous'"
+  XF86AudioPrev

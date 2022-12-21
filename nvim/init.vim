@@ -200,6 +200,7 @@
         \ col(".") == 1 ? '<C-\><C-N><C-\><C-N>' : '<backspace>'
 
 " maps
+    set clipboard+=unnamedplus
     let mapleader = ","
     noremap <leader>. :s::g<Left><Left>
     noremap <leader>w :%s:\(<c-r>=expand("<cword>")<cr>\)::g<Left><Left>
@@ -211,6 +212,7 @@
     noremap <leader>e :e <C-R>=expand("%:p:h") . "/" <CR><CR>
     noremap <leader>t :tabe <C-R>=expand("%:p:h") . "/" <CR><CR>
     noremap <leader>s :split <C-R>=expand("%:p:h") . "/" <CR><CR>
+    noremap <leader>v :vsplit <C-R>=expand("%:p:h") . "/" <CR><CR>
 
     function! PasteFromExtern()
         let l:pasteSetting = &paste

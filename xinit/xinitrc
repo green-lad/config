@@ -1,5 +1,0 @@
-setxkbmap -option caps:swapescape
-xset r rate 200 50
-xbindkeys
-echo "Xft.dpi: 200" | xrdb -merge
-exec i3
