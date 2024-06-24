@@ -1,5 +1,4 @@
-" TODO
-" - folding behaves by inproduceable closing folds when pasting / editing
+let mapleader = ","
 
 " plugins
     " vim-plug setup
@@ -32,6 +31,14 @@
         \   {
         \       "name": "wilder.nvim",
         \       "root": "https://github.com/gelguy",
+        \   },
+        \   {
+        \       "name": "gnupg.vim",
+        \       "root": "https://github.com/vim-scripts",
+        \   },
+        \   {
+        \       "name": "tabular",
+        \       "root": "https://github.com/godlygeek",
         \       "func": "UpdateRemotePlugins"
         \   },
         \   {
@@ -124,6 +131,35 @@
             \ 'reject_key': '.',
             \ })
 
+" maps
+    set clipboard+=unnamedplus
+    noremap <leader>. :s::g<Left><Left>
+    noremap <leader>w :%s:\(<c-r>=expand("<cword>")<cr>\)::g<Left><Left>
+    noremap <leader>% :%s::g<Left><Left>
+    noremap <leader>i :sp $MYVIMRC<Cr>
+    noremap <leader>r :source $MYVIMRC<Cr>
+    noremap <leader>h :set hlsearch!<Cr>
+
+    noremap <leader>e :e <C-R>=expand("%:p:h") . "/" <CR><CR>
+    noremap <leader>t :tabe <C-R>=expand("%:p:h") . "/" <CR><CR>
+    noremap <leader>f :split <C-R>=expand("%:p:h") . "/" <CR><CR>
+    noremap <leader>v :vsplit <C-R>=expand("%:p:h") . "/" <CR><CR>
+
+    function! PasteFromExtern()
+        let l:pasteSetting = &paste
+        set paste
+        normal! "+p
+        let &paste = l:pasteSetting
+    endfunction
+    noremap <leader>p :call PasteFromExtern()<Cr>
+    execute printf('nnoremap <silent> <leader>a :execute printf(''sp %s/ftplugin/%%s.vim'', &ft)<Cr>', s:customPlugin)
+    cmap <leader>( \(\)<Left><Left>
+    map <C-h> <C-w>h
+    map <C-j> <C-w>j
+    map <C-k> <C-w>k
+    map <C-l> <C-w>l
+    nnoremap <leader>b :exec "sp " . s:customPlugin . "/ftplugin/" . &filetype . ".vim"<cr>
+
 " indent
     set shiftwidth=0
     set shiftround
@@ -199,36 +235,6 @@
     au CmdwinEnter * inoremap <buffer> <expr> <backspace>
         \ col(".") == 1 ? '<C-\><C-N><C-\><C-N>' : '<backspace>'
 
-" maps
-    set clipboard+=unnamedplus
-    let mapleader = ","
-    noremap <leader>. :s::g<Left><Left>
-    noremap <leader>w :%s:\(<c-r>=expand("<cword>")<cr>\)::g<Left><Left>
-    noremap <leader>% :%s::g<Left><Left>
-    noremap <leader>i :e $MYVIMRC<Cr>
-    noremap <leader>r :source $MYVIMRC<Cr>
-    noremap <leader>h :set hlsearch!<Cr>
-
-    noremap <leader>e :e <C-R>=expand("%:p:h") . "/" <CR><CR>
-    noremap <leader>t :tabe <C-R>=expand("%:p:h") . "/" <CR><CR>
-    noremap <leader>s :split <C-R>=expand("%:p:h") . "/" <CR><CR>
-    noremap <leader>v :vsplit <C-R>=expand("%:p:h") . "/" <CR><CR>
-
-    function! PasteFromExtern()
-        let l:pasteSetting = &paste
-        set paste
-        normal! "+p
-        let &paste = l:pasteSetting
-    endfunction
-    noremap <leader>p :call PasteFromExtern()<Cr>
-    execute printf('nnoremap <silent> <leader>c :execute printf(''e %s/ftplugin/%%s.vim'', &ft)<Cr>', s:customPlugin)
-    cmap <leader>( \(\)<Left><Left>
-    map <C-h> <C-w>h
-    map <C-j> <C-w>j
-    map <C-k> <C-w>k
-    map <C-l> <C-w>l
-    nnoremap <leader>b :exec "sp " . s:customPlugin . "/ftplugin/" . &filetype . ".vim"<cr>
-
 " look
     syntax on
     set conceallevel=0
@@ -241,6 +247,7 @@
     set splitbelow
     set splitright
     set nohlsearch
+    set rulerformat=%l,%c,0x%B
 
     " colors
         syntax on

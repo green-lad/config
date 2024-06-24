@@ -17,6 +17,8 @@
 	bindsym $mod+Shift+l move right
 	bindsym $mod+backslash split h
 	bindsym $mod+minus split v
+  bindsym $mod+a focus parent
+  bindsym $mod+p exec flameshot gui
 
 	# window separation
 		bindsym $mod+f fullscreen toggle
@@ -28,6 +30,8 @@
     bindsym $mod+m bar mode toggle
 
 	# workspace stuff
+    # default layout
+    workspace_layout stacking
 		set $ws1 "1"
 		set $ws2 "2"
 		set $ws3 "3"
@@ -120,7 +124,8 @@
   bar {
     position top
     status_command i3status
-    mode hide
+    # mode hide
+    mode dock
     modifier none
   }
   default_border pixel 1

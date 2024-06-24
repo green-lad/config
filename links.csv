@@ -4,3 +4,4 @@ $XDG_CONFIG_HOME/xorg/xinitrc,~/.xinitrc
 $XDG_CONFIG_HOME/xorg/xbindkeysrc,~/.xbindkeysrc
 $XDG_CONFIG_HOME/firefox,~/.mozilla/firefox
 $XDG_CONFIG_HOME/moc,~/.moc
+$XDG_CONFIG_HOME/gtk-3.0/themes,~/.themes

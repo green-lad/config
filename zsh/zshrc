@@ -85,9 +85,6 @@
     }
 
 # enviornment variables
-	editor="/usr/bin/nvim"
-	export TERM="xterm"
-
 	$(which "go" &> /dev/null) && {
 		goWorkspace="$HOME/goWorkspace"
 		GOPATH="$(go env GOPATH)"
@@ -97,14 +94,25 @@
 		export GOPATH
 	}
 
+	editor="/usr/bin/nvim"
+	export BROWSER="firefox"
+	export TERM="xterm"
 	export XDG_CONFIG_HOME="$HOME/.config"
+	export ESCDELAY=0
 	export ZSH="$XDG_CONFIG_HOME/zsh/oh-my-zsh"
 	export SUDO_EDITOR="$editor"
 	export EDITOR="$editor"
 	export XDG_RUNTIME_DIR="/run/user/$UID"
 	export DBUS_SESSION_DBUS_ADDRESS="unix:path=${XDG_RUNTIME_DIR}/bus"
 	export JAVA_HOME="/usr/lib/jvm/java-17-openjdk"
+
+  export CURA_BAUDRATES="115200"
+  export CURA_COMPORTS="/dev/ttyUSB0"
+  export CURA_AUTODETECT="0"
+
   append_path_rec "$HOME/bin"
+  append_path_rec "$HOME/script"
+  append_path_rec "$HOME/.local/bin"
   append_path_rec "$HOME/est_ad11ezol_ir59exot" 1
 
 # OMZ
@@ -158,3 +166,6 @@
 	zle -N escapeLine
 	bindkey -M vicmd '^e' escapeLine
     bindkey -v
+
+# opam configuration
+[[ ! -r /home/markus/.opam/opam-init/init.zsh ]] || source /home/markus/.opam/opam-init/init.zsh  > /dev/null 2> /dev/null

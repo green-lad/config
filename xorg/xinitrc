@@ -1,10 +1,28 @@
 #!/bin/sh
 
-#echo "Xft.dpi: 200" | xrdb -merge
+echo "Xft.dpi: 100" | xrdb -merge
+# see: /usr/share/X11/xkb/symbols/de
+setxkbmap 'de(us)'
+flameshot &!
+
+xdg-mime default firefox.desktop 'x-scheme-handler/http'
+xdg-mime default firefox.desktop 'x-scheme-handler/https'
+xdg-mime default firefox.desktop 'text/html'
+xdg-mime default feh.desktop 'image/png'
+xdg-mime default feh.desktop 'image/jpg'
+xdg-mime default nautilus.desktop inode/directory
+
+# to revert any mapping (only one mapping does not work) do:
+# setxkbmap -option ''
 setxkbmap -option caps:swapescape
 xset r rate 200 50
 xset -dpms
+
+# disable screen saver / sleep / suspension
+xset s off
+
 xbindkeys
 if [ ! "$(ps -e | grep 'i3status')" ]; then
+  # redshift -l 49:11 -b 1:.3 &!
   exec i3
 fi
