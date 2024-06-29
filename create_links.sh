@@ -1,5 +1,7 @@
 #!/bin/sh
 
+export XDG_CONFIG_HOME="$HOME/.config"
+
 set \
   "$XDG_CONFIG_HOME/zsh/zshrc,~/.zshrc" \
   "$XDG_CONFIG_HOME/xorg/xinitrc,~/.xinitrc" \
