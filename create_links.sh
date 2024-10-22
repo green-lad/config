@@ -8,7 +8,8 @@ set \
   "$XDG_CONFIG_HOME/xorg/xbindkeysrc,~/.xbindkeysrc" \
   "$XDG_CONFIG_HOME/firefox,~/.mozilla/firefox" \
   "$XDG_CONFIG_HOME/moc,~/.moc" \
-  "$XDG_CONFIG_HOME/gtk-3.0/themes,~/.themes"
+  "$XDG_CONFIG_HOME/gtk-3.0/themes,~/.themes" \
+  "$XDG_CONFIG_HOME/applications/neomutt.desktop,~/.local/share/applications/neomutt.desktop"
 
 IFS=$','
 for i

@@ -110,6 +110,8 @@
   export CURA_COMPORTS="/dev/ttyUSB0"
   export CURA_AUTODETECT="0"
 
+  export QT_QPA_PLATFORMTHEME=qt5ct
+
   append_path_rec "$HOME/bin"
   append_path_rec "$HOME/script"
   append_path_rec "$HOME/.local/bin"
@@ -169,3 +171,11 @@
 
 # opam configuration
 [[ ! -r /home/markus/.opam/opam-init/init.zsh ]] || source /home/markus/.opam/opam-init/init.zsh  > /dev/null 2> /dev/null
+
+# auto start X at login
+if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]]; then
+startx
+fi
+
+# Load Angular CLI autocompletion.
+source <(ng completion script)

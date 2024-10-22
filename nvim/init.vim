@@ -37,6 +37,14 @@ let mapleader = ","
         \       "root": "https://github.com/vim-scripts",
         \   },
         \   {
+        \       "name": "vim-gutentags",
+        \       "root": "https://github.com/ludovicchabant",
+        \   },
+        \   {
+        \       "name": "tagbar",
+        \       "root": "https://github.com/preservim",
+        \   },
+        \   {
         \       "name": "tabular",
         \       "root": "https://github.com/godlygeek",
         \       "func": "UpdateRemotePlugins"
@@ -122,6 +130,10 @@ let mapleader = ","
             \ )
 
         nnoremap <leader>f :ED<CR>
+    " tagbar
+        nnoremap <leader>q :TagbarToggle<CR>
+        let g:tagbar_autofocus = 1
+        let g:tagbar_autoclose = 1
     " wilder
         call wilder#setup({
             \ 'modes': [':', '/', '?'],
@@ -130,6 +142,7 @@ let mapleader = ","
             \ 'accept_key': '/',
             \ 'reject_key': '.',
             \ })
+
 
 " maps
     set clipboard+=unnamedplus
@@ -260,7 +273,7 @@ let mapleader = ","
         " for colorscheme
         execute printf('nnoremap <leader>c :sp %s/colors/nocolor.vim<Cr>', s:customPlugin)
 
-" winows spefic setting
+" settings for windows
     if has('win32')
         set shell=powershell.exe
         set shellcmdflag=-NoProfile\ -NoLogo\ -NonInteractive\ -Command
