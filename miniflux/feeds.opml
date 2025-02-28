@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml version="2.0">
+    <head>
+        <title>Miniflux</title>
+        <dateCreated>Fri, 28 Feb 2025 15:47:54 CET</dateCreated>
+    </head>
+    <body>
+        <outline text="All">
+            <outline title="Current Affairs" text="Current Affairs" xmlUrl="https://www.currentaffairs.org/news/rss.xml" htmlUrl="https://www.currentaffairs.org/news" type="rss"></outline>
+            <outline title="Declassified Media Ltd" text="Declassified Media Ltd" xmlUrl="https://www.declassifieduk.org/feed/" htmlUrl="https://www.declassifieduk.org/" type="rss"></outline>
+        </outline>
+        <outline text="Entertaining">
+            <outline title="GIFGAS" text="GIFGAS" xmlUrl="https://www.youtube.com/feeds/videos.xml?channel_id=UC8iPVSFr42KUFf8DKsmnvSw" htmlUrl="https://www.youtube.com/channel/UC8iPVSFr42KUFf8DKsmnvSw" type="rss"></outline>
+            <outline title="Jung &amp; Naiv" text="Jung &amp; Naiv" xmlUrl="https://www.youtube.com/feeds/videos.xml?channel_id=UCv1WDP5EiipMQ__C4Cg6aow" htmlUrl="https://www.youtube.com/channel/UCv1WDP5EiipMQ__C4Cg6aow" type="rss"></outline>
+        </outline>
+        <outline text="Machining">
+            <outline title="Inheritance Machining" text="Inheritance Machining" xmlUrl="https://www.youtube.com/feeds/videos.xml?channel_id=UCVI8Mfisni3GaobL1e2JOIQ" htmlUrl="https://www.youtube.com/channel/UCVI8Mfisni3GaobL1e2JOIQ" type="rss"></outline>
+            <outline title="Max Grant ,The Swan Valley Machine Shop." text="Max Grant ,The Swan Valley Machine Shop." xmlUrl="https://www.youtube.com/feeds/videos.xml?channel_id=UC0aqEQjvoXXWjPWMW_XKa5g" htmlUrl="https://www.youtube.com/channel/UC0aqEQjvoXXWjPWMW_XKa5g" type="rss"></outline>
+            <outline title="RotarySMP" text="RotarySMP" xmlUrl="https://www.youtube.com/feeds/videos.xml?channel_id=UCkmwgo38DWUFGMgu4jT68YQ" htmlUrl="https://www.youtube.com/channel/UCkmwgo38DWUFGMgu4jT68YQ" type="rss"></outline>
+            <outline title="Stefan Gotteswinter" text="Stefan Gotteswinter" xmlUrl="https://www.youtube.com/feeds/videos.xml?channel_id=UCY8gSLTqvs38bR9X061jFWw" htmlUrl="https://www.youtube.com/channel/UCY8gSLTqvs38bR9X061jFWw" type="rss"></outline>
+            <outline title="Uri Tuchman" text="Uri Tuchman" xmlUrl="https://www.youtube.com/feeds/videos.xml?channel_id=UCHsqqRjziUaMwZgQZHw-n1w" htmlUrl="https://www.youtube.com/channel/UCHsqqRjziUaMwZgQZHw-n1w" type="rss"></outline>
+            <outline title="Watch Wes Work" text="Watch Wes Work" xmlUrl="https://www.youtube.com/feeds/videos.xml?channel_id=UC2kEuLCRUrWAvHlupobn4aw" htmlUrl="https://www.youtube.com/channel/UC2kEuLCRUrWAvHlupobn4aw" type="rss"></outline>
+        </outline>
+        <outline text="Technology">
+            <outline title="Breaking Taps" text="Breaking Taps" xmlUrl="https://www.youtube.com/feeds/videos.xml?channel_id=UC06HVrkOL33D5lLnCPjr6NQ" htmlUrl="https://www.youtube.com/channel/UC06HVrkOL33D5lLnCPjr6NQ" type="rss"></outline>
+            <outline title="Technology Connections" text="Technology Connections" xmlUrl="https://www.youtube.com/feeds/videos.xml?channel_id=UCy0tKL1T7wFoYcxCe0xjN6Q" htmlUrl="https://www.youtube.com/channel/UCy0tKL1T7wFoYcxCe0xjN6Q" type="rss"></outline>
+        </outline>
+    </body>
+</opml>

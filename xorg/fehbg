@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# feh --no-fehbg --bg-scale '/home/markus/.config/xorg/background/S2_EP7_4K_15.jpg' 
+# feh --no-fehbg --bg-scale '/home/markus/.config/xorg/background/S2_EP7_4K_19.jpg'
+# feh --no-fehbg --bg-scale '/home/markus/.config/xorg/background/S2_EP7_4K_20.jpg'
+# feh --no-fehbg --bg-scale '/home/markus/.config/xorg/background/S2_EP7_4K_33.jpg'
+feh --no-fehbg --bg-scale '/home/markus/.config/xorg/background/S2_EP7_4K_45.jpg'

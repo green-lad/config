@@ -21,6 +21,10 @@ xset -dpms
 # disable screen saver / sleep / suspension
 xset s off
 
+#background image
+#arcane src: https://www.reddit.com/r/arcane/comments/1gytwkn/s2_spoilers_arcane_final_wallpaper_release_act_3/#lightbox
+~/.fehbg
+
 xbindkeys
 if [ ! "$(ps -e | grep 'i3status')" ]; then
   # redshift -l 49:11 -b 1:.3 &!

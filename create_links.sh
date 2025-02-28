@@ -2,9 +2,14 @@
 
 export XDG_CONFIG_HOME="$HOME/.config"
 
+# "$XDG_CONFIG_HOME/miniflux/miniflux.conf,/etc/miniflux.conf" \
+
 set \
   "$XDG_CONFIG_HOME/zsh/zshrc,~/.zshrc" \
+  "$XDG_CONFIG_HOME/taskwarrior/taskrc,~/.taskrc" \
+  "$XDG_CONFIG_HOME/gnupg/gpg-agent.conf,~/.gnupg/gpg-agent.conf" \
   "$XDG_CONFIG_HOME/xorg/xinitrc,~/.xinitrc" \
+  "$XDG_CONFIG_HOME/xorg/fehbg,~/.fehbg" \
   "$XDG_CONFIG_HOME/xorg/xbindkeysrc,~/.xbindkeysrc" \
   "$XDG_CONFIG_HOME/firefox,~/.mozilla/firefox" \
   "$XDG_CONFIG_HOME/moc,~/.moc" \

@@ -50,6 +50,10 @@ let mapleader = ","
         \       "func": "UpdateRemotePlugins"
         \   },
         \   {
+        \       "name": "nerdtree",
+        \       "root": "https://github.com/preservim",
+        \   },
+        \   {
         \       "name": s:customPluginName,
         \       "root": s:pluginFolder
         \   },
@@ -142,7 +146,9 @@ let mapleader = ","
             \ 'accept_key': '/',
             \ 'reject_key': '.',
             \ })
-
+    " nerdtree
+        nnoremap <leader>n :NERDTreeToggle<CR>
+        nnoremap <leader>m :NERDTreeFocus<CR>
 
 " maps
     set clipboard+=unnamedplus
@@ -173,6 +179,9 @@ let mapleader = ","
     map <C-l> <C-w>l
     nnoremap <leader>b :exec "sp " . s:customPlugin . "/ftplugin/" . &filetype . ".vim"<cr>
 
+" miscellaneous
+    set modelineexpr
+
 " indent
     set shiftwidth=0
     set shiftround
@@ -180,6 +189,8 @@ let mapleader = ","
     set tabstop=2
 
 " folding
+    " enable folds when opening a file
+    set foldenable
     function! FoldByIndent(lnum)
         function! IndentLevel(lnum)
             let l:spacesPerIndent = &shiftwidth
@@ -217,9 +228,11 @@ let mapleader = ","
     endfunction
 
     set foldnestmax=5
+    "note: set foldlevelstart negative (default -1) to not use it
+    set foldlevelstart=0
+    "autocmd BufWinEnter * let &foldlevel = 0
     set foldexpr=FoldByIndent(v:lnum)
     set foldmethod=expr
-    set nofoldenable
 
 " completion
     set suffixes=.bak,~,.swp,.o,.info,.aux,.log,.dvi,.bbl,.blg,.brf,.cb,.ind
@@ -236,9 +249,9 @@ let mapleader = ","
 
 " cmdwin
     set cmdwinheight=5
-    " execute printf('nnoremap : :%s', &cedit)
-    " execute printf('nnoremap / /%s', &cedit)
-    " execute printf('nnoremap ? ?%s', &cedit)
+    execute printf('nnoremap : :%s', &cedit)
+    execute printf('nnoremap / /%s', &cedit)
+    execute printf('nnoremap ? ?%s', &cedit)
     au CmdwinEnter * startinsert
     au CmdwinEnter * nnoremap <buffer> <ESC> <C-\><C-N>
     au CmdwinEnter * nnoremap <buffer> <C-c> <C-\><C-N>
@@ -294,3 +307,6 @@ let mapleader = ","
 
 " ideas
     " - move to last character like in this plugin: https://www.vim.org/scripts/script.php?script_id=3386 (eg via d-f/ or d-2f/)
+    " - show the start line of the current fold the cursor is in as info
+    " - make substituing via c option more useful (highlight the relevant
+    "   expression, ask after substituing if everything is correct)

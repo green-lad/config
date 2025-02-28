@@ -31,6 +31,19 @@
 		$exePath $@ &!
 	}
 
+  show_color() {
+    for color in "$@"
+    do
+      r="${color#'#'}"
+      r="${r:-FFFFFF}"
+      b="${r#????}"
+      r="${r%??}"
+      g="${r#??}"
+      r="${r%??}"
+      printf '\e[38;2;%d;%d;%dm%s\e[0m\n' "0x$r" "0x$g" "0x$b" "$color"
+    done
+  }
+
 	escapeLine() {
 		charactersToEscape=('\' '"' '$' '!' '`')
 		terminalLine="$BUFFER"
@@ -116,6 +129,8 @@
   append_path_rec "$HOME/script"
   append_path_rec "$HOME/.local/bin"
   append_path_rec "$HOME/est_ad11ezol_ir59exot" 1
+  append_path_rec "$HOME/est_ad11ezol_ir59exot" 1
+  append_path_rec "$HOME/.local/share/LightBurn" 1
 
 # OMZ
     plugins=(
