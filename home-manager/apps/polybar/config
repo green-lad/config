@@ -1,0 +1,268 @@
+[colors]
+  background = #1e1e20
+  ;button_text_color = ${colors.background}
+  button_text_color = #1e1e20
+  button_color = #56737a
+  button_selected_color = #2c5159
+  text_normal_color = #ffffff
+  highlight = #e06c75
+
+;using variables inside prefix / suffix settings does not seem to work, hence
+;the following is redundant
+[powerline]
+  prefix = 
+  suffix = 
+
+[bar/top]
+  monitor = ${env:MONITOR:}
+  width = 100%
+  height = 27
+  radius = 0
+  fixed-center = true
+  top = true
+
+  background = ${colors.background}
+  foreground = ${colors.text_normal_color}
+
+  line-size = 3
+  line-color =
+
+  border-size = 0
+  border-color =
+
+  padding-left = 0
+  padding-right = 0
+
+  module-margin-left = 0
+  module-margin-right = 0
+
+  ;search for icons: https://www.nerdfonts.com/cheat-sheet
+  ;list monospace fonts: fc-list :spacing=100 | less
+  font-0 = "SauceCodePro Nerd Font Propo,SauceCodePro NFP:style=Regular:pixelsize=10;0"
+  font-1 = "SauceCodePro Nerd Font Propo,SauceCodePro NFP:style=Regular:pixelsize=17;3"
+  ;font-2 = 
+
+  modules-left = i3
+  modules-center = date
+  modules-right = eth taskwarrior pulseaudio flameshot inbox-imap powermenu
+
+  wm-restack = i3
+  override-redirect = false
+  enable-ipc = true
+
+  cursor-click = pointer
+  cursor-scroll = ns-resize
+
+; modules
+  [module/i3]
+    type = internal/i3
+    format = <label-state> <label-mode>
+    index-sort = true
+    wrapping-scroll = false
+
+    label-mode-background = ${colors.button_color}
+    label-mode-foreground = ${colors.button_text_color}
+
+    label-focused = %{T2}%{T-} %index% %{R T2}%{T-}
+    label-focused-background = ${colors.button_selected_color}
+    label-focused-foreground = ${colors.button_text_color}
+
+    label-unfocused = %{T2}%{T-} %index% %{R T2}%{T-}
+    label-unfocused-background = ${colors.button_color}
+    label-unfocused-foreground = ${colors.button_text_color}
+
+    label-visible = %{T2}%{T-} %index% %{R T2}%{T-}
+    label-visible-background = ${colors.button_color}
+    label-visible-foreground = ${colors.button_text_color}
+
+    label-urgent = %{T2}%{T-} %index% %{R T2}%{T-}
+    label-urgent-background = ${colors.highlight}
+
+  [module/wlan]
+    type = internal/network
+    interface = wlp0s20f3
+    interval = 3.0
+
+    format-connected = <ramp-signal> <label-connected>
+    format-connected-foreground = ${colors.text_normal_color}
+    format-connected-background = ${colors.background}
+    format-connected-padding = 2
+    label-connected = %essid%
+
+    format-disconnected =
+
+    ramp-signal-0 = 
+    ramp-signal-1 = 
+    ramp-signal-2 = 
+    ramp-signal-3 = 
+    ramp-signal-4 = 
+    ramp-signal-foreground = ${colors.text_normal_color}
+
+  [module/eth]
+    type = internal/network
+    interface = eno1
+    interval = 3.0
+
+    format-connected-padding = 2
+    format-connected-foreground = ${colors.text_normal_color}
+    format-connected-background = ${colors.background}
+    format-connected-prefix = " "
+    format-connected-prefix-foreground = ${colors.text_normal_color}
+    label-connected = %local_ip%
+
+    format-disconnected =
+
+  [module/date]
+    format-prefix = "%{T2}%{T-} "
+    format-suffix-background = ${colors.background}
+    format-suffix-foreground = ${colors.button_color}
+    format-suffix = "%{R} %{R}%{T2}%{T-}"
+
+    type = internal/date
+    interval = 5
+
+    date =
+    date-alt = " %Y-%m-%d"
+
+    time = %H:%M
+    time-alt = %H:%M:%S
+
+    format-foreground = ${colors.button_text_color}
+    format-background = ${colors.button_color}
+
+    label =  %date% %time%
+
+  [module/powermenu]
+    format-prefix-background = ${colors.button_color}
+    format-prefix-foreground = ${colors.background}
+    format-prefix = "%{T2}%{T-}"
+    format-suffix-background = ${colors.background}
+    format-suffix-foreground = ${colors.button_color}
+    format-suffix = "%{T2}%{T-}"
+
+    type = custom/menu
+
+    expand-right = true
+
+    format-spacing = 1
+    format-background = ${colors.button_color}
+
+    label-open = "  󰐥  "
+    label-open-foreground = ${colors.button_text_color}
+    label-close = "  󰜺  "
+    label-close-foreground = ${colors.button_text_color}
+    label-close-background = ${colors.button_color}
+    label-separator = |
+    label-separator-foreground = ${colors.text_normal_color}
+    label-separator-background = ${colors.background}
+
+    menu-0-0 = reload polybar
+    menu-0-0-exec = restart_polybar.sh
+    menu-0-1 = reload i3
+    menu-0-1-exec = i3-msg restart
+    menu-0-2 = log off
+    menu-0-2-exec = menu-open-1
+    menu-0-3 = reboot
+    menu-0-3-exec = menu-open-2
+    menu-0-4 = "power off | "
+    menu-0-4-exec = menu-open-3
+    menu-1-0 = "log off | "
+    menu-1-0-exec = i3 exit logout
+    menu-2-0 = "reboot | "
+    menu-2-0-exec = reboot
+    menu-3-0 = "power off | "
+    menu-3-0-exec = poweroff
+
+  [module/pulseaudio]
+    format-volume-prefix = "%{T2}%{T-} "
+    format-volume-suffix-background = ${colors.background}
+    format-volume-suffix-foreground = ${colors.button_color}
+    format-volume-suffix = "%{R} %{R}%{T2}%{T-}"
+
+    format-muted-prefix-background = ${colors.button_color}
+    format-muted-prefix-foreground = ${colors.background}
+    format-muted-prefix = "%{T2}%{T-} "
+    format-muted-suffix-background = ${colors.background}
+    format-muted-suffix-foreground = ${colors.button_color}
+    format-muted-suffix = "%{R} %{R}%{T2}%{T-}"
+
+    type = internal/pulseaudio
+    format-padding = 2
+    ; Sink to be used, if it exists (find using `pacmd list-sinks`, name field)
+    ; sink = alsa_output.pci-0000_12_00.3.analog-stereo
+    ; Use PA_VOLUME_UI_MAX (~153%) if true, or PA_VOLUME_NORM (100%) if false
+    use-ui-max = true
+    ; Interval for volume increase/decrease (in percent points)
+    interval = 5
+    reverse-scroll = false
+
+    ; Available tags:
+    ;   <label-volume> (default)
+    ;   <ramp-volume>
+    ;   <bar-volume>
+    ; Only applies if <ramp-volume> is used
+    ramp-volume-0 = 󰕿
+    ramp-volume-1 = 󰖀
+    ramp-volume-2 = 󰕾
+    ;label-volume = %percentage%%
+    format-volume-foreground = ${colors.button_text_color}
+    format-volume-background = ${colors.button_color}
+    format-volume = <ramp-volume> <label-volume>
+
+    label-muted = 󰝟
+    label-muted-foreground = ${colors.button_text_color}
+    label-muted-background = ${colors.button_color}
+    label-muted-padding = 2
+    format-muted = <label-muted>
+
+    ; Right and Middle click
+    click-right = st -e mocp
+    ;click-middle = 
+
+  [module/flameshot]
+    content-prefix = "%{T2}%{T-} "
+    content-suffix-background = ${colors.background}
+    content-suffix-foreground = ${colors.button_color}
+    content-suffix = "%{R} %{R}%{T2}%{T-}"
+
+    content-background = ${colors.button_color}
+    content-foreground = ${colors.button_text_color}
+    type = custom/text
+    click-left = flameshot gui
+    content = "󰹑 "
+
+  [module/inbox-imap]
+    format-prefix = "%{T2}%{T-} "
+    format-suffix-background = ${colors.background}
+    format-suffix-foreground = ${colors.button_color}
+    format-suffix = "%{R} %{R}%{T2}%{T-}"
+
+    format-background = ${colors.button_color}
+    format-foreground = ${colors.button_text_color}
+    type = custom/script
+    ;passing variables to exec seems to be not supported...
+    ;exec = get_mail_count --colornormal "${colors.background}" --colorhighlight "${colors.highlight}"
+    exec = get_mail_count --colornormal "#1e1e20" --colorhighlight "#e06c75"
+    click-left = st -e neomutt
+    tail = true
+
+  [module/taskwarrior]
+    format-prefix = "%{T2}%{T-} "
+    format-suffix-background = ${colors.background}
+    format-suffix-foreground = ${colors.button_color}
+    format-suffix = "%{R} %{R}%{T2}%{T-}"
+
+    interval = 30
+    type = custom/script
+    exec = get_most_urgent_task
+    format = <label>
+    format-foreground = ${colors.button_text_color}
+    format-background = ${colors.button_color}
+    click-left = task "$((`cat /tmp/tw_polybar_id`))" done
+
+[settings]
+  screenchange-reload = true
+
+[global/wm]
+  margin-top = 0
+  margin-bottom = 0

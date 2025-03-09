@@ -1,0 +1,19 @@
+get info about package
+  nix-repl
+  :l <nixpkgs>
+  :e pkgs.<package stuff>
+
+build env with package (here python3 with numpy)
+  :l <nixpkgs>
+  :b python3.withPackages (p: [p.numpy])
+
+get info about flake
+  nix-repl
+  x = builtins.getFlake "github:..."
+  :e x.<flake stuff>
+
+rebuild system
+  sudo nixos-rebuild switch --flake .
+
+rebuild home-manager
+  home-manager switch --flake .

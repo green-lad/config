@@ -1,0 +1,3080 @@
+#PersonalToolbar{
+  display: none !important;
+}
+
+
+  /*== ShyFox Variables ===============================================================================================================================
+
+This is where most of variables are located
+
+
+--- SETTINGS ----------------------------------------------------------------------------------------------------------------------------------------
+
+Values of these variables can be changed safely and most likely nothing will break.
+
+*/
+
+:root, #screenshots-component *{
+  /* accent color */
+  --shy-accent-color: #3584E4;
+  
+  /* window border thickness and size of many margins */
+  --margin: 0.8rem;
+  
+  /* rounded corners radius of most elements */
+  --rounding: 11.5px;
+  --big-rounding: 15px;
+  --bigger-rounding: 20px;
+  --giant-rounding: 30px;
+  
+  /* animations time */
+  --trans-dur: 0.25s;
+  
+  /* width of some elements. 1vw is one hundredth of the screen width */
+  --sdbr-wdt: 300px;
+  
+  --navbar-wdt: 60vw;
+  
+  --findbar-wdt: 70vw;
+  
+  /* intensity of blur (new tab) */
+  --blur-radius: 10px;
+  
+  /* brightness of inactive window elements */
+  --inactive-opct: 0.7;
+  
+  /* transparency of indicator bars showing the position of hidden panels */
+  --hide-bar-opct: 0.2;
+  &:-moz-window-inactive{--hide-bar-opct: 0.1;}
+  
+  /* how much shorter these bars than panels */
+  --hide-bar-wdt-pad: 10px;
+  
+  /* size of the panel hitbox outside the window border */
+  --panel-hide-ldg: 1px;            /* f11 fullscreen   */
+  &:not([inFullscreen="true"]){
+    --panel-hide-ldg: 0px;          /* maximized window */ 
+    &[sizemode="normal"]:not([titlepreface*="‍"]){
+      --panel-hide-ldg: 9px;        /* floating window  */
+    }
+  }
+  
+  /* colors */
+  --shadow-col:  #00000020;    /* color of the translucent outline that imitates a shadow     */
+  --private-col: #6e00bc80;    /* private mode outline color                                  */
+  --debug-col: transparent;    /* rgba(0, 0, 255, 0.2); color of hidden panels hover hitboxes */
+  --debug-col-2: transparent;  /* rgba(0, 255, 0, 0.2); color of window dragging hitboxes     */
+}
+
+
+/* accent color toggle */
+:root{--shy-color: var(--shy-accent-color)}
+
+@media (-moz-bool-pref: "shyfox.fill.accent.with.icons.fill.color"){
+  :root{--shy-color: var(--toolbar-color, var(--shy-accent-color)) !important;}
+}
+
+/* 
+
+--- VARIABLES ----------------------------------------------------------------------------------------------------------------------------------
+
+Reserved values and all sorts of dynamic variables. You should not touch them.
+
+*/
+
+:root{
+  
+  --ActiveCaption: ActiveCaption;
+  
+  /* pick browser colors */                                           /* used for:          */ 
+  --bg-col: var(--lwt-accent-color, var(--ActiveCaption, tomato));    /* darker background  */       /* tomato is the fallback color */
+  --tb-col: var(--toolbar-bgcolor, tomato);                           /* lighter background */       /* meaning something went wrong */
+  --bt-col: var(--toolbarbutton-icon-fill);                           /* text or icons      */
+  --pp-col: var(--arrowpanel-background);                             /* popup color        */
+  
+  /* dynamic opacity */
+  --dyn-opct: 1;
+  &:-moz-window-inactive{--dyn-opct: var(--inactive-opct);}
+  
+  /* shared shortcuts for commonly used parameters */
+  --outline: 1px solid var(--arrowpanel-background);      /* outline around almost anything              */
+  --shadow: 2px solid var(--shadow-col);                  /* translucent outline that imitates a shadow  */
+  --transition: all var(--trans-dur) ease-out;            /* animation for smooth transitions            */
+  
+  /* constant variables */
+  --toolbar-item-hgt: 40px;       /* height of all panels elements: buttons, urlbar, etc.                                   */
+  --toolbar-button-wdt: 45px;     /* width of all panels buttons                                                            */
+  --hide-bar-padding: 3px;        /* how much indicator bars showing the position of hidden panels is thinner than --margin */
+  --screenshot-tool-hgt: 145px;   /* height of `ctrl + shift + s` tool buttons  */
+  
+  /* hiding the window border in fullscreen mode and assigning --margin to it in windowed mode */
+  --left-margin:   0px;
+  --right-margin:  0px;
+  --top-margin:    0px;
+  --bottom-margin: 0px; 
+  
+  &:not(:is([inFullscreen="true"], [inDOMFullscreen="true"], [titlepreface*="‍"]:is([sizemode="maximized"], [gtktiledwindow="true"]))){
+    --left-margin:   var(--margin);
+    --right-margin:  var(--margin);
+    --top-margin:    var(--margin);
+    --bottom-margin: var(--margin);
+  }
+  
+  /* hide indication bars in fullscreen or clean mode */
+  &:is([inFullscreen="true"], [inDOMFullscreen="true"], [titlepreface*="‍"]){
+    --hide-bar-opct: 0 !important;
+  }
+  
+  /* override built-in roundings with custom */
+  --arrowpanel-border-radius: var(--big-rounding) !important;
+  --panel-border-radius:      var(--big-rounding) !important;
+  
+  --arrowpanel-menuitem-border-radius: var(--rounding) !important;
+  --toolbarbutton-border-radius:       var(--rounding) !important;
+  --button-border-radius:              var(--rounding) !important;
+  --border-radius-small:               var(--rounding) !important;
+  --tab-border-radius:                 var(--rounding) !important;
+  
+  /* override one padding in navbar to match style */
+  --toolbar-start-end-padding: calc(var(--margin) / 2) !important;
+  
+  /* fix bookmark toolbar */
+  --bookmarks-toolbar-overlapping-browser-height: 0px !important;
+}
+
+/* current tab loading progress */
+#main-window{
+  &:has(.tabbrowser-tab[selected][busy]                        ){--shy-tab-load-pcent: 20%;}
+  &:has(.tabbrowser-tab[selected][busy][pendingicon]           ){--shy-tab-load-pcent: 50%;}
+  &:has(.tabbrowser-tab[selected][busy][pendingicon][progress] ){--shy-tab-load-pcent: 85%;}
+  &:has(.tabbrowser-tab[selected][busy][progress]              ){--shy-tab-load-pcent: 95%;}
+}
+
+/* globalise download percentages (yes, i am a clown) */
+#main-window{
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 0%;"]){--shy-download-pcent: 0%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 1%;"]){--shy-download-pcent: 1%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 2%;"]){--shy-download-pcent: 2%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 3%;"]){--shy-download-pcent: 3%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 4%;"]){--shy-download-pcent: 4%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 5%;"]){--shy-download-pcent: 5%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 6%;"]){--shy-download-pcent: 6%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 7%;"]){--shy-download-pcent: 7%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 8%;"]){--shy-download-pcent: 8%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 9%;"]){--shy-download-pcent: 9%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 10%;"]){--shy-download-pcent: 10%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 11%;"]){--shy-download-pcent: 11%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 12%;"]){--shy-download-pcent: 12%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 13%;"]){--shy-download-pcent: 13%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 14%;"]){--shy-download-pcent: 14%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 15%;"]){--shy-download-pcent: 15%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 16%;"]){--shy-download-pcent: 16%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 17%;"]){--shy-download-pcent: 17%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 18%;"]){--shy-download-pcent: 18%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 19%;"]){--shy-download-pcent: 19%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 20%;"]){--shy-download-pcent: 20%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 21%;"]){--shy-download-pcent: 21%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 22%;"]){--shy-download-pcent: 22%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 23%;"]){--shy-download-pcent: 23%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 24%;"]){--shy-download-pcent: 24%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 25%;"]){--shy-download-pcent: 25%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 26%;"]){--shy-download-pcent: 26%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 27%;"]){--shy-download-pcent: 27%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 28%;"]){--shy-download-pcent: 28%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 29%;"]){--shy-download-pcent: 29%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 30%;"]){--shy-download-pcent: 30%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 31%;"]){--shy-download-pcent: 31%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 32%;"]){--shy-download-pcent: 32%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 33%;"]){--shy-download-pcent: 33%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 34%;"]){--shy-download-pcent: 34%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 35%;"]){--shy-download-pcent: 35%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 36%;"]){--shy-download-pcent: 36%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 37%;"]){--shy-download-pcent: 37%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 38%;"]){--shy-download-pcent: 38%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 39%;"]){--shy-download-pcent: 39%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 40%;"]){--shy-download-pcent: 40%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 41%;"]){--shy-download-pcent: 41%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 42%;"]){--shy-download-pcent: 42%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 43%;"]){--shy-download-pcent: 43%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 44%;"]){--shy-download-pcent: 44%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 45%;"]){--shy-download-pcent: 45%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 46%;"]){--shy-download-pcent: 46%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 47%;"]){--shy-download-pcent: 47%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 48%;"]){--shy-download-pcent: 48%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 49%;"]){--shy-download-pcent: 49%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 50%;"]){--shy-download-pcent: 50%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 51%;"]){--shy-download-pcent: 51%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 52%;"]){--shy-download-pcent: 52%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 53%;"]){--shy-download-pcent: 53%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 54%;"]){--shy-download-pcent: 54%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 55%;"]){--shy-download-pcent: 55%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 56%;"]){--shy-download-pcent: 56%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 57%;"]){--shy-download-pcent: 57%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 58%;"]){--shy-download-pcent: 58%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 59%;"]){--shy-download-pcent: 59%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 60%;"]){--shy-download-pcent: 60%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 61%;"]){--shy-download-pcent: 61%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 62%;"]){--shy-download-pcent: 62%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 63%;"]){--shy-download-pcent: 63%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 64%;"]){--shy-download-pcent: 64%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 65%;"]){--shy-download-pcent: 65%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 66%;"]){--shy-download-pcent: 66%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 67%;"]){--shy-download-pcent: 67%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 68%;"]){--shy-download-pcent: 68%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 69%;"]){--shy-download-pcent: 69%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 70%;"]){--shy-download-pcent: 70%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 71%;"]){--shy-download-pcent: 71%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 72%;"]){--shy-download-pcent: 72%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 73%;"]){--shy-download-pcent: 73%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 74%;"]){--shy-download-pcent: 74%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 75%;"]){--shy-download-pcent: 75%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 76%;"]){--shy-download-pcent: 76%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 77%;"]){--shy-download-pcent: 77%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 78%;"]){--shy-download-pcent: 78%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 79%;"]){--shy-download-pcent: 79%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 80%;"]){--shy-download-pcent: 80%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 81%;"]){--shy-download-pcent: 81%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 82%;"]){--shy-download-pcent: 82%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 83%;"]){--shy-download-pcent: 83%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 84%;"]){--shy-download-pcent: 84%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 85%;"]){--shy-download-pcent: 85%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 86%;"]){--shy-download-pcent: 86%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 87%;"]){--shy-download-pcent: 87%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 88%;"]){--shy-download-pcent: 88%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 89%;"]){--shy-download-pcent: 89%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 90%;"]){--shy-download-pcent: 90%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 91%;"]){--shy-download-pcent: 91%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 92%;"]){--shy-download-pcent: 92%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 93%;"]){--shy-download-pcent: 93%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 94%;"]){--shy-download-pcent: 94%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 95%;"]){--shy-download-pcent: 95%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 96%;"]){--shy-download-pcent: 96%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 97%;"]){--shy-download-pcent: 97%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 98%;"]){--shy-download-pcent: 98%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 99%;"]){--shy-download-pcent: 99%;}
+  &:has(#downloads-indicator-progress-inner[style="--download-progress-pcent: 100%;"]){--shy-download-pcent: 100%;}
+}
+
+
+/*== ShyFox Global Styles ===========================================================================================================================
+
+All sorts of important tweaks that don't belong in any category
+
+
+--- BROWSER CONTENT ---------------------------------------------------------------------------------------------------------------------------------
+
+Area where website is displayed 
+
+*/
+
+/* set background color */
+#appcontent .browserStack, #browser, .browserContainer {background: var(--bg-col)}
+
+#browser #tabbrowser-tabbox {
+  /* shift website content relative to panels */
+  margin-left: var(--left-margin) !important;
+  margin-right: var(--right-margin) !important;
+  margin-top: var(--top-margin) !important;
+  margin-bottom: var(--bottom-margin) !important;
+  
+  /* add smoothness to it */
+  transition: var(--transition) !important;
+}
+
+/* completely remove the browser interface in fullscreen videos and popups like login with Google or in a floating Bitwarden window */
+#main-window:is(:not([chromehidden=""]), [inDOMFullscreen="true"]){
+  #navigator-toolbox {display: none !important;}
+  --margin: 0px !important;
+}
+
+/* some z-index */
+#navigator-toolbox {z-index: 2 !important;}
+#browser {z-index: 1 !important;}
+
+/* if it not fullscreen video or floating window */
+#main-window:not([inDOMFullscreen="true"])[chromehidden=""]{
+    
+  /* if navbar is not hidden in f11 fullscreen or not only navbar is visible in f11 or window is not maximized in clean mode */
+  &:not(
+    :is(
+      :is([titlepreface*="‌"], [titlepreface*="᠎"][titlepreface*="​"])[inFullscreen="true"]),
+      [titlepreface*="‍"]:is([sizemode="maximized"], [inFullscreen="true"], [gtktiledwindow="true"])
+  ){
+    
+    /* add rounded corners and outline to browser content */
+    #tabbrowser-tabbox {
+      border-radius: var(--big-rounding) !important;
+      border: var(--outline);
+      outline: none !important;
+    }
+    
+    #tabbrowser-tabpanels::after {
+      content: "";
+      margin: -1px;
+      border: var(--outline);
+      position: absolute;
+      inset: 0;
+      border-radius: var(--big-rounding);
+      box-shadow: 0 0 0 100px var(--bg-col) !important;
+      clip-path: inset(0);
+      pointer-events: none;
+    }
+  }
+  
+  /* if in f11 fullscreen sidebar active but navbar not */
+  &:not([titlepreface*="‍"]):not([titlepreface*="᠎"])[titlepreface*="‌"][inFullscreen="true"]{
+    #appcontent browser {border-left: var(--outline);}
+  }
+  
+  /* if in f11 fullscreen toolbar active but navbar not */
+  &:not([titlepreface*="‍"]):not([titlepreface*="​"])[titlepreface*="‌"][inFullscreen="true"]{
+    #appcontent browser {border-right: var(--outline);}
+  }
+  
+  /* if in f11 fullscreen nor toolbar or sidebar active but navbar is */
+  &:not([titlepreface*="‍"])[titlepreface*="᠎"][titlepreface*="​"]:not([titlepreface*="‌"])[inFullscreen="true"]{
+    #appcontent browser {border-top: var(--outline);}
+  }
+}
+
+/* private mode outline */
+#main-window[privatebrowsingmode="temporary"]
+{--outline: 1px solid var(--private-col) !important;}
+
+/* drag window using border */
+
+/* shared */
+#browser::before,
+#browser::after,
+#navigator-toolbox::before,
+#navigator-toolbox::after
+{
+  position: fixed;
+  pointer-events: none;
+  -moz-window-dragging: drag;
+    
+  content: "";
+  background-color: var(--debug-col-2);
+}
+
+/* top */
+#browser::after {
+  height: calc(var(--top-margin) + 2px);
+  top: -1px;
+  width: 100vw;
+}
+
+/* bottom */
+#browser::before {
+  height: calc(var(--bottom-margin) + 2px);
+  bottom: -1px;
+  width: 100vw;
+}
+
+/* left */
+#navigator-toolbox::before{
+  width: calc(var(--bottom-margin) + 2px);
+  left: -1px;
+  height: 100vw;
+}
+
+/* right */
+#navigator-toolbox::after{
+  width: calc(var(--right-margin) + 2px);
+  right: -1px;
+  height: 100vw;
+}
+
+/* statuspanel (that thing at the bottom of the screen that shows the address of the link you're hovering over) */
+#statuspanel #statuspanel-label {
+  padding-inline: 6px !important;
+  border-radius: var(--big-rounding) !important;
+  
+  background-color: var(--tb-col) !important;
+  color: var(--bt-col) !important;
+  
+  border: var(--outline) !important;
+  outline: var(--shadow) !important;
+}
+
+/* rounded things */
+richlistitem,
+panel tree,
+menulist,
+button,
+select,
+input:not([type="checkbox"]),
+#urlbar-background,
+#preview-image,
+.ctrlTab-canvas,
+.ctrlTab-canvas *
+
+{border-radius: var(--rounding) !important}
+
+.ctrlTab-preview .ctrlTab-preview-inner,
+#ctrlTab-showAll,
+richlistbox
+{border-radius: var(--big-rounding) !important;}
+
+/* disable pointer events in clean mode */ 
+#main-window[titlepreface*="‍"]{
+  #nav-bar:not(:has(#urlbar[breakout-extend])),
+  #sidebar,
+  #TabsToolbar,
+  #PersonalToolbar
+  {pointer-events: none !important;}
+}
+
+/*
+
+--- DIALOG ------------------------------------------------------------------------------------------------------------------------------------------
+
+Styles for dialogs e.g. "confirm deleting extension"
+
+*/
+
+
+#commonDialogWindow, #commonDialogWindow .titleIcon{
+  background-color: transparent !important;
+  color: var(--bt-col) !important;
+}
+
+.dialogBox {
+  border-radius: var(--big-rounding) !important;
+  border: var(--outline) !important;
+  background-color: var(--tb-col) !important;
+}
+
+.dialogTemplate{
+  background-color: transparent !important;
+  :before{
+    content: "";
+    position: fixed;
+    z-index: -1;
+    
+    width: 100vw;
+    height: 100vh;
+    
+    left: 0px;
+    top: 0px;
+    
+    background-color: color-mix(in srgb, var(--bg-col) 80%, transparent);
+  }
+}
+
+#window-modal-dialog {margin-top: var(--margin) !important;} /* shift top-aligned dialogs little bit lower */
+.sizeDetermined #infoBody {min-height: 20px !important;} /* add minimal height to alert text */
+#searchbar-anon-search-settings {margin-inline-end: 7px !important;} /* margin for settings button in searcbar popup */
+#PopupSearchAutoComplete {--panel-border-radius: var(--big-rounding) !important;} /* rounding for this popup */
+
+/* print dialog */
+print-preview::before,
+print-preview .previewStack::before,
+.printPreviewNavigation::before
+{display: none !important;}
+
+.printDialogBox::before {border-radius: var(--rounding) !important;}
+
+.printDialogBox {margin-top: var(--margin) !important;}
+
+/*
+
+--- SCREENSHOTS -------------------------------------------------------------------------------------------------------------------------------------
+
+Ctrl + Shift + S
+
+*/
+
+#screenshotsPagePanel{  
+  position: fixed !important;
+  transition: var(--transition);
+  
+  bottom: calc(
+    var(--bottom-margin) 
+    + var(--screenshot-tool-hgt)
+  );
+  
+  left: 0;
+  
+  z-index: -1 !important;
+  width: var(--sdbr-wdt) !important;
+}
+
+/* for smooth transition */
+#screenshotsPagePanel[hidden]{
+  display: flex !important;
+  opacity: 0;
+  pointer-events: none !important;
+  bottom: 0px !important;
+}
+
+screenshots-buttons{
+  background-color: transparent !important;
+  transition: var(--transition);
+  position: absolute !important;
+  display: flex !important;
+  height: var(--screenshot-tool-hgt) !important;
+  width: var(--sdbr-wdt) !important;
+  padding: calc(var(--margin) / 2) !important;
+  
+  top: 0px !important;
+  inset-inline-end: 0px !important;
+}
+
+.screenshot-button{
+  width: calc(
+    var(--sdbr-wdt) / 2
+    - var(--margin) * 1.5
+  )!important;
+  
+  margin: calc(var(--margin) / 2) !important;
+  padding-top: 56px !important;
+  background-position-y: 10px !important;
+}
+
+/* when sidebar hidden */
+#main-window:is([titlepreface*="᠎"], [titlepreface*="‍"]){
+  #screenshotsPagePanel{
+    bottom: calc(
+      var(--bottom-margin)
+      + var(--margin)
+      + var(--screenshot-tool-hgt)
+    );
+
+    left: calc(
+      var(--left-margin)
+      + var(--margin)
+    );
+  }
+  
+  screenshots-buttons {background-color: var(--bg-col) !important;}
+}
+
+
+/*
+
+--- CONTEXT MENU ------------------------------------------------------------------------------------------------------------------------------------
+
+Apply theme colors to context menus and menubar
+
+*/
+
+/* in page context menu */
+#contentAreaContextMenu[showservicesmenu="true"],
+#contentAreaContextMenu[showservicesmenu="true"] menupopup
+{
+  --panel-background: var(--bg-col)!important;
+  --panel-border-color: var(--tb-col) !important;
+  
+  --toolbar-field-focus-background-color: var(--bt-col) !important;
+  --panel-color: var(--bt-col) !important;  
+  
+  menu:where([_moz-menuactive="true"]:not([disabled="true"])), menuitem:where([_moz-menuactive="true"]:not([disabled="true"])) {
+    background-color: var(--panel-item-hover-bgcolor) !important;
+    color: var(--bt-col) !important;
+  }
+}
+
+/* toolbar menu */
+#toolbar-menubar menupopup,
+#toolbar-context-menu, #toolbar-context-menu menupopup,
+#unified-extensions-context-menu, #unified-extensions-context-menu menupopup,
+#placesContext, #placesContext menupopup,
+#downloadsContextMenu, #downloadsContextMenu menupopup,
+#sidebarMenu-popup, #PopupSearchAutoComplete,
+:is(#back-button, #forward-button) menupopup,
+#permission-popup-menulist menupopup
+{
+  --panel-background: var(--pp-col)!important;  
+  --panel-border-color: var(--tb-col) !important;
+  
+  --toolbar-field-focus-background-color: var(--bt-col) !important;
+  --panel-color: var(--bt-col) !important;  
+  
+  menu:where([_moz-menuactive="true"]:not([disabled="true"])), menuitem:where([_moz-menuactive="true"]:not([disabled="true"])) {
+    background-color: var(--panel-item-hover-bgcolor) !important;
+    color: var(--bt-col) !important;
+  }
+}
+
+/* dropdown selectors */
+menupopup {--content-select-background-image: none !important;}
+#ContentSelectDropdown .ContentSelectDropdown-item-0:not([_moz-menuactive="true"]) {background-color: transparent !important;;}
+
+/*
+
+--- CUSTOMIZING PAGE --------------------------------------------------------------------------------------------------------------------------------
+
+Right click > Customize toolbar
+
+*/
+
+#main-window[customizing]{
+  #customization-palette-container {padding-top: 100px}
+  
+  #customization-panelWrapper{
+    margin-top: 60px;
+    margin-right: 50px;
+  }
+  
+  .panel-arrowbox {opacity: 0 !important;}
+  .panel-arrowcontent{border-radius: var(--big-rounding) !important;}
+  toolbarspring {border-radius: var(--rounding) !important;}
+  
+  #customization-footer{
+    position: fixed !important;
+
+    bottom: 10px;   
+    right: 70px;
+    left: 10px;
+    
+    background-color: var(--bg-col) !important;
+    border-radius: var(--big-rounding) !important;
+  }
+}
+
+toolbarpaletteitem#wrapper-search-container[place="palette"] #searchbar {background-color: var(--bg-col) !important;}
+
+:root[customizing] .customization-target:not(#widget-overflow-fixed-list) {min-width: 0px !important;}
+
+/* red sidebar icon styles */
+#main-window{
+  --shyfox-string-sidebar-button-tooltip: "This button is only shown when the sidebar is disabled and is colored red to attract attention";
+  &[lang="ru"]{--shyfox-string-sidebar-button-tooltip: "Эта кнопка отображается только тогда, когда боковая панель отключена, и окрашена в красный цвет, чтобы привлечь внимание";}
+}
+
+#wrapper-sidebar-button[place="palette"] .toolbarbutton-icon {
+  padding: 2px !important;
+  width: 20px !important;
+  height: 20px !important;
+  border-radius: 6px !important;
+}
+
+#wrapper-sidebar-button[mousedown]{
+  &::after{
+    content: var(--shyfox-string-sidebar-button-tooltip) !important;
+    text-align: left !important;
+    position: absolute;
+    color: black !important;
+    background-color: white !important;
+    border-radius: var(--rounding);
+    padding: 5px;
+    width: 160px !important;
+    margin-left: 40px;
+    margin-top: 40px;
+  }
+}
+
+/*
+
+--- NOTIFICATION BAR --------------------------------------------------------------------------------------------------------------------------------
+
+Sometimes Firefox shows notifications at the top of the window suggesting, for example, to restore tabs from a previous session
+
+*/
+
+#tab-notification-deck, .global-notificationbox{
+  position: fixed !important;
+  transition: var(--transition) !important;
+  z-index: 0 !important;
+  vbox {background-color: transparent !important;}
+  background-color: transparent !important;
+  width: auto;
+  
+  max-width: calc(
+    100vw 
+    - var(--margin)
+    - var(--right-margin)
+    - var(--left-margin)
+  );
+  
+  top: calc(
+    var(--top-margin) 
+    + var(--margin) / 2
+  );
+  
+  left: calc(
+    var(--left-margin) 
+    + var(--margin) / 2
+  );
+  
+  notification-message{
+    border-radius: var(--big-rounding) !important;
+    background-color: var(--tb-col) !important;
+    color: var(--bt-col) !important;
+    
+    &::before {display: none !important;}
+  }
+  
+  .footer-button {margin: 4px !important;}
+}
+
+/* notification close button color */
+button[type~="icon"][type~="ghost"][part="button"][size="small"] {fill: var(--bt-col) !important;}
+
+/* icon color */ 
+:is(.icon, img)[src="chrome://global/skin/icons/info-filled.svg"] {fill: var(--shy-color) !important;}
+
+/*
+
+--- MENUBAR ----------------------------------------------------------------------------------------------------------------------------------------
+
+File Edit View History Bookmarks Tools Help
+
+*/
+
+@media not (-moz-platform: macos) {
+  
+  #toolbar-menubar {
+    
+    position: fixed;
+    overflow: clip;
+    visibility: visible !important;
+    z-index: 5;
+    
+    width: -fit-content;
+    max-height: 0px;
+    padding-bottom: 0 !important;
+    
+    transition: var(--transition) !important;
+    
+    top: var(--top-margin);
+    left: var(--left-margin);
+    
+    border-radius: var(--rounding);
+    background-color: var(--tb-col) !important;
+    & > * {opacity: var(--dyn-opct);}
+    
+    /* outline only when visible */
+    &:not([inactive="true"]) {
+      border: var(--outline) !important;
+      outline: var(--shadow) !important;
+    }
+  }
+
+  #main-menubar > * {padding-top: 0px !important;}
+}
+
+/*
+
+--- DEVTOOLS ---------------------------------------------------------------------------------------------------------------------------------------
+
+*/
+
+.browserSidebarContainer, .responsive-mode {background-color: var(--bg-col) !important;}
+
+.devtools-side-splitter, .devtools-horizontal-splitter {
+  background-color: transparent !important;
+  margin-inline: 0px !important;
+  margin: 0px !important;
+}
+
+.devtools-side-splitter       { min-width: calc(var(--margin) / 1.5) !important;}
+.devtools-horizontal-splitter {min-height: calc(var(--margin) / 1.5) !important;}
+
+.rdm-toolbar {
+  margin-top: var(--margin) !important;
+  width: 95% !important;
+  margin-left: 3% !important;
+}
+
+.rdm-toolbar, .user-agent {border-radius: var(--rounding) !important;}
+
+.user-agent {border: 1px solid grey !important;}
+
+/*
+
+--- FIXES ------------------------------------------------------------------------------------------------------------------------------------------
+
+*/
+
+/* fix some items dissapearing */
+#titlebar {
+  opacity: 1 !important;
+  z-index: 1 !important;
+}
+
+:root[tabsintitlebar] #titlebar:-moz-window-inactive {
+  opacity: 1 !important;
+}
+
+#navigator-toolbox:-moz-window-inactive {
+  background-color: initial !important;
+  color: initial !important;
+}
+
+/* remove annoying line at the top of the window */
+#navigator-toolbox {
+  margin-top: -1px !important;
+  position: relative;
+  z-index: 3;
+}
+
+/* weird margin fix */
+#tabbrowser-tabpanels {
+  & browser[type="content"] {
+    margin: 0 !important;
+  }
+}
+
+/* z-index fix */
+#tabbrowser-tabbox{z-index: 1 !important;}
+
+/* border fix */
+* {
+  border: 0px solid transparent; 
+  outline: 0px solid transparent;
+}
+
+/*
+
+--- ACCENT COLOR ----------------------------------------------------------------------------------------------------------------------------------
+
+*/
+
+.text-link, a {color: var(--shy-color) !important;}
+
+.footer-button {
+  &:not([disabled]) {
+    &[default], &.primary {
+      background-color: var(--shy-accent-color) !important;;
+      &:hover {
+        background-color: color-mix(in srgb, var(--bt-col, black) 10%,var(--shy-accent-color)) !important;
+      }
+    }
+  }
+}
+
+::selection {background: var(--shy-accent-color) !important;}
+
+#tracking-protection-icon-box[active]{
+  fill: var(--shy-color) !important;
+  list-style-image: url(chrome://browser/skin/tracking-protection.svg) !important;
+}
+
+.urlbarView-url {
+  .urlbarView-row:not([selected]) & {
+    color: var(--shy-color) !important;
+  }
+}
+
+.urlbarView-row[selected] {background-color: var(--shy-accent-color) !important;}
+
+.urlbarView-favicon {
+  .urlbarView-row[type="tabtosearch"]:not([selected]) > .urlbarView-row-inner > .urlbarView-no-wrap > & {
+    color: var(--shy-color) !important;
+  }
+}
+
+.urlbarView-row[dynamicType="onboardTabToSearch"] > .urlbarView-row-inner {
+  &:not([selected]) > .urlbarView-no-wrap {
+    & > .urlbarView-favicon {
+      color: var(--shy-color) !important;
+    }
+  }
+}
+
+.ctrlTab-preview:focus > .ctrlTab-preview-inner, #ctrlTab-showAll:focus {border-color: var(--shy-color) !important;}
+
+:root, panel, dialog, window{
+  --in-content-primary-button-background-active: var(--shy-color) !important;
+  --in-content-primary-button-background-hover:  var(--shy-color) !important;
+  --lwt-toolbarbutton-icon-fill-attention:       var(--shy-color) !important;
+  --in-content-primary-button-background:        var(--shy-color) !important;
+  --toolbarbutton-icon-fill-attention:           var(--shy-color) !important;
+  --fxview-primary-action-background:            var(--shy-color) !important;
+  --toolbar-field-focus-border-color:            var(--shy-color) !important;
+  --uei-button-attention-dot-color:              var(--shy-color) !important;
+  --button-primary-active-bgcolor:               var(--shy-color) !important;
+  --button-primary-hover-bgcolor:                var(--shy-color) !important;
+  --uc-checkbox-checked-bgcolor:                 var(--shy-color) !important;
+  --color-accent-primary-active:                 var(--shy-color) !important;
+  --color-accent-primary-hover:                  var(--shy-color) !important;
+  --checkbox-checked-bgcolor:                    var(--shy-color) !important;
+  --in-content-accent-color:                     var(--shy-color) !important;
+  --button-primary-bgcolor:                      var(--shy-color) !important;
+  --in-content-link-color:                       var(--shy-color) !important;
+  --color-accent-primary:                        var(--shy-color) !important;
+  --focus-outline-color:                         var(--shy-color) !important;
+  --input-border-color:                          var(--shy-color) !important;
+}
+
+#historySwipeAnimationPreviousArrow,#historySwipeAnimationNextArrow {
+	--swipe-nav-icon-primary-color: color-mix(in srgb, var(--shy-color) 80%, #FFFFFF50) !important;
+	--swipe-nav-icon-accent-color:  color-mix(in srgb, var(--shy-color) 20%, #00000050) !important;
+}
+
+/*== ShyFox Sidebar =================================================================================================================================
+
+Styles for sidebar
+
+
+--- JUST IMPORTANT THINGS ---------------------------------------------------------------------------------------------------------------------------
+
+*/
+
+/* reserve space for bookmarks toolbar */
+:root{
+  --little-gap: calc(var(--margin) / 1.5);
+  --bookmarks-hgt: var(--toolbar-item-hgt);
+}
+
+/* CHANGE */
+/* remove space reserved for bookmarks toolbar if it hidden */
+/* #main-window:has(#PersonalToolbar[collapsed="true"]) { */
+#main-window {
+  --little-gap: 0px;
+  --bookmarks-hgt: 0px;
+}
+/* ------------------------- */
+
+/* if sidebar is not hidden or clean mode not enabled, this window is not floating popup and not in fullscreen video */
+#main-window:not(:is([titlepreface*="᠎"], [titlepreface*="‍"]))[chromehidden=""]:not([inDOMFullscreen="true"]){
+  /* set left margin to sidebar width */
+  --left-margin: var(--sdbr-wdt) !important;
+}
+
+/* hide sidebar splitter */
+#sidebar-splitter {display: none}
+
+/* 
+
+--- SIDEBAR SHOWN -----------------------------------------------------------------------------------------------------------------------------------
+
+*/
+
+/* styles for both sidebar and bookmarks toolbar */
+#sidebar-box,
+#PersonalToolbar
+{
+  position: fixed;
+  overflow: visible;
+  z-index: 2 !important;
+  
+  min-width: 0px !important;
+  max-width: 100vw !important;
+  
+  left: 0px;
+
+  transition: var(--transition) !important;
+  background-color: transparent !important;
+  
+  padding-top: 0 !important;
+  
+  & > * {
+    opacity: var(--dyn-opct);
+    transition: var(--transition) !important;
+  }
+}
+
+/* styles for sidebar */
+#sidebar-box{
+  
+  top: calc(
+    var(--margin) / 2 
+    + var(--bookmarks-hgt)
+  );
+
+  height: calc(
+    100vh
+    - var(--margin) * 2
+    + var(--margin) / 2 
+    - var(--bookmarks-hgt)
+  )!important;
+  
+  width: var(--sdbr-wdt) !important;
+}
+
+/* drag window by empty space in bookmarks toolbar */
+#PersonalToolbar > *, #PlacesToolbarItems .bookmark-item[style="visibility: hidden;"]{
+  -moz-window-dragging: drag !important;
+  background-color: var(--debug-col-2) !important;
+}
+
+/* styles for bookmarks toolbar */
+#PersonalToolbar{
+  visibility: visible !important;
+  height: var(--toolbar-item-hgt) !important;
+  top: 0px;
+  border-radius: var(--rounding);
+  margin-left: var(--buttonbox-left-wdt);
+  
+  width: calc(
+    var(--sdbr-wdt) 
+    - var(--buttonbox-left-wdt)
+  ) !important;
+  
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
+  
+  &[collapsed="true"] {display: none}
+}
+
+/* padding for screenshot control buttons */
+#main-window:not([titlepreface*="᠎"]):has(#screenshotsPagePanel:not([hidden])){
+  #sidebar-box{
+    padding-bottom: calc(
+      var(--screenshot-tool-hgt)
+      - var(--margin)
+      + var(--bottom-margin)
+    ) !important;
+  }
+}
+
+/* 
+
+--- SIDEBAR HIDDEN ----------------------------------------------------------------------------------------------------------------------------------
+
+*/
+
+/* activate style when sidebar hidden or clean mode enabled (and not in customizing page) */
+#main-window:is([titlepreface*="᠎"], [titlepreface*="‍"]):not([customizing]){
+  
+  /* styles for both sidebar and bookmaarks toolbar */
+  #sidebar-box,
+  #PersonalToolbar
+  {
+    z-index: 2 !important;
+    width: var(--sdbr-wdt) !important;
+    
+    left: calc(
+      var(--left-margin) 
+      + var(--panel-hide-ldg) 
+      - var(--sdbr-wdt)
+    ) !important;
+
+    border-radius: var(--big-rounding) !important;
+    
+    /* hover target (invisible box between window edge and panel) */
+    &::before{
+      content: "";
+      position: absolute;
+      z-index: -999;
+      background-color: var(--debug-col);
+      
+      width: 150%;
+      height: 100%;
+      right: 0px;
+      top: 0px;
+    }
+    
+    /* make all panel content invisible (it will visible when hover) */
+    & > * {
+      transition: var(--transition) !important;
+      opacity: 0;
+    }
+  }
+  
+  /* styles for sidebar */
+  #sidebar-box{    
+    height: calc(
+      100vh
+      - var(--bookmarks-hgt)
+      - var(--little-gap)
+      - var(--top-margin)
+      - var(--bottom-margin)
+      - var(--margin) * 2
+    ) !important;
+    
+    top: calc(
+      var(--top-margin)
+      + var(--margin)
+      + var(--bookmarks-hgt) + var(--little-gap)
+    );
+    
+    /* indication bar (line on window edge) */
+    &::after{
+      content: "";
+      position: absolute;
+      transition: var(--transition);
+      
+      left: calc(
+        100% 
+        - var(--panel-hide-ldg) 
+        - var(--margin) 
+        + var(--hide-bar-padding)
+      );
+      
+      width: calc(var(--margin) - var(--hide-bar-padding) * 2 );
+      height: calc(
+        100% 
+        - var(--hide-bar-wdt-pad) 
+        + var(--bookmarks-hgt)
+        + var(--little-gap)
+      );
+      
+      bottom: calc(var(--hide-bar-wdt-pad) / 2);
+      border-radius: var(--rounding);
+      background-color: var(--bt-col);
+      opacity: var(--hide-bar-opct);
+    }
+  }
+  
+  /* add rounded corners to sidebar content */
+  #sidebar {border-radius: var(--big-rounding) !important;}
+  
+  /* styles for bookmarks */
+  #PersonalToolbar{
+    top: calc(var(--top-margin) + var(--margin));
+    margin-left: 0px !important;
+    overflow: visible !important;
+
+    padding-inline: 2px !important;
+    
+    /* hover target between sidebar and bookmarks toolbar */
+    &::after{
+      content: "";
+      z-index: 1;
+      position: absolute;
+      
+      background-color: var(--debug-col);
+      opacity: 1 !important;
+      
+      height: calc(var(--little-gap) + 4px);
+      bottom: calc(-2px - var(--little-gap));
+      
+      width: 150%;
+      
+      right: 0px;
+    }
+  }
+
+  /* show sidebar on hover or focus (if not in clean mode) */
+  &:not([titlepreface*="‍"]):has(
+    #sidebar-box:hover,
+    #sidebar-box:focus-within,
+    #PersonalToolbar:hover,
+    #PersonalToolbar *:not(#firefox-view-button)[open],
+    #sidebar-switcher-target[aria-expanded="true"]
+  ) {
+    #sidebar-box,
+    #PersonalToolbar
+    {
+      opacity: 1 !important;
+      left: calc(var(--left-margin) + var(--margin)) !important;
+      
+      background-color: var(--bg-col) !important;
+      
+      border: var(--outline) !important;
+      outline: var(--shadow) !important;
+            
+      &::after{opacity: 0}
+      
+      & > * {opacity: var(--dyn-opct);}
+    }
+  }
+}
+
+/*
+
+--- CUSTOMIZING PAGE --------------------------------------------------------------------------------------------------------------------------------
+
+*/
+
+#main-window[customizing]{
+  #PersonalToolbar{
+    top: 65px !important;
+    left: 20px !important;
+    margin-left: 0px !important;
+    
+    border-radius: var(--big-rounding) !important;
+    
+    background-color: var(--bg-col) !important;
+  }
+  
+  /* remove text from bookmarks toolbar elements placeholder */
+  #bookmarks-toolbar-placeholder .toolbarbutton-text {display: none !important;}
+}
+
+
+/*
+
+--- NOT SIDEBERY -----------------------------------------------------------------------------------------------------------------------------------
+
+Styles when Sidebery is not opened
+
+*/
+
+/* hide sidebar header when Sidebery opened */
+#main-window:not([customizing]):has(
+  #sidebar-box:not([hidden])[sidebarcommand*="_3c078156-979c-498b-8990-85f7987dd929_-sidebar-action"]
+) { 
+  #sidebar-header {display: none} 
+}
+
+/* hide sidebar button on toolbar when sidebar opened */
+#main-window:not([customizing]):has(
+  #sidebar-box:not([hidden])
+) { 
+  #sidebar-button {display: none}
+}
+
+/* color the sidebar button red */
+#sidebar-button .toolbarbutton-icon {
+  background-color: red !important;
+  fill: white !important;
+}
+
+/* notification when sidebar is not opened */
+#main-window[chromehidden=""]:has( 
+  #sidebar-box[hidden="true"]
+) {
+  --shyfox-string-open-sidebar: "Open sidebar!";
+  &[lang="ru"]{--shyfox-string-open-sidebar: "Откройте боковую панель!";}
+  
+  &::before{
+    content: var(--shyfox-string-open-sidebar);
+    position: fixed;
+    z-index: 9999;
+    
+    font-weight: bold;
+    
+    top: calc(var(--margin) + var(--toolbar-item-hgt));
+    left: calc(var(--margin) * 2);
+    
+    background-color: var(--tb-col);
+    color: var(--bt-col);
+    outline: 3px solid red;
+    
+    border-radius: var(--big-rounding);
+    padding: 10px;
+  }
+}
+
+/* styles when Sidebery is not opened but sidebar is */
+#main-window[chromehidden=""]:has(
+  #sidebar-box:not([hidden]):not([sidebarcommand*="_3c078156-979c-498b-8990-85f7987dd929_-sidebar-action"]) 
+) {
+  
+  --shyfox-string-to-manage-tabs-open-sidebery: "To manage tabs, open Sidebery in this menu";
+  &[lang="ru"]{--shyfox-string-to-manage-tabs-open-sidebery: "Для работы с вкладками откройте Sidebery";}
+  
+  #sidebar {
+    border: var(--outline) !important;
+    margin: 0 calc(var(--margin) / 1.5) !important;
+  }
+  
+  &[titlepreface*="᠎"] {#sidebar {margin-bottom: calc(var(--margin) / 1.5) !important;}}
+  
+  #sidebar-header{
+    #sidebar-close {display: none}
+    
+    padding-bottom: 30px !important;
+    border: none !important;
+    
+    /* info text */
+    &::before{
+      content: "";
+      width: 20px;
+      height: 20px;
+      position: absolute;
+      
+      mask-image: url("chrome://global/skin/icons/info-filled.svg");
+      background-color: var(--shy-color);
+      mask-repeat: no-repeat;
+      
+      top: 44px;
+      left: 10px;
+    }
+    
+    &::after{
+      content: var(--shyfox-string-to-manage-tabs-open-sidebery);
+      position: absolute;
+      top: 45px;
+      font-size: 11.8px;
+      
+      padding-left: 22px;
+    }
+  }
+}
+
+/* assign the button to move the sidebar left and right to enable and disable native tabs for emergencies */
+
+/* if Sidebery is not opened but sidebar is */
+#main-window:has(
+  #sidebar-box:not([hidden]):not([sidebarcommand*="_3c078156-979c-498b-8990-85f7987dd929_-sidebar-action"]) 
+) {
+  
+  --shyfox-string-enable-native-tabs: "Enable native tabs";
+  &[lang="ru"]{--shyfox-string-enable-native-tabs: "Включить нативные вкладки";}
+  
+  #sidebarMenu-popup #sidebar-reverse-position{
+    /* remove original text from this button */
+    .menu-text {display: none !important;}
+    
+    &::after{
+      content: var(--shyfox-string-enable-native-tabs) !important;
+      padding-inline: 5px;
+    }
+  }
+  
+  /* add rounded corners to sidebar content */
+  #sidebar {border-radius: var(--big-rounding) !important;}
+  
+  /* sidebar on left (native tabs disabled, default) */
+  &:has(#sidebar-box[style*="order: 2"]){
+    /* there is no styles */
+  }
+  
+  /* sidebar on right (native tabs enabled) */
+  &:has(#sidebar-box[style*="order: 4"]){
+    
+    /* add checkmark to button to indicate state */
+    #sidebarMenu-popup #sidebar-reverse-position {background-image: url("../icons/menu-check.svg") !important;}
+    
+    /* native tabs styling */
+    #tabbrowser-tabs{
+      --tabsbar-wdt: calc(
+        (
+          100vw
+          - var(--margin) * 2
+          - var(--left-margin)
+          - var(--right-margin)
+        ) / 1.5
+      );
+      
+      display: flex !important;
+      position: fixed !important;
+      
+      width: var(--tabsbar-wdt) !important;
+      height: 45px !important;
+      padding: 0 !important;
+      
+      left: calc(var(--left-margin) + var(--margin)) !important;
+      top:  calc(var(--top-margin)  + var(--margin)) !important;
+      
+      background-color: var(--tb-col) !important;
+      border-radius: var(--big-rounding) !important;
+      border: var(--outline) !important;
+      outline: var(--shadow) !important;
+      transition: var(--transition) !important;
+      
+      .tabbrowser-tab:not([pinned]){
+        min-width: 150px !important;
+        .tab-close-button{display: flex !important;}
+      }
+      
+      /* pinned tabs */
+      .tabbrowser-tab[pinned]{
+        position: initial !important;
+        margin-inline: 0px !important;
+      }
+    }
+  }
+}
+
+/*== ShyFox Toolbar =================================================================================================================================
+
+Tab bar has been transformed into vertical toolbar on the right side of the window
+
+
+--- JUST IMPORTANT THINGS ---------------------------------------------------------------------------------------------------------------------------
+
+*/
+
+/* if toolbar is not hidden, this window is not floating popup and not in fullscreen video */
+#main-window:not(:is([titlepreface*="​"], [titlepreface*="‍"]))[chromehidden=""]:not([inDOMFullscreen="true"]){
+  /* set right margin to toolbar width */
+  --right-margin: var(--toolbar-button-wdt);
+}
+
+/* hide some things */
+#tabbrowser-tabs,                       /* native tabs            */
+#alltabs-button,                        /* all tabs button        */
+#private-browsing-indicator-with-label, /* private mode indicator */
+.titlebar-spacer
+
+{display: none}
+
+/* 
+
+--- TOOLBAR SHOWN -----------------------------------------------------------------------------------------------------------------------------------
+
+*/
+
+/* styles for tabs toolbar and buttons */
+#TabsToolbar,
+#PanelUI-menu-button,
+#unified-extensions-button 
+{
+  position: fixed; 
+  z-index: 1 !important;
+  
+  width: var(--toolbar-button-wdt);
+  right: 0px;
+  
+  transition: var(--transition) !important;
+}
+
+/* styles for menu button */
+#PanelUI-menu-button{
+  top: 2px;
+  
+  padding-right: 3px !important;
+  min-height: var(--toolbar-item-hgt) !important;
+  min-width: var(--toolbar-button-wdt) !important;
+  
+  /* fit button size to other buttons in toolbar */
+  .toolbarbutton-badge-stack{
+    padding: calc((var(--tab-min-height) - 16px) / 2) !important;
+  }
+}
+
+/* styles for extensions button */
+#unified-extensions-button{
+  top: var(--toolbar-item-hgt);
+  opacity: 1 !important;
+  
+  /* fit button size to other buttons in toolbar */
+  & > .toolbarbutton-icon {
+    width: var(--toolbar-button-wdt) !important;
+    height: var(--toolbar-item-hgt) !important;
+    scale: 0.88;
+    padding: 10.5px !important;
+    border-radius: calc(var(--rounding) * 1.136363636) !important;
+  }
+}
+
+/* styles for tabs toolbar */
+#TabsToolbar{
+  bottom: 2px;
+  top: 2px;
+  background-color: transparent !important;
+  padding-top: calc(var(--toolbar-item-hgt) * 2 + 3px) !important;
+}
+
+/* vertical tabs toolbar orientation */
+#TabsToolbar-customization-target{
+  position: absolute;
+  
+  opacity: var(--dyn-opct);
+  
+  right: 0;
+  top: calc(var(--toolbar-item-hgt) * 2) !important;
+  bottom: 0;
+  
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-content: center !important;
+  width: var(--toolbar-button-wdt) !important;
+  
+  & > * {padding: 3px !important;}
+  
+  /* bookmarks inside toolbar */
+  #PlacesToolbar {width: 40px !important;}
+  
+  /* searchbar inside toolbar */
+  --searchbar-hgt: 170px;
+  #search-container{
+    margin-inline: 0px !important;
+    margin-block: 2px !important;
+    padding: 5px !important;
+    padding-block: 0px !important;
+    
+    min-width: var(--toolbar-button-wdt) !important;
+    width: var(--toolbar-button-wdt) !important;
+    min-height: var(--toolbar-item-hgt) !important;
+    max-height: var(--searchbar-hgt) !important;
+    
+    #searchbar {height: var(--searchbar-hgt) !important;}
+    
+    .searchbar-search-button, .search-go-container {position: absolute}
+    .searchbar-search-button {margin-top: 5px !important;}
+    .search-go-container {
+      margin-top: calc(var(--searchbar-hgt) - 33px ) !important;
+      margin-left: 1.48px !important; 
+    }
+    
+    .searchbar-textbox{
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      padding-inline-start: 25px !important;
+      padding-inline-end: 35px !important;
+      cursor: vertical-text !important;
+    }
+  }
+}
+
+/* space for window controls */
+#main-window:not([titlepreface*="​"]){
+  #TabsToolbar,
+  #PanelUI-menu-button,
+  #unified-extensions-button
+  {
+    margin-top: var(--buttonbox-right-hgt) !important;
+  }
+}
+
+/* 
+
+--- TOOLBAR HIDDEN ----------------------------------------------------------------------------------------------------------------------------------
+
+*/
+
+/* activate style when toolbar hidden or clean mode enabled (and not in customizing page) */
+#main-window:is([titlepreface*="​"], [titlepreface*="‍"]):not([customizing]){
+  
+  /* styles for tabs toolbar and buttons */
+  #TabsToolbar,
+  #PanelUI-menu-button,
+  #unified-extensions-button
+  {
+    top: calc(
+      var(--margin) 
+      + var(--top-margin)
+    );
+    
+    right: calc(
+      var(--right-margin) 
+      + var(--panel-hide-ldg) 
+      - var(--toolbar-button-wdt)
+    );
+    
+    bottom: auto;
+    z-index: 3 !important;
+  }
+  
+  /* styles for tabs toolbar */
+  #TabsToolbar{
+    top: calc(
+      var(--margin) 
+      + var(--top-margin)
+      - 3px
+    );
+
+    border-radius: var(--big-rounding);
+    
+    /* hover target (invisible box between window edge and panel) */
+    &::before{
+      content: "";
+      position: absolute;
+      z-index: -999;
+      background-color: var(--debug-col);
+      
+      width: 500%;
+      height: 100%;
+      left: 0px;
+      top: 0px;
+    }
+    
+    /* indication bar (line on window edge) */
+    &::after{
+      content: "";
+      position: absolute;
+      transition: var(--transition);
+      
+      right: calc(
+        100% 
+        - var(--panel-hide-ldg) 
+        - var(--margin) 
+        + var(--hide-bar-padding)
+      );
+      width: calc(var(--margin) - var(--hide-bar-padding) * 2);
+      height: calc(100% - var(--hide-bar-wdt-pad));
+      top: calc(var(--hide-bar-wdt-pad) / 2);
+      
+      border-radius: var(--rounding);
+      background-color: var(--bt-col);
+      opacity: var(--hide-bar-opct);
+    }
+  }
+  
+  /* make all panel content invisible (it will visible when hover) */
+  :is(#PanelUI-menu-button, #unified-extensions-button) > *,
+  #TabsToolbar-customization-target > *:not(#tabbrowser-tabs) {
+    transition: var(--transition) !important;
+    opacity: 0;
+  }
+  
+  #TabsToolbar-customization-target{
+    /* make the toolbar height dynamic */
+    position: relative !important;
+    top: 0px !important;
+    padding-bottom: 3px !important;
+    
+    /* styled spacer */
+    toolbarspring{
+      background-color: color-mix(in srgb, var(--bt-col) 15%, var(--debug-col-2)) !important;
+      border-radius: var(--rounding) !important;
+      max-height: 1px !important;
+      padding: 1px !important;
+      scale: 0.75;
+    }
+    
+    /* limit toolbar items width */
+    & > toolbarbutton {margin-left: 1px !important;}
+    & > *:not(#tabbrowser-tabs) {max-width: var(--toolbar-button-wdt) !important;}
+  }
+  
+  /* styles for extensions button */
+  #unified-extensions-button {margin-top: var(--toolbar-item-hgt) !important;}
+
+  /* show toolbar on hover or focus (if not in clean mode) */
+  &:not([titlepreface*="‍"]):has(
+    #TabsToolbar:hover
+    .titlebar-buttonbox-container:not(:hover),
+    #TabsToolbar-customization-target *:not(#firefox-view-button, tab)[open],
+    #TabsToolbar-customization-target #searchbar:focus-within,
+    #PanelUI-menu-button[open],
+    #PanelUI-menu-button:hover,
+    #unified-extensions-button[open],
+    #unified-extensions-button:hover
+  ) {
+    #TabsToolbar,
+    #PanelUI-menu-button,
+    #unified-extensions-button
+    {
+      right: calc(var(--right-margin) + var(--margin));
+      
+      & > *:not(.titlebar-buttonbox-container), #TabsToolbar-customization-target > * {opacity: 1 !important;}
+    }
+    #TabsToolbar{
+      width: calc(var(--toolbar-button-wdt) + 4px) !important;
+      padding-right: 0px !important;
+      
+      background-color: var(--tb-col) !important;
+      
+      border: var(--outline) !important;
+      outline: var(--shadow) !important;
+      
+      &::after{opacity: 0}
+    }
+    
+    #PanelUI-menu-button,
+    #unified-extensions-button{
+      margin-right: 2px !important;
+    }
+  }
+  
+  /* downloads progress indicator bar */
+  &:has(#downloads-button[progress="true"]){
+    #TabsToolbar::after{
+      background: linear-gradient(
+        to top,
+        var(--shy-color) 0 var(--shy-download-pcent),
+        var(--bt-col) var(--shy-download-pcent) 100%
+      ) !important;
+    }
+  }
+}
+
+/*
+
+--- CUSTOMIZING PAGE --------------------------------------------------------------------------------------------------------------------------------
+
+*/
+
+#main-window[customizing]{
+  #TabsToolbar{
+    min-width: 0px !important;
+    top: 50px !important;
+    bottom: 10px !important;
+    right: 10px !important;
+        
+    border-radius: var(--big-rounding) !important;
+    
+    background-color: var(--bg-col) !important;
+  }
+  
+  #PanelUI-menu-button{
+    top: 50px !important;
+    right: 10px !important;
+  }
+  
+  #TabsToolbar-customization-target toolbarpaletteitem {width: 46px !important;}
+  #wrapper-search-container {max-height: var(--searchbar-hgt) !important;}
+  #wrapper-unified-extensions-button {opacity: 1 !important;}
+  
+  #unified-extensions-button{
+    top: 90px !important;
+    right: 10px !important;
+    .toolbarbutton-icon {opacity: 0.5 !important;}
+  }
+}
+
+/*== ShyFox Navbar ==================================================================================================================================
+
+Navigation bar on top of the window
+
+
+--- JUST IMPORTANT THINGS ---------------------------------------------------------------------------------------------------------------------------
+
+*/
+
+/* local variables */
+:root{
+  --navbar-real-wdt: var(--navbar-wdt);
+}
+
+/* if navbar is not hidden, this window is not floating popup and not in fullscreen video */
+#main-window:not(:is([titlepreface*="‌"], [titlepreface*="‍"]))[chromehidden=""]:not([inDOMFullscreen="true"]){
+  /* set top margin to navbar height */
+  --top-margin: calc(var(--toolbar-item-hgt)) !important;
+}
+
+/* padding tweak */
+.toolbaritem-combined-buttons:not([widget-type="button-and-view"], [widget-type="custom"]), .toolbaritem-menu-buttons {
+  margin-inline-end: var(--toolbar-start-end-padding) !important;
+}
+#nav-bar-overflow-button {margin-inline-end: calc(var(--toolbar-start-end-padding) / 2) !important;}
+
+/* limit items height */
+#nav-bar-customization-target > * {max-height: var(--toolbar-item-hgt) !important;}
+#nav-bar-customization-target {height: var(--toolbar-item-hgt) !important;}
+
+#downloadsFooterButtons toolbarseparator {
+  margin-top: 6px !important;
+  padding-bottom: 2px !important;
+}
+
+/* 
+
+--- NAVBAR SHOWN ------------------------------------------------------------------------------------------------------------------------------------
+
+*/
+
+#nav-bar{
+  position: fixed !important;
+  z-index: 3 !important;
+  
+  transition: var(--transition) !important;
+  
+  background-color: transparent !important;
+  border-top: 0px solid transparent !important;
+  
+  top: 0px;
+  left: var(--left-margin) !important;
+  right: auto !important;
+  
+  & > * {opacity: var(--dyn-opct);}
+}
+
+/* centered navbar text */
+#urlbar:not(:is(
+  [breakout][breakout-extend],
+  :focus-within
+) ) {
+  #urlbar-input {text-align: center !important}
+}
+
+/* tab loading progress in urlbar background */
+#main-window:not([customizing]):not([titlepreface*="‌"]):has(.tabbrowser-tab[selected][busy]) #urlbar:not([breakout-extend]) #urlbar-background{
+  background: linear-gradient(
+    to right,
+    color-mix(in srgb, var(--shy-color) 10%, transparent) 0 var(--shy-tab-load-pcent),
+    color-mix(in srgb, var(--bt-col) 10%, transparent) var(--shy-tab-load-pcent) 100%
+  ) !important;
+}
+
+/* space for window controls and magic width calculations (это пиздец) */
+#main-window:not([customizing])[titlepreface*="​"]:not(:is([titlepreface*="‌"], [titlepreface*="‍"])){
+  #nav-bar{
+    margin-right: calc(var(--buttonbox-right-wdt) - var(--nav-rgt-btnbx-margin));
+    width: calc(
+      100vw
+      - var(--left-margin)
+      - var(--right-margin)
+      - var(--buttonbox-right-wdt) 
+      + var(--nav-rgt-btnbx-margin)
+    ) !important;
+  }
+}
+
+#main-window:not([customizing]):not([titlepreface*="​"]):not(:is([titlepreface*="‌"], [titlepreface*="‍"])){
+  #nav-bar{
+    margin-right: calc(var(--buttonbox-right-wdt) - var(--nav-rgt-btnbx-button));
+    width: calc(
+      100vw
+      - var(--left-margin)
+      - var(--right-margin)
+      - var(--buttonbox-right-wdt) 
+      + var(--nav-rgt-btnbx-button)
+    ) !important;
+  }
+}
+
+#main-window:not([customizing])[titlepreface*="᠎"]:not(:is([titlepreface*="‌"], [titlepreface*="‍"])){
+  #nav-bar{
+    margin-left: calc(var(--buttonbox-left-wdt) - var(--nav-lft-btnbx-margin));
+    width: calc(
+      100vw
+      - var(--left-margin)
+      - var(--right-margin)
+      - var(--buttonbox-left-wdt) 
+      + var(--nav-lft-btnbx-margin)
+      - var(--buttonbox-right-wdt) 
+      + var(--nav-rgt-btnbx-button)
+    ) !important;
+  }
+}
+
+#main-window:not([customizing])[titlepreface*="᠎"][titlepreface*="​"]:not(:is([titlepreface*="‌"], [titlepreface*="‍"])){
+  #nav-bar{
+    width: calc(
+      100vw
+      - var(--left-margin)
+      - var(--right-margin)
+      - var(--buttonbox-left-wdt) 
+      + var(--nav-lft-btnbx-margin)
+      - var(--buttonbox-right-wdt) 
+      + var(--nav-rgt-btnbx-margin)
+    ) !important;
+  }
+}
+
+/* 
+
+--- NAVBAR HIDDEN -----------------------------------------------------------------------------------------------------------------------------------
+
+*/
+
+
+/* activate style when navbar hidden or clean mode enabled (and not in customizing page) */
+#main-window:is([titlepreface*="‌"], [titlepreface*="‍"]):not([customizing]){
+  
+  #nav-bar{
+    overflow: visible !important;
+    z-index: 4 !important;
+    
+    border-radius: var(--big-rounding);
+    
+    width: var(--navbar-real-wdt) !important;
+    max-width: calc(
+      100vw 
+      - var(--left-margin)
+      - var(--right-margin)
+    );
+    
+    top: calc(
+      var(--margin) 
+      + var(--panel-hide-ldg) 
+      - var(--toolbar-item-hgt) 
+    );
+    
+    left: calc(
+      (
+        100vw 
+        - var(--navbar-real-wdt) 
+        + var(--left-margin) 
+        - var(--right-margin) 
+      ) / 2 
+    ) !important;
+    
+    /* make all panel content invisible (it will visible when hover) */
+    #nav-bar-customization-target > *:not(#unified-extensions-button),
+    #nav-bar-overflow-button
+    {
+       transition: var(--transition) !important;
+       opacity: 0 !important;
+    }
+    
+    /* hover target (invisible box between window edge and panel) */
+    #nav-bar-customization-target::before{
+      content: "";
+      position: absolute;
+      z-index: -999;
+      background-color: var(--debug-col);
+      height: 500%;
+      width: 100%;
+      bottom: 0px;
+    }
+    
+    /* indication bar (line on window edge) */
+    &::before{
+      content: "";
+      position: absolute;
+      transition: var(--transition);
+      
+      top: calc(
+        100% 
+        - var(--panel-hide-ldg) 
+        - var(--margin) 
+        + var(--hide-bar-padding)
+      );
+      
+      height: calc(var(--margin) - var(--hide-bar-padding) * 2);
+      width: calc(100% - var(--hide-bar-wdt-pad));
+      left: calc(var(--hide-bar-wdt-pad) / 2);
+      
+      border-radius: var(--rounding);
+      background-color: var(--bt-col);
+      opacity: var(--hide-bar-opct);
+    }
+  }
+  
+  /* tab loading progress bar */
+  &:has(.tabbrowser-tab[selected][busy]) #nav-bar::before{
+    background: linear-gradient(
+      to right,
+      var(--shy-color) 0 var(--shy-tab-load-pcent),
+      var(--bt-col) var(--shy-tab-load-pcent) 100%
+    ) !important;
+  }
+  
+  /* tab loading progress on whole panel */
+  &:has(.tabbrowser-tab[selected][busy]) #nav-bar::after{
+    content: "";
+    position: absolute;
+    pointer-events: none;
+    z-index: -999;
+    width: 100%;
+    height: 100%;
+    bottom: 0px;
+    border-radius: var(--big-rounding);
+    opacity: 0;
+    background: linear-gradient(
+      to right,
+      var(--shy-color) 0 var(--shy-tab-load-pcent),
+      transparent var(--shy-tab-load-pcent) 100%
+    );
+  }
+  
+  /* hotfix */
+  #urlbar{
+    visibility: collapse;
+  }
+
+  #urlbar-container::before {
+    content: "";
+    width: 100%;
+    height: 100%;
+    border-radius: var(--rounding);
+    background-color: var(--toolbar-field-background-color);
+  }
+  
+  
+  /* show navbar on hover or focus */
+  &:has(
+    #nav-bar-customization-target:hover #unified-extensions-button:not(:hover),
+    #nav-bar-customization-target *:not(:is(#unified-extensions-button, #firefox-view-button))[open],
+    #nav-bar-customization-target #searchbar:focus-within,
+    #urlbar:focus-within,
+    #urlbar[breakout][breakout-extend],
+    #nav-bar-overflow-button[open],
+    #nav-bar-overflow-button:hover
+  ) {
+    #nav-bar{
+      
+      /* hotfix */
+      #urlbar{
+        visibility: visible !important;
+        transition: visibility 0s linear var(--trans-dur);
+        min-width: var(--urlbar-width) !important;
+      }
+
+      
+      top: calc(var(--top-margin) + var(--margin));
+      
+      background-color: var(--tb-col) !important;
+      
+      /* corners, shadow */
+      border: var(--outline) !important;
+      outline: var(--shadow) !important;
+      
+      #nav-bar-customization-target > *:not([disabled="true"]),
+      #nav-bar-overflow-button {opacity: 1 !important;}
+      #nav-bar-customization-target > *[disabled="true"] {opacity: 0.5 !important;}
+      
+      &::before {opacity: 0;}
+      &::after {opacity: 0.1;} /* opacity of tab load progress indicator */
+    }
+  }
+  
+  /* hide all  */
+  &[titlepreface*="‍"]{
+    #nav-bar-customization-target > *:not(#urlbar-container, #unified-extensions-button) {display: none !important;}
+  }
+  
+  /* adaptive navbar width */
+  @media (max-width: 1000px) {
+    #nav-bar{
+      --navbar-real-wdt: calc(
+        100vw 
+        - var(--margin) * 2
+        - var(--right-margin)
+        - var(--buttonbox-left-wdt)
+        - var(--buttonbox-right-wdt)
+      ) !important;
+      
+      max-width: none !important;
+      left: calc(
+        var(--margin)
+        + var(--buttonbox-left-wdt)
+      ) !important;
+    }
+  }
+}
+
+/*
+
+--- CUSTOMIZING PAGE --------------------------------------------------------------------------------------------------------------------------------
+
+*/
+
+#main-window[customizing]{
+  #nav-bar{
+    left: 140px !important;
+    right: 140px !important;
+    
+    width: calc(100vw - 280px) !important;
+    
+    top: var(--margin) !important;
+    border-radius: var(--big-rounding) !important;
+    
+    background-color: var(--bg-col) !important;
+  }
+  
+  #urlbar-background, #searchbar {background-color: var(--tb-col) !important;}
+}
+
+/*== ShyFox Findbar =================================================================================================================================
+
+Ctrl + F
+
+
+*/
+
+findbar{
+  --findbar-pad: 8px;
+  --fndbr-btn-wdt: 30px;
+  
+  position: fixed !important;
+  z-index: 5 !important;
+  
+  bottom: calc(var(--bottom-margin) + var(--margin));
+  left: calc(
+    (
+      100vw
+      - var(--findbar-wdt)
+      - var(--left-margin)
+      - var(--right-margin)
+    ) / 2
+  );
+  
+  height: calc(var(--toolbar-item-hgt) * 2);
+  padding-top: var(--toolbar-item-hgt) !important;
+  width: var(--findbar-wdt);
+  
+  /* styles for input textbox */
+  .findbar-textbox{
+    position: absolute;
+    top: var(--findbar-pad);
+    left: var(--findbar-pad);
+    width: calc(
+      var(--findbar-wdt) 
+      - var(--findbar-pad) * 2.5
+      - var(--fndbr-btn-wdt) * 3
+    ) !important;
+  }
+  
+  /* put buttons to right place */
+  .findbar-closebutton,
+  .findbar-find-next,
+  .findbar-find-previous
+  {
+    position: absolute;
+    top: var(--findbar-pad);
+    margin-inline-start: 0px !important;
+    margin-inline-end: 0px !important;
+  }
+  .findbar-closebutton {right: var(--findbar-pad);}
+  .findbar-find-next {right: calc(var(--fndbr-btn-wdt) + var(--findbar-pad) / 2 )}
+  .findbar-find-previous {right: calc(var(--fndbr-btn-wdt) * 2 + var(--findbar-pad) / 2 )}
+  
+  /* some design */
+  background: var(--tb-col) !important;
+  transition: var(--transition) !important;
+  & > * {opacity: var(--dyn-opct);}
+  
+  /* corners, shadow */
+  border: var(--outline) !important;
+  outline: var(--shadow) !important;
+  border-radius: var(--big-rounding) !important;
+  
+  /* rounded buttons */
+  .findbar-textbox, .findbar-closebutton,
+  .findbar-find-next, .findbar-find-previous
+  {border-radius: var(--rounding) !important;}
+}
+
+findbar[hidden]{
+  margin-bottom: unset !important;
+  transition-delay: unset !important;
+  visibility: visible !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  bottom: calc(
+    0px 
+    - var(--toolbar-item-hgt) * 2
+    - var(--margin) * 2
+  ) !important;
+}
+
+/* adaptive findbar width */
+@media (max-width: 1500px) {
+   :root{
+     --findbar-wdt: calc(
+       100vw
+       - var(--left-margin)
+       - var(--right-margin)
+       - var(--margin) * 2
+     ) !important;
+  }
+}
+
+/*== ShyFox Window Controls =========================================================================================================================
+
+Styles for Min Max Close buttons
+
+
+--- JUST IMPORTANT THINGS ---------------------------------------------------------------------------------------------------------------------------
+
+*/
+
+/* move buttons to correct position */
+#TabsToolbar .titlebar-buttonbox-container{ display: none !important; }
+#toolbar-menubar .titlebar-buttonbox-container{ display: flex !important; }
+
+.titlebar-buttonbox-container{
+  position: fixed !important;
+  overflow: clip !important;
+
+  z-index: -1 !important;
+  
+  transition: var(--transition) !important;
+  & *{transition: var(--transition) !important;}
+  
+  /* set position to right */
+  right: 0px;
+  top: 8px;
+}
+
+/* 
+
+--- VARIABLES ----------------------------------------------------------------------------------------------------------------------------------
+
+*/
+
+/* paddings */
+:root{
+  --buttonbox-right-wdt: var(--window-control-wdt);
+  --buttonbox-right-hgt: 35px;
+  
+  --buttonbox-left-wdt: 0px;
+  --buttonbox-left-hgt: 0px;
+}
+
+/* useful variables */
+:root{
+  --nav-rgt-btnbx-margin: var(--margin);
+  --nav-rgt-btnbx-button: var(--toolbar-button-wdt);
+  
+  --nav-lft-btnbx-margin: 0px;
+  --nav-lft-btnbx-button: 0px;
+}
+
+/* remove window controls in f11 fullscreen or in clean mode */
+#main-window:is([sizemode="fullscreen"], [titlepreface*="‍"]:not([customizing])) {
+  --window-control-wdt:   0px !important;                          /* <                             */
+  --buttonbox-left-hgt:   0px !important;                          /* <         !DUPLICATE!         */
+  --buttonbox-right-hgt:  0px !important;                          /* <                             */
+  --nav-rgt-btnbx-margin: 0px !important;                          /* <   This code block must be   */
+  --nav-rgt-btnbx-button: 0px !important;                          /* <      identical to the       */
+  --nav-lft-btnbx-margin: 0px !important;                          /* <      code block below       */
+  --nav-lft-btnbx-button: 0px !important;                          /* <                             */
+  .titlebar-buttonbox-container {display: none !important;}        /* < vvvvvvvvvvvvvvvvvvvvvvvvvvv */
+}
+
+/* remove window controls by setting */
+@media (-moz-bool-pref: "shyfox.remove.window.controls") { 
+  #main-window{
+    --window-control-wdt:   0px !important;                        /* < ^^^^^^^^^^^^^^^^^^^^^^^^^^^ */
+    --buttonbox-left-hgt:   0px !important;                        /* <                             */
+    --buttonbox-right-hgt:  0px !important;                        /* <         !DUPLICATE!         */
+    --nav-rgt-btnbx-margin: 0px !important;                        /* <                             */
+    --nav-rgt-btnbx-button: 0px !important;                        /* <   This code block must be   */
+    --nav-lft-btnbx-margin: 0px !important;                        /* <      identical to the       */
+    --nav-lft-btnbx-button: 0px !important;                        /* <      code block above       */
+    .titlebar-buttonbox-container {display: none !important;}      /* <                             */
+  }
+}
+
+/*
+
+--- DETECT SYSTEM AND CALCULATE VALUES  -------------------------------------------------------------------------------------------------------------
+
+*/
+
+/* default (if system not detected) */
+:root {--window-control-wdt: 140px;}
+
+/* Windows */
+
+@media (-moz-platform: windows) {
+  :root {--window-control-wdt: 138px;}
+  .titlebar-buttonbox-container{
+    top: 0px;
+    height: var(--toolbar-item-hgt);
+  }
+  
+  /* style when not enough space - merged into window border */
+  #main-window[titlepreface*="​"][titlepreface*="‌"] {
+    .titlebar-button {padding: calc(var(--margin) / 2) 15px !important;}
+    .titlebar-buttonbox-container{
+      height: var(--margin) !important;
+      top: 0px;
+      opacity: calc(var(--hide-bar-opct) / 2 );
+      &:hover{opacity: 1}
+    }
+  }
+  
+  /* style when right toolbar is visible but navbar hidden - vertical orientation */
+  #main-window:not([titlepreface*="​"])[titlepreface*="‌"]:not([customizing]){
+    .titlebar-buttonbox-container{height: 85px}
+    .titlebar-buttonbox{
+      display: flex;
+      flex-direction: column-reverse;
+    }
+    
+    --buttonbox-left-wdt: 0px  !important;
+    --buttonbox-right-hgt: 85px;
+  }
+}
+
+/* Linux (GTK) */
+
+:root{
+  --window-control-gtk-max-wdt: 0px;
+  --window-control-gtk-min-wdt: 0px;
+}
+
+@media (-moz-gtk-csd-maximize-button) { :root {--window-control-gtk-max-wdt: 40px;} }
+@media (-moz-gtk-csd-minimize-button) { :root {--window-control-gtk-min-wdt: 40px;} }
+
+@media (-moz-gtk-csd-available) {
+  :root {
+    --window-control-wdt: calc(
+      40px
+      + var(--window-control-gtk-min-wdt)
+      + var(--window-control-gtk-max-wdt)
+    );
+  }
+  
+  /* GTK buttons design */
+  .titlebar-button{
+    .toolbarbutton-icon {
+      background-image: none !important;
+      stroke: none !important;
+      -moz-context-properties: fill, fill-opacity !important;
+    }
+    
+    &:hover .toolbarbutton-icon {background-color: color-mix(in srgb, var(--bt-col) 15%, transparent) !important;}
+
+    margin-inline: 8px !important;
+    padding: 0 !important;
+    fill: var(--bt-col) !important;
+    color: var(--bt-col) !important;
+  }
+
+  @media not (-moz-bool-pref: "shyfox.force.native.controls"){
+    .titlebar-close   {list-style-image: url("../icons/gtk-window-close-symbolic.svg")    !important;}
+    .titlebar-min     {list-style-image: url("../icons/gtk-window-minimize-symbolic.svg") !important;}
+    .titlebar-max     {list-style-image: url("../icons/gtk-window-maximize-symbolic.svg") !important;}
+    .titlebar-restore {list-style-image: url("../icons/gtk-window-restore-symbolic.svg")  !important;}
+    
+    .titlebar-button .toolbarbutton-icon{
+      background-color: color-mix(in srgb, var(--bt-col) 5%, transparent);
+      appearance: none !important;
+      border-radius: 100%;
+      padding: 4px !important;
+    }
+  }
+  
+  @media (-moz-bool-pref: "shyfox.force.native.controls"){
+    .titlebar-close   {appearance: -moz-window-button-close    !important;}
+    .titlebar-min     {appearance: -moz-window-button-minimize !important;}
+    .titlebar-max     {appearance: -moz-window-button-maximize !important;}
+    .titlebar-restore {appearance: -moz-window-button-restore  !important;}
+  }
+}
+
+/* if GTK buttons position is right */
+@media (-moz-gtk-csd-available){
+  @media not (-moz-gtk-csd-reversed-placement){
+    
+    .titlebar-buttonbox-container{padding-right: 4px}
+    
+    /* style when not enough space - merged into window border */
+    #main-window:is([titlepreface*="​"][titlepreface*="‌"], [titlepreface*="‍"]):not([customizing]){
+      .titlebar-buttonbox-container{
+        opacity: calc(var(--hide-bar-opct) / 2 );
+        &:hover{opacity: 1};
+        right: 5px;
+      }
+      
+      .titlebar-button {margin: 0px !important;}
+      
+      @media not (-moz-bool-pref: "shyfox.force.native.controls"){
+        .titlebar-buttonbox-container{
+          top: 0px;
+          height: var(--margin);
+        }
+        
+        .titlebar-button .toolbarbutton-icon {border-radius: 0 !important;}
+      }
+      
+      @media (-moz-bool-pref: "shyfox.force.native.controls"){
+        .titlebar-buttonbox-container{
+          top: -6px;
+          height: calc(var(--margin) + 6px);
+        }
+      }
+    }
+
+    /* style when right toolbar is visible but navbar hidden - vertical orientation */
+    #main-window:not([titlepreface*="​"])[titlepreface*="‌"]:not([customizing]){
+      
+      .titlebar-buttonbox{
+        display: flex;
+        flex-direction: column-reverse;
+        top: -6px;
+
+        & * {
+          margin-top: 3px !important;
+          margin-bottom: 3px !important;
+        }
+      }
+      
+      --buttonbox-right-wdt: 0px !important;
+      --buttonbox-right-hgt: calc(
+        35px
+        + var(--window-control-gtk-max-wdt)
+        + var(--window-control-gtk-min-wdt)
+      );
+    }
+  }
+}
+
+/* MacOS */
+@media (-moz-platform: macos){
+  :root {--window-control-wdt: 72px;}
+}
+
+/*
+--- CONTROLS ON LEFT ---------------------------------------------------------------------------------------------------------------------------
+
+Styles when GTK window controls on left or system is MacOS 
+
+*/
+
+@media (-moz-gtk-csd-reversed-placement), (-moz-platform: macos){
+  :root{
+    --buttonbox-right-wdt: 0px;
+    --buttonbox-right-hgt: 0px;
+   
+    --buttonbox-left-wdt: var(--window-control-wdt);
+    --buttonbox-left-hgt: 35px;
+    
+    --nav-rgt-btnbx-margin: 0px;
+    --nav-rgt-btnbx-button: 0px;
+    
+    --nav-lft-btnbx-margin: var(--margin);
+    --nav-lft-btnbx-button: var(--toolbar-button-wdt);
+  }
+  
+  .titlebar-buttonbox-container{padding-left: 3px}
+  
+  /* set position to left */
+  .titlebar-buttonbox-container{
+    left: 0px;
+    right: auto !important;
+  }
+  
+  /* style when not enough space - merged into window border */
+  #main-window:is([titlepreface*="᠎"][titlepreface*="‌"], [titlepreface*="‍"]):not([customizing]){
+    .titlebar-buttonbox-container{
+      opacity: calc(var(--hide-bar-opct) / 2 );
+      &:hover{opacity: 1};
+      left: 5px;
+    }
+
+    .titlebar-button {margin: 0px !important;}
+
+    @media not (-moz-bool-pref: "shyfox.force.native.controls"){
+      .titlebar-buttonbox-container{
+        top: 0px;
+        height: var(--margin);
+      }
+
+      .titlebar-button .toolbarbutton-icon {border-radius: 0 !important;}
+    }
+
+    @media (-moz-bool-pref: "shyfox.force.native.controls"){
+      .titlebar-buttonbox-container{
+        top: -6px;
+        height: calc(var(--margin) + 6px);
+      }
+    }
+  }
+}
+
+/*== ShyFox Compact Menus ===========================================================================================================================
+
+Shrink some things so they take up less space
+
+
+--- CONTEXT MENU ------------------------------------------------------------------------------------------------------------------------------------
+
+*/
+
+@media not (-moz-platform: macos) {
+  .menupopup-arrowscrollbox,
+  #context-navigation > .menuitem-iconic {border-radius: var(--big-rounding) !important;}
+}
+
+#context-navigation > .menuitem-iconic[disabled="true"] {background-color: transparent !important;}
+
+menupopup > :is(menuitem, menu){
+  height: fit-content !important;
+  & > * {
+    padding: 0px !important;
+    margin: 1px !important;
+  }
+  
+  max-width: 300px !important;
+  border-radius: var(--rounding) !important;
+  margin: 0 !important;
+  
+  padding-block: 0px !important;
+  padding-inline-start: 5px !important;
+}
+
+/* large context menu */
+@media (-moz-bool-pref: "shyfox.larger.context.menu"){
+  menupopup > :is(menuitem, menu) > * {padding: 5px 0px !important;}
+}
+
+/* margin for some menus */
+:is(.bookmark-item, #PlacesChevron, #bookmarks-menu-button, #sidebarMenu-popup) :is(menuitem, menu) {margin-inline: 5px !important;}
+
+/* remove some items from sidebar header menu */
+#sidebarMenu-popup :is(menuitem[data-l10n-id="sidebar-menu-close"], menuseparator:nth-last-of-type(1)) {display: none}
+/* 
+
+--- EXTENSIONS MENU ---------------------------------------------------------------------------------------------------------------------------------
+
+*/
+
+@media not (-moz-bool-pref: "shyfox.disable.compact.unified.extensions") {
+
+  #unified-extensions-view{
+
+    --uei-icon-size: 24px;
+    --extensions-in-row: 4;
+
+    width: 100% !important;
+    :is(
+      toolbarseparator,
+      .unified-extensions-item-menu-button.subviewbutton,
+      .unified-extensions-item-action-button .unified-extensions-item-contents
+    ) {display: none !important;}
+
+    :is(
+      #overflowed-extensions-list,
+      #unified-extensions-area,
+      .unified-extensions-list 
+    ){
+      display: grid !important;
+      grid-template-columns: repeat(var(--extensions-in-row),auto);
+      justify-items: center !important;
+      align-items: center !important;
+    }
+
+    :is(
+      :is(
+        #unified-extensions-area,
+        .unified-extensions-list
+      ) .unified-extensions-item,
+      .unified-extensions-list
+    ){max-width: max-content;}
+
+    #unified-extensions-area {
+      margin-bottom: 5px !important;
+      border-top: 1px solid var(--panel-separator-color);
+      border-bottom: 1px solid var(--panel-separator-color);
+      padding-top: 5px !important;
+      padding-bottom: 5px !important;
+    }
+    
+    .unified-extensions-item[attention] > .unified-extensions-item-action-button.subviewbutton {
+      background-position: left calc(var(--uei-dot-horizontal-position-in-panel) - 4px) bottom var(--uei-dot-vertical-position-in-panel) !important;
+    }
+    .unified-extensions-item-action-button {padding-right: 3px !important;}
+  }
+}
+
+/*== ShyFox Icons ===================================================================================================================================
+
+Adding icons to all sorts of places
+
+
+--- BOOKMARKS TOOLBAR -------------------------------------------------------------------------------------------------------------------------------
+
+*/
+
+/* overflow */  
+#PlacesChevron {list-style-image: url("../icons/bookmarks-toolbar.svg") !important;}
+
+/* hide folders icons */
+.bookmark-item[container="true"] .toolbarbutton-icon {display: none}
+
+/* other bookmarks */
+#OtherBookmarks{
+  & > label {display: none !important;}
+  & > image {margin-inline: 0px !important;}
+  background-repeat: no-repeat;
+  background-position-x: 4px;
+  background-position-y: 8px;
+  width: 25px !important;
+  background-image: url("../icons/book.svg") !important;
+}
+
+/* 
+
+--- MONOCHROME EXTENSIONS ---------------------------------------------------------------------------------------------------------------------------
+
+Monochrome icons for some extensions
+
+
+*/
+
+@media (-moz-bool-pref: "shyfox.enable.ext.mono.toolbar.icons") {
+
+  /* Userchrome Toggle => sidebar icon */
+  :is(.webextension-browser-action,
+  .eom-addon-button):is([data-extensionid="userchrome-toggle-extended@n2ezr.ru"]) 
+  .toolbarbutton-icon {
+    list-style-image: url("../icons/command-frames.svg");
+  }
+
+  /* uBlock Origin => custom svg icon */
+  :is(.webextension-browser-action,
+  .eom-addon-button)[data-extensionid="uBlock0@raymondhill.net"] 
+  .toolbarbutton-icon {
+    list-style-image: url("../icons/ublock.svg");
+  }
+
+  /* Bitwarden => custom svg icon */
+  :is(.webextension-browser-action,
+  .eom-addon-button)[data-extensionid="{446900e4-71c2-419f-a6a7-df9c091e268b}"] 
+  .toolbarbutton-icon {
+    list-style-image: url("../icons/bitwarden.svg");
+  }
+
+  /* Privacy Badger => it's own monochrome icon */
+  :is(.webextension-browser-action,
+  .eom-addon-button)[data-extensionid="jid1-MnnxcxisBPnSXQ@jetpack"] 
+  .toolbarbutton-icon {
+    list-style-image: url("../icons/PrivacyBadger.svg");
+    scale: 1.3;
+  }
+
+  /* Dark Reader => custom svg icon (moon) */
+  :is(.webextension-browser-action,
+  .eom-addon-button)[data-extensionid="addon@darkreader.org"] 
+  .toolbarbutton-icon {
+    list-style-image: url("../icons/moon.svg");
+  }
+  
+  /* Video Download Helper => custom svg icon */
+  :is(.webextension-browser-action,
+  .eom-addon-button)[data-extensionid="{b9db16a4-6edc-47ec-a1f4-b86292ed211d}"] 
+  .toolbarbutton-icon {
+    list-style-image: url("../icons/video-download-helper.svg");
+  }
+  
+  /* Auto Tab Discard => power icon */
+  :is(.webextension-browser-action,
+  .eom-addon-button)[data-extensionid="{c2c003ee-bd69-42a2-b0e9-6f34222cb046}"] 
+  .toolbarbutton-icon {
+    list-style-image: url("../icons/quit.svg");
+  }
+  
+  /* Midnight Lizard => custom svg icon */
+  :is(.webextension-browser-action,
+  .eom-addon-button)[data-extensionid="{8fbc7259-8015-4172-9af1-20e1edfbbd3a}"] 
+  .toolbarbutton-icon {
+    list-style-image: url("../icons/midnight-lizard.svg");
+    scale: 1.3;
+  }
+
+  /* gray background for all badges */
+  .toolbarbutton-badge {
+    background-color: rgba(102, 102, 102, 1) !important;
+    box-shadow: none !important;
+    border-radius: 5px !important;
+    color: white !important;
+  }
+}
+
+/* context menu */
+
+@media (-moz-bool-pref: "shyfox.enable.ext.mono.context.icons") {
+  #contentAreaContextMenu, #toolbar-context-menu, #unified-extensions-context-menu{
+    /* ublock */
+    menuitem[id*="ublock0_raymondhill_net-menuitem-_uBlock0-"]{
+      .menu-iconic-icon {opacity: 0 !important;}
+      background-image: url("../icons/ublock.svg") !important;
+    }
+
+    /* simple translate */
+    :is(menu, menuitem):not(menu *)[id*="simple-translate_sienori-menuitem-"] {
+      .menu-iconic-icon {opacity: 0 !important;}
+      background-image: url("../icons/translate.svg") !important;
+    }
+
+    /* bitwarden */
+    #_446900e4-71c2-419f-a6a7-df9c091e268b_-menuitem-_root{
+      .menu-iconic-icon {opacity: 0 !important;}
+      background-image: url("../icons/bitwarden.svg") !important;
+      & > menupopup{
+        & > *[id*="-menuitem-_autofill"] {background-image: url("chrome://browser/skin/login.svg")!important;}
+        & > *[id*="-menuitem-_copy-username"] {background-image: url("../icons/edit-copy.svg") !important;}
+        & > *[id*="-menuitem-_copy-password"] {background-image: url("../icons/password.svg") !important;}
+
+        & > *[id*="-menuitem-_autofill-identity"] {background-image: url("chrome://browser/skin/fxa/avatar-empty.svg") !important;}
+        & > *[id*="-menuitem-_autofill-card"] {background-image: url("../icons/credit-card.svg") !important;}
+
+        & > *[id*="-menuitem-_generate-password"] {background-image: url("../icons/reload-auto.svg") !important;}
+        & > *[id*="-menuitem-_copy-identifier"] {background-image: url("../icons/edit-copy.svg") !important;}
+        
+        *[id*="_create-"] {background-image: url("chrome://global/skin/icons/plus.svg") !important;}
+      }
+    }
+
+    /* clean url */
+    #_74145f27-f039-47ce-a470-a662b129930a_-menuitem-_copy-link-to-clipboard{
+      .menu-iconic-icon {opacity: 0 !important;}
+      background-image: url("../icons/eraser.svg") !important;
+    }
+    
+    /* video download helper */
+    #_b9db16a4-6edc-47ec-a1f4-b86292ed211d_-menuitem-_vdh-top{
+      .menu-iconic-icon {opacity: 0 !important;}
+      background-image: url("../icons/video-download-helper.svg") !important;
+    }
+  }
+  
+  /* sidebar switcher */
+  
+  /* Bitwarden */
+  #sidebarswitcher_menu__446900e4-71c2-419f-a6a7-df9c091e268b_-sidebar-action{
+    .menu-iconic-icon {opacity: 0 !important;}
+    background-image: url("../icons/bitwarden.svg") !important;
+  }
+  #sidebar-switcher-target[style*="fde67d36-ff48-49e7-8ec4-3cf26deea141"] #sidebar-icon {list-style-image: url("../icons/bitwarden.svg") !important;}
+
+  /* Video Download Helper */
+  #sidebarswitcher_menu__b9db16a4-6edc-47ec-a1f4-b86292ed211d_-sidebar-action{
+    .menu-iconic-icon {opacity: 0 !important;}
+    background-image: url("../icons/video-download-helper.svg") !important;
+  }
+  #sidebar-switcher-target[style*="89b69b2a-5ae9-4b43-addc-4bf789f8448f"] #sidebar-icon {list-style-image: url("../icons/video-download-helper.svg") !important;}
+}
+
+/* 
+
+--- MENU --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+*/
+
+/* icons color */
+#appMenu-multiView .subviewbutton::before,
+#appMenu-proton-update-banner::before,
+#protections-popup-tp-switch-breakage-link::before,
+#downloadsHistory .button-icon,
+#PanelUI-fxa-menu-syncnow-button::before,
+.subviewbutton:not(#appMenu-proton-update-banner) > image 
+{
+  fill: currentColor !important;
+  fill-opacity: var(--toolbarbutton-icon-fill-opacity) !important;
+  -moz-context-properties: fill, fill-opacity, stroke !important;
+}
+
+/* text padding */
+#appMenu-multiView .toolbarbutton-text,
+#customizationui-widget-panel .toolbarbutton-text,
+#identity-popup-clear-sitedata-button .toolbarbutton-text,
+#unified-extensions-manage-extensions .toolbarbutton-text,
+#widget-overflow .toolbarbutton-text,
+#protections-popup-tp-switch-breakage-link .toolbarbutton-text,
+#downloadsPanel #downloadsHistory .button-text,
+.protections-popup-footer-button-label
+{padding-left: 6px !important;}
+
+/* security popup */
+#protections-popup-tp-switch-breakage-link::before {content: url("chrome://global/skin/icons/help.svg"); scale: 1.1}
+#protections-popup-settings-button {list-style-image: url("chrome://global/skin/icons/settings.svg");}
+#protections-popup-show-report-stack {list-style-image: url("../icons/dashboard.svg");}
+
+/* delete cookies */
+#identity-popup-clear-sitedata-button {list-style-image: url("../icons/trash.svg");}
+
+/* extensions popup */
+#unified-extensions-manage-extensions {list-style-image: url("chrome://mozapps/skin/extensions/extension.svg");}
+
+/* main menu */
+#appMenu-fxa-separator{border-image: none !important;}
+#appMenu-proton-update-banner::before {content: url("../icons/whatsnew.svg");}
+#appMenu-new-tab-button2 {list-style-image: url("../icons/new-tab.svg");}
+#appMenu-new-window-button2 {list-style-image: url("../icons/window.svg");}
+#appMenu-new-private-window-button2 {list-style-image: url("chrome://browser/skin/privateBrowsing.svg");}
+#appMenu-bookmarks-button {list-style-image: url("chrome://browser/skin/bookmark.svg");}
+#appMenu-history-button {list-style-image: url("chrome://browser/skin/history.svg");}
+#appMenu-downloads-button {list-style-image: url("chrome://browser/skin/downloads/downloads.svg");}
+#appMenu-passwords-button {list-style-image: url("chrome://browser/skin/login.svg");}
+#appMenu-extensions-themes-button {list-style-image: url("chrome://mozapps/skin/extensions/extension.svg");}
+#appMenu-print-button2 {list-style-image: url("chrome://global/skin/icons/print.svg");}
+#appMenu-save-file-button2 {list-style-image: url("../icons/toolbarButton-download.svg");}
+#appMenu-find-button2 {list-style-image: url("chrome://global/skin/icons/search-glass.svg");}
+#appMenu-translate-button {list-style-image: url("../icons/translate.svg");}
+#appMenu-zoom-controls::before, #appMenu-zoom-controls2::before {content: url("../icons/screenshot.svg");}
+#appMenu-settings-button {list-style-image: url("chrome://global/skin/icons/settings.svg");}
+#appMenu-more-button2 {list-style-image: url("../icons/ion.svg");}
+#appMenu-help-button2 {list-style-image: url("chrome://global/skin/icons/help.svg");}
+#appMenu-quit-button2 {list-style-image: url("../icons/quit.svg");}
+
+#PanelUI-fxa-menu-syncnow-button {padding-left: 11.3px !important;}
+#PanelUI-fxa-menu-syncnow-button::before {content: url("chrome://browser/skin/sync.svg"); width: 13px; height: 15px; scale: 1.5; padding-right: 5px}
+#PanelUI-fxa-menu-connect-device-button {list-style-image: url("../icons/add-device.svg");}
+#PanelUI-fxa-menu-sendtab-button {list-style-image: url("../icons/send-to-device.svg");}
+#PanelUI-fxa-menu-sync-prefs-button {list-style-image: url("chrome://global/skin/icons/settings.svg");}
+#PanelUI-fxa-menu-account-signout-button {list-style-image: url("../icons/sign-out.svg");}
+
+#panelMenuBookmarkThisPage {list-style-image: url("chrome://browser/skin/bookmark-hollow.svg");}
+#panelMenuBookmarkThisPage[starred] {list-style-image: url("chrome://browser/skin/bookmark.svg");}
+#panelMenu_searchBookmarks {list-style-image: url("chrome://global/skin/icons/search-glass.svg");}
+#panelMenu_viewBookmarksToolbar {list-style-image: url("../icons/bookmarks-toolbar-alt.svg");}
+#panelMenu_showAllBookmarks {list-style-image: url("chrome://browser/skin/bookmark-star-on-tray.svg");}
+
+#appMenuSearchHistory {list-style-image: url("chrome://global/skin/icons/search-glass.svg");}
+#appMenuClearRecentHistory {list-style-image: url("../icons/forget.svg");}
+#PanelUI-historyMore {list-style-image: url(chrome://browser/skin/history.svg);}
+#appMenuRecentlyClosedTabs {list-style-image: url("../icons/tab.svg");}
+#appMenuRecentlyClosedWindows {list-style-image: url("chrome://browser/skin/window.svg");}
+#appMenuRestoreSession, #appMenu-restoreSession {list-style-image: url("../icons/restore-session.svg");}
+  
+#appmenu-moreTools-button, #overflowMenu-customize-button {list-style-image: url("chrome://browser/skin/customize.svg");}
+
+#appmenu-developer-tools-view .subviewbutton:nth-child(1),
+#PanelUI-developer-tools-view .subviewbutton:nth-child(1) {
+  list-style-image: url("../icons/developer.svg");}
+#appmenu-developer-tools-view .subviewbutton:nth-child(2),
+#PanelUI-developer-tools-view .subviewbutton:nth-child(2) {
+  list-style-image: url("../icons/performance.svg");}
+#appmenu-developer-tools-view .subviewbutton:nth-child(3),
+#PanelUI-developer-tools-view .subviewbutton:nth-child(3) {
+  list-style-image: url("../icons/bug.svg");}
+#appmenu-developer-tools-view .subviewbutton:nth-child(4),
+#PanelUI-developer-tools-view .subviewbutton:nth-child(4) {
+  list-style-image: url("../icons/window-dev-tools.svg");}
+#appmenu-developer-tools-view .subviewbutton:nth-child(5),
+#PanelUI-developer-tools-view .subviewbutton:nth-child(5) {
+  list-style-image: url("../icons/command-frames.svg");}
+#appmenu-developer-tools-view .subviewbutton:nth-last-child(5),
+#PanelUI-developer-tools-view .subviewbutton:nth-last-child(5) {
+  list-style-image: url("../icons/command-console.svg");}
+#appmenu-developer-tools-view .subviewbutton:nth-last-child(4),
+#PanelUI-developer-tools-view .subviewbutton:nth-last-child(4) {
+  list-style-image: url("../icons/command-responsivemode.svg");}
+#appmenu-developer-tools-view .subviewbutton:nth-last-child(3),
+#PanelUI-developer-tools-view .subviewbutton:nth-last-child(3) {
+  list-style-image: url("../icons/command-eyedropper.svg");}
+#appmenu-developer-tools-view .subviewbutton:nth-last-child(2),
+#PanelUI-developer-tools-view .subviewbutton:nth-last-child(2) {
+  list-style-image: url("../icons/document-search.svg");}
+#appmenu-developer-tools-view .subviewbutton:nth-last-child(1),
+#PanelUI-developer-tools-view .subviewbutton:nth-last-child(1) {
+  list-style-image: url("chrome://mozapps/skin/extensions/extension.svg");}
+#appmenu-developer-tools-view .subviewbutton:last-child {margin-bottom: 6px !important;}
+
+#appMenu_menu_openHelp {list-style-image: url("chrome://global/skin/icons/help.svg");}
+#appMenu_feedbackPage {list-style-image: url("../icons/send.svg");}
+#appMenu_helpSafeMode {list-style-image: url("chrome://devtools/skin/images/debugging-workers.svg");}
+#appMenu_troubleShooting {list-style-image: url("chrome://global/skin/icons/more.svg");}
+#appMenu-report-broken-site-button, #appMenu_help_reportSiteIssue {list-style-image: url("chrome://global/skin/icons/lightbulb.svg");}
+#appMenu_menu_HelpPopup_reportPhishingtoolmenu {list-style-image: url("chrome://global/skin/icons/warning.svg");}
+#appMenu_helpSwitchDevice {list-style-image: url("../icons/add-device.svg");}
+#appMenu_aboutName {list-style-image: url("chrome://global/skin/icons/info.svg");}
+  
+#downloadsHistory {list-style-image: url("chrome://browser/skin/downloads/downloads.svg");}
+
+/* 
+
+--- CONTEXT MENU ------------------------------------------------------------------------------------------------------------------------------------
+
+
+*/
+
+:is(
+  #toolbar-context-menu,
+  #contentAreaContextMenu,
+  #unified-extensions-context-menu,
+  #downloadsContextMenu,
+  #placesContext,
+  #sidebarMenu-popup,
+  #BMB_bookmarksPopup,
+  #toolbar-menubar menupopup,
+  #PlacesToolbar menupopup
+) :is(menuitem, menu){
+  
+  /* icons color and position */
+  fill: currentColor !important;
+  fill-opacity: var(--toolbarbutton-icon-fill-opacity) !important;
+  -moz-context-properties: fill, fill-opacity, stroke !important;
+  background-repeat: no-repeat !important;
+  background-position-x: 5px !important;
+  background-position-y: center !important;
+  background-size: 16px !important;
+  
+  /* various paddings/margins tweaks */
+  &:not(.menuitem-iconic, .menu-iconic, [type="checkbox"], [type="radio"]) > label {margin-inline-start: 21px !important;}
+
+  .menu-iconic-left{
+    width: 22px !important;
+    padding-inline-end: 6px !important;
+    margin-inline: 0px !important;
+  }
+  
+  .menu-iconic-text {margin-inline-start: -1px !important;}
+  &:not(:is(menu, [acceltext])) {padding-right: 0px !important;}
+}
+
+@media (-moz-bool-pref: "shyfox.enable.context.menu.icons") {
+  
+  /* in page context menu */
+  #contentAreaContextMenu{
+    & > #context-back {background-image: url("chrome://browser/skin/back.svg") !important;}
+    & > #context-forward {background-image: url("chrome://browser/skin/forward.svg") !important;}
+    & > #context-reload {background-image: url("chrome://global/skin/icons/reload.svg") !important;}
+    & > #context-stop {background-image: url("chrome://global/skin/icons/close.svg") !important;}
+    & > #context-bookmarkpage {background-image: url("chrome://browser/skin/bookmark-hollow.svg") !important;}
+    
+    #context-openlinkincurrent {background-image: url("../icons/link-square.svg") !important;}
+    #context-openlinkintab {background-image: url("../icons/new-tab.svg") !important;}
+    context-openlinkincontainertab, #context-openlinkinusercontext-menu {background-image: url("../icons/container-openin-16.svg") !important;}
+    #context-openlink {background-image: url("../icons/window.svg") !important;}
+    #context-openlinkprivate {background-image: url("chrome://browser/skin/privateBrowsing.svg") !important;}
+    
+    #spell-no-suggestions {background-image: url("../icons/text-proofing-tools.svg") !important;}
+    #spell-add-to-dictionary, #spell-add-dictionaries, #spell-add-dictionaries-main {background-image: url("../icons/book-add.svg") !important;}
+    #spell-undo-add-to-dictionary {background-image: url("../icons/undo.svg") !important}
+    #spell-dictionaries {background-image: url("../icons/book.svg") !important;}
+
+    #context-undo, #context-pdfjs-undo {background-image: url("../icons/undo.svg") !important;}
+    #context-redo, #context-pdfjs-redo {background-image: url("../icons/redo.svg") !important;}
+
+    #context-savepage {background-image: url("chrome://browser/skin/downloads/downloads.svg") !important;}
+    #context-pocket {background-image: url("../icons/pocket-outline.svg") !important;}
+    #context-sendpagetodevice {background-image: url("../icons/send-to-device.svg") !important;}
+    #context-cut, #context-pdfjs-cut {background-image: url("../icons/edit-cut.svg") !important;}
+    #context-copy, #context-pdfjs-copy {background-image: url("../icons/edit-copy.svg") !important;}
+    #context-print-selection {background-image: url("chrome://global/skin/icons/print.svg") !important;}
+    #context-paste, #context-pdfjs-paste {background-image: url("../icons/edit-paste.svg") !important;}
+    #context-paste-no-formatting {background-image: url("../icons/paste-text.svg") !important;}
+    #context-delete, #context-pdfjs-delete {background-image: url("../icons/trash.svg") !important;}
+    #context-selectall, #context-pdfjs-selectall {background-image: url("../icons/select-all-on.svg") !important;}
+    #context-pdfjs-highlight-selection {background-image: url("../icons/toolbarButton-editorHighlight.svg") !important;}
+    
+    #context-media-play {background-image: url("chrome://global/skin/media/play-fill.svg") !important;}
+    #context-media-pause {background-image: url("chrome://global/skin/media/pause-fill.svg") !important;}
+    #context-media-mute {background-image: url("chrome://global/skin/media/audio-muted.svg") !important;}
+    #context-media-unmute {background-image: url("chrome://global/skin/media/audio.svg") !important;}
+    #context-media-playbackrate {background-image: url("../icons/performance.svg") !important;}
+    #context-video-fullscreen {background-image: url("chrome://browser/skin/fullscreen.svg") !important;}
+    #context-leave-dom-fullscreen {background-image: url("chrome://global/skin/media/fullscreenExitButton.svg") !important;}
+    #context-media-showcontrols {background-image: url("../icons/eye-show.svg") !important;}
+    #context-media-hidecontrols {background-image: url("../icons/eye-hide.svg") !important;}
+
+    #context-viewvideo {background-image: url("../icons/video-clip.svg") !important;}
+    #context-savevideo {background-image: url("../icons/video.svg") !important;}
+    
+    #context-saveaudio {background-image: url("chrome://global/skin/media/audio.svg") !important;}
+    
+    #context-reloadimage {background-image: url("../icons/image-arrow-counterclockwise.svg") !important;}
+    #context-viewimage {background-image: url("../icons/image-add.svg") !important;}
+    #context-saveimage {background-image: url("../icons/image.svg") !important;}
+    #context-video-saveimage {background-image: url("../icons/video-snapshot.svg") !important;}
+    #context-copyimage-contents {background-image: url("../icons/image-copy.svg") !important;}
+    #context-viewimageinfo {background-image: url("chrome://global/skin/icons/info.svg") !important;}
+    #context-viewimagedesc {background-image: url("../icons/image-alt-text.svg") !important;}
+    
+    #context-copyimage, #context-copyvideourl, #context-copyaudiourl {background-image: url("../icons/link.svg") !important;}
+    #context-sendimage, #context-sendvideo, #context-sendaudio {background-image: url("../icons/mail.svg") !important;}
+
+    #context-setDesktopBackground {background-image: url("../icons/device-desktop.svg") !important;}
+
+    #context-take-screenshot {background-image: url("chrome://browser/skin/screenshot.svg") !important;}
+
+    #context-bookmarklink {background-image: url("chrome://browser/skin/bookmark.svg") !important;}
+    #context-savelink {background-image: url("../icons/toolbarButton-download.svg") !important;}
+    #context-savelinktopocket {background-image: url("../icons/pocket-outline.svg") !important;}
+    #context-copyemail {background-image: url("../icons/mail.svg") !important;}
+    #context-copyphone {background-image: url("../icons/device-phone.svg") !important;}
+    #context-copylink {background-image: url("../icons/link.svg") !important;}
+    #context-stripOnShareLink {background-image: url("../icons/link-no-tracking.svg") !important;}
+    #context-sendlinktodevice {background-image: url("../icons/send-to-device.svg") !important;}
+
+    #context-searchselect {background-image: url(chrome://global/skin/icons/search-glass.svg) !important;}
+    #context-searchselect-private {background-image: url("../icons/private-favicon.svg") !important;}
+    #context-keywordfield {background-image: url("chrome://browser/skin/bookmark.svg") !important;}
+    
+    #context-translate-selection {background-image: url("../icons/translate.svg") !important;}
+
+    #context-bidi-text-direction-toggle {background-image: url("../icons/text-direction-horizontal-ltr.svg") !important;}
+    #context-bidi-page-direction-toggle {background-image: url("../icons/document-landscape-split-hint.svg") !important;}
+    
+    #context-viewsource-goToLine {background-image: url("../icons/text-number-format.svg") !important;}
+    #context-viewpartialsource-selection {background-image: url("../icons/code.svg") !important;}
+    #context-viewsource {background-image: url("../icons/document-search.svg") !important;}
+    #context-inspect-a11y {background-image: url("../icons/tool-accessibility.svg") !important;}
+    #context-inspect {background-image: url("../icons/command-pick.svg") !important;}
+    
+    #fill-login {background-image: url("../icons/password.svg") !important;}
+    #fill-login-generated-password {background-image: url("chrome://browser/skin/login.svg") !important;}
+    #manage-saved-logins {background-image: url("../icons/key-multiple.svg") !important;}
+    #use-relay-mask {background-image: url("../icons/relay-logo.svg") !important;}
+    #context-reveal-password {background-image: url("../icons/eye-show.svg") !important;}
+  }
+  
+  /* toolbar context menu */
+  #toolbar-context-menu, #unified-extensions-context-menu{
+    .customize-context-manageExtension, .unified-extensions-context-menu-manage-extension {background-image: url("chrome://global/skin/icons/settings.svg") !important;}
+    .customize-context-removeExtension, .unified-extensions-context-menu-remove-extension {background-image: url("../icons/trash.svg") !important;}
+    .customize-context-reportExtension, .unified-extensions-context-menu-report-extension {background-image: url("chrome://global/skin/icons/warning.svg") !important;}
+    .customize-context-moveToPanel {background-image: url("../icons/pin-tab.svg") !important;}
+    .customize-context-removeFromToolbar {background-image: url("../icons/trash.svg") !important;}
+    #toggle_PersonalToolbar {background-image: url("../icons/bookmarks-toolbar-alt.svg") !important;}
+    .viewCustomizeToolbar {background-image: url("chrome://browser/skin/customize.svg") !important;}
+    
+    .unified-extensions-context-menu-move-widget-up {background-image: url("../icons/up-arrow.svg") !important;}
+    .unified-extensions-context-menu-move-widget-down {background-image: url("../icons/down-arrow.svg") !important;}
+  }
+  
+  /* bookmarks context menu */
+  #placesContext{
+    #placesContext_open {background-image: url("../icons/link-square.svg") !important;}
+    #placesContext_openBookmarkContainer\:tabs, #placesContext_openBookmarkLinks\:tabs {background-image: url("../icons/movetowindow-16.svg") !important;}
+    #placesContext_open\:newtab, #placesContext_openContainer\:tabs, #placesContext_openLinks\:tabs {background-image: url("../icons/new-tab.svg") !important;}
+    #placesContext_open\:newcontainertab {background-image: url("../icons/container-openin-16.svg") !important;}
+    #placesContext_open\:newwindow {background-image: url("chrome://browser/skin/window.svg") !important;}
+    #placesContext_open\:newprivatewindow {background-image: url("chrome://browser/skin/privateBrowsing.svg") !important;}
+    #placesContext_show_bookmark\:info, #placesContext_show\:info, #placesContext_show_folder\:info {background-image: url("../icons/edit-active.svg") !important;}
+    #placesContext_deleteBookmark, #placesContext_deleteFolder, #placesContext_delete, #placesContext_delete_history {background-image: url("../icons/trash.svg") !important;}
+    #placesContext_deleteHost {background-image: url("../icons/eye-hide.svg") !important;}
+    #placesContext_sortBy\:name {background-image: url("../icons/text-sort-ascending.svg") !important;}
+    
+    #placesContext_cut {background-image: url("../icons/edit-cut.svg") !important;}
+    #placesContext_copy {background-image: url("../icons/edit-copy.svg") !important;}
+    #placesContext_paste_group, #placesContext_paste {background-image: url("../icons/edit-paste.svg") !important;}
+    #placesContext_new\:separator {background-image: url("../icons/vertical-line.svg") !important;}
+    #placesContext_new\:bookmark {background-image: url("chrome://browser/skin/bookmark.svg") !important;}
+    #placesContext_new\:folder {background-image: url("chrome://global/skin/icons/folder.svg") !important;}
+    #placesContext_showAllBookmarks {background-image: url("chrome://browser/skin/bookmark-star-on-tray.svg") !important;}
+    #toggle_PersonalToolbar {background-image: url("../icons/bookmarks-toolbar-alt.svg") !important;}
+  }
+  
+  /* downloads context menu */
+  #downloadsContextMenu{
+    .downloadPauseMenuItem {background-image: url("chrome://global/skin/media/pause-fill.svg") !important;}
+    .downloadResumeMenuItem {background-image: url("chrome://global/skin/media/play-fill.svg") !important;}
+    .downloadUnblockMenuItem {background-image: url("../icons/checkmark-circle.svg") !important;}
+    .downloadUseSystemDefaultMenuItem {background-image: url("../icons/toolbarButton-upload.svg") !important;}
+    .downloadShowMenuItem {background-image: url("chrome://global/skin/icons/folder.svg") !important;}
+    
+    .downloadOpenReferrerMenuItem {background-image: url("../icons/link-square.svg") !important;}
+    .downloadCopyLocationMenuItem {background-image: url("../icons/link.svg") !important;}
+    
+    .downloadDeleteFileMenuItem {background-image: url("../icons/trash.svg") !important;}
+    .downloadRemoveFromHistoryMenuItem {background-image: url("../icons/eraser.svg") !important;}
+    
+    menuitem[command="downloadsCmd_clearList"],  menuitem[command="downloadsCmd_clearDownloads"] {background-image: url("../icons/broom.svg") !important;}
+  }
+  
+  /* sidebar header menu */
+  #sidebarMenu-popup{
+    #sidebar-switcher-bookmarks {background-image: url(chrome://browser/skin/bookmark.svg) !important;}
+    #sidebar-switcher-history {background-image: url(chrome://browser/skin/history.svg) !important;}
+    #sidebar-switcher-tabs {background-image: url(chrome://browser/skin/synced-tabs.svg) !important;}
+  }
+  
+  /* bookmarks button menu */
+  #main-window:has(#PersonalToolbar[collapsed="true"]) #BMB_bookmarksPopup #BMB_viewBookmarksToolbar {background-image: url("../icons/eye-show.svg") !important;}
+  #BMB_bookmarksPopup{
+    #BMB_viewBookmarksToolbar {background-image: url("../icons/eye-hide.svg") !important;}
+    #BMB_viewBookmarksSidebar {background-image: url("chrome://browser/skin/sidebars.svg") !important;}
+    #BMB_searchBookmarks {background-image: url(chrome://global/skin/icons/search-glass.svg) !important}
+    #BMB_mobileBookmarks {background-image: url(../icons/device-phone.svg) !important;}
+    
+    #BMB_bookmarksShowAllTop {display: none !important;}
+    #BMB_bookmarksShowAll {background-image: url("chrome://browser/skin/bookmark-star-on-tray.svg") !important;}
+  }
+  
+  /* bookmarks bar folder menu */
+  #PlacesToolbar .openintabs-menuitem {background-image: url("../icons/bookmark-multiple.svg") !important;}
+}
+
+/*== ShyFox Floating Search =========================================================================================================================
+
+Cool floating search panel
+
+
+*/
+
+/* about:config setting */
+@media not (-moz-bool-pref: "shyfox.disable.floating.search") { 
+  
+  /* styles for urlbar */
+  #urlbar[breakout-extend]{
+
+    #urlbar-input {font-size: 23.5px !important;}
+    #urlbar-input-container, .urlbar-input-container {height: 50px !important;}
+    #urlbar-background {border-radius: var(--bigger-rounding) !important;}
+
+    #urlbar-input-container, .urlbar-input-container {
+      & > :is(box, image){
+        height: 28px !important;
+        margin-block: calc((50px - 28px) / 4) !important;
+      }
+    }
+
+    position: fixed !important;
+    z-index: 999999 !important;
+
+    bottom: auto !important;
+    top: 20vh !important;
+
+    left: 18vw !important;
+    right: 18vw !important;
+    width: 64vw !important;
+
+    /* cool translucent background */
+    &:before{
+      content: "";
+      position: fixed;
+      pointer-events: none;
+      border-radius: var(--rounding);
+
+      width: 100vw;
+      height: 100vh;
+
+      top: 0px;
+      left: 0px;
+
+      background-color: color-mix(in srgb, var(--bg-col) 80%, transparent);
+    }
+  } 
+}
+
