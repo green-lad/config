@@ -65,32 +65,32 @@
 
           };
 
-          "root/nix" = {
+          "nix" = {
             type = "zfs_fs";
             options.mountpoint = "/nix";
             mountpoint = "/nix";
           };
 
-          "root/var" = {
+          "var" = {
             type = "zfs_fs";
             options.mountpoint = "/var";
             mountpoint = "/var";
           };
 
-          "root/persist" = {
+          "persist" = {
             type = "zfs_fs";
             options.mountpoint = "/persist";
             mountpoint = "/persist";
           };
 
-          "root/home" = {
+          "home" = {
             type = "zfs_fs";
             options.mountpoint = "/home";
             mountpoint = "/home";
           };
 
           # README MORE: https://wiki.archlinux.org/title/ZFS#Swap_volume
-          # "root/swap" = {
+          # "swap" = {
           #   type = "zfs_volume";
           #   size = "10M";
           #   content = {
