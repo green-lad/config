@@ -205,6 +205,12 @@
       allowedUDPPorts = [ 443 80 44857 ];
       allowPing = false;
     };
+    interfaces.enp0s25 = {
+      ipv4.addresses = [{
+        address = "10.10.10.1";
+        prefixLength = 24;
+      }];
+    };
   };
 
   # Ensure the uinput group exists
