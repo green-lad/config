@@ -17,45 +17,52 @@
   #'';
 
   fileSystems."/" =
-    { device = "zroot/root";
+    {
+      device = "zroot/root";
       fsType = "zfs";
       options = [ "zfsutil" ];
       #options = [ "nodev" "nosuid" "noexec" "zfsutil" ];
     };
 
   fileSystems."/nix" =
-    { device = "zroot/nix";
+    {
+      device = "zroot/nix";
       fsType = "zfs";
       options = [ "zfsutil" ];
     };
 
   fileSystems."/var" =
-    { device = "zroot/var";
+    {
+      device = "zroot/var";
       fsType = "zfs";
       options = [ "zfsutil" ];
     };
 
   fileSystems."/persist" =
-    { device = "zroot/persist";
+    {
+      device = "zroot/persist";
       fsType = "zfs";
       options = [ "zfsutil" ];
     };
 
   fileSystems."/home" =
-    { device = "zroot/home";
+    {
+      device = "zroot/home";
       fsType = "zfs";
       options = [ "zfsutil" ];
     };
 
   fileSystems."/boot" =
-    { device = "/dev/disk/by-id/ata-INTEL_SSDSC2BW180A3L_CVCV22530598180EGN-part1";
+    {
+      device = "/dev/disk/by-partlabel/disk-root-ESP";
       fsType = "vfat";
       options = [ "fmask=0077" "dmask=0077" ];
     };
 
   swapDevices =
     [
-      { device = "/dev/disk/by-id/ata-INTEL_SSDSC2BW180A3L_CVCV22530598180EGN-part2";
+      {
+        device = "/dev/disk/by-partlabel/disk-root-swap";
         randomEncryption = true;
       }
     ];
