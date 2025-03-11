@@ -13,36 +13,36 @@
 
   # src: 
   #boot.initrd.postDeviceCommands = lib.mkAfter ''
-  #  zfs rollback -r zpool/root@blank
+  #  zfs rollback -r zroot/root@blank
   #'';
 
   fileSystems."/" =
-    { device = "zpool/root";
+    { device = "zroot/root";
       fsType = "zfs";
       options = [ "zfsutil" ];
       #options = [ "nodev" "nosuid" "noexec" "zfsutil" ];
     };
 
   fileSystems."/nix" =
-    { device = "zpool/nix";
+    { device = "zroot/nix";
       fsType = "zfs";
       options = [ "zfsutil" ];
     };
 
   fileSystems."/var" =
-    { device = "zpool/var";
+    { device = "zroot/var";
       fsType = "zfs";
       options = [ "zfsutil" ];
     };
 
   fileSystems."/persist" =
-    { device = "zpool/persist";
+    { device = "zroot/persist";
       fsType = "zfs";
       options = [ "zfsutil" ];
     };
 
   fileSystems."/home" =
-    { device = "zpool/home";
+    { device = "zroot/home";
       fsType = "zfs";
       options = [ "zfsutil" ];
     };

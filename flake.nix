@@ -14,8 +14,13 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     
-    linuxcnc-nix = {
-      url = "github:mattywillo/linuxcnc-nix";
+    # linuxcnc-nix = {
+    #   url = "github:mattywillo/linuxcnc-nix";
+    # };
+
+    disko = {
+      url = github:nix-community/disko;
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
@@ -26,7 +31,10 @@
     nixosConfigurations.x230 = nixpkgs.lib.nixosSystem {
       inherit system;
       # TODO: https://github.com/mattywillo/linuxcnc-nix
-      modules = [ ./system/configuration.nix ];
+      modules = [
+        ./system/configuration.nix
+        ./system/disko_partition.nix
+      ];
     };
 
     homeConfigurations.markus = home-manager.lib.homeManagerConfiguration {
