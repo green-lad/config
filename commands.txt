@@ -1,3 +1,6 @@
+enable flakes
+  echo "experimental-features = nix-command flake" >> /etc/nix/nix.conf
+
 get info about package
   nix-repl
   :l <nixpkgs>
