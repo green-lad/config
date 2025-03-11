@@ -32,6 +32,7 @@
       inherit system;
       # TODO: https://github.com/mattywillo/linuxcnc-nix
       modules = [
+        disko.nixosModules.disko
         ./system/configuration.nix
         ./disk-config.nix
       ];
