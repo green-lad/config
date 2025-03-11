@@ -33,7 +33,7 @@
       # TODO: https://github.com/mattywillo/linuxcnc-nix
       modules = [
         ./system/configuration.nix
-        ./system/disko_partition.nix
+        ./disk-config.nix
       ];
     };
 
