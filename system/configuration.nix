@@ -67,7 +67,11 @@
       KERNEL=="uinput", MODE="0660", GROUP="uinput", OPTIONS+="static_node=uinput"
     '';
 
-    openssh.enable = true;
+    openssh = {
+      enable = true;
+      #settings.PermitRootLogin = "prohibit-password";
+      settings.PermitRootLogin = "yes";
+    };
 
     libinput.enable = true;
 

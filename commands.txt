@@ -15,8 +15,8 @@ get info about flake
   x = builtins.getFlake "github:..."
   :e x.<flake stuff>
 
-rebuild system
+rebuild system (use "--flake path:." if files got moved)
   sudo nixos-rebuild switch --flake .
 
-rebuild home-manager
+rebuild home-manager (use "--flake path:." if files got moved)
   home-manager switch --flake .

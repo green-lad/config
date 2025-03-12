@@ -1,6 +1,6 @@
 { config, pkgs, inputs, ... }: {
   # info to https://www.reddit.com/r/NixOS/comments/1j0oky4/declaring_librewolf_bookmarks/ if "bookmarks.internal = false" works
-  programs.librewolf = {
+  programs.firefox = {
   # in librewolf the configuration of bookmarks is not working with the configuration of firefox
   # programs.librewolf = {
     enable = true;

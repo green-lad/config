@@ -27,25 +27,39 @@
   outputs = { nixpkgs, home-manager, disko, ... } @ inputs:
   let
     system = "x86_64-linux";
+    pkgs = import nixpkgs {
+      inherit system;
+      config = {
+        allowUnfree = true;
+        allowUnfreePredicate = pkg: builtins.elem (nixpkgs.lib.getName pkg) [
+          "lightburn"
+        ];
+      };
+    };
   in {
     nixosConfigurations.x230 = nixpkgs.lib.nixosSystem {
       inherit system;
+      specialArgs = inputs // { pkgs = pkgs; };
       # TODO: https://github.com/mattywillo/linuxcnc-nix
       modules = [
         disko.nixosModules.disko
         ./system/configuration.nix
-        ./disk-config.nix
+        ./system/disk-config.nix
         # integrate home-manager in system configuration
         home-manager.nixosModules.home-manager {
           home-manager.useGlobalPkgs = true;
-          home-manager.useUserPkgs = true;
+          home-manager.useUserPackages = true;
           home-manager.users.markus = import ./home-manager/home.nix;
+          home-manager.extraSpecialArgs = {
+            inherit inputs;
+          };
         }
       ];
     };
 
     homeConfigurations.markus = home-manager.lib.homeManagerConfiguration {
-      pkgs = nixpkgs.legacyPackages.${system};
+      #pkgs = nixpkgs.legacyPackages.${system};
+      inherit pkgs;
       modules = [ ./home-manager/home.nix ];
       extraSpecialArgs = {
         inherit inputs;
