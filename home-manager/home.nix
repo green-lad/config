@@ -6,6 +6,14 @@
     ./apps/i3
     ./apps/polybar
   ];
+  
+  nixpkgs = {
+    config = {
+      allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
+        "lightburn"
+      ];
+    };
+  };
 
   home = {
     username = "markus";

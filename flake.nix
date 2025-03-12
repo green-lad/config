@@ -35,6 +35,12 @@
         disko.nixosModules.disko
         ./system/configuration.nix
         ./disk-config.nix
+        # integrate home-manager in system configuration
+        home-manager.nixosModules.home-manager {
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPkgs = true;
+          home-manager.users.markus = import ./home-manager/home.nix;
+        }
       ];
     };
 

@@ -31,7 +31,7 @@
           toolbar = true;
           bookmarks = import ./bookmarks.nix;
         }];
-        bookmarks.internal = false;
+        #bookmarks.internal = false;
         search = {
           force = true;
           default = "DuckDuckGo";

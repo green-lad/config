@@ -1,5 +1,25 @@
 {
   "nodes": {
+    "disko": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1741785189,
+        "narHash": "sha256-FG2Q3Kg7g8GrOOd9/p0DHx4lZnqsZmmod+md7GUYIYY=",
+        "owner": "nix-community",
+        "repo": "disko",
+        "rev": "0c8f1b9eab32ab6ec69fbf2b16b408ecade43db5",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "disko",
+        "type": "github"
+      }
+    },
     "firefox-addons": {
       "inputs": {
         "flake-utils": "flake-utils",
@@ -76,6 +96,7 @@
     },
     "root": {
       "inputs": {
+        "disko": "disko",
         "firefox-addons": "firefox-addons",
         "home-manager": "home-manager",
         "nixpkgs": "nixpkgs"

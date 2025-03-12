@@ -2,7 +2,7 @@
   imports = [
     ./hardware-configuration.nix
   ];
-
+  
   environment = {
     # Remove unecessary preinstalled packages
     defaultPackages = [ ];
