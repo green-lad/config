@@ -2,7 +2,6 @@
 let 
   secretspath = builtins.toString input.sops_secrets;
 in {
-{
   sops = {
     defaultSopsFile = "${secretspath}/secrets.yaml";
     # defaultSopsFile = ../secrets.yaml;
