@@ -1,4 +1,4 @@
-{ config, pkgs, inputs, ... }: {
+{ config, pkgs, inputs, user, hostname, ... }: {
   imports = [
     ./hardware-configuration.nix
   ];
@@ -8,6 +8,9 @@
     defaultPackages = [ ];
     # packages that have no home-manager configs
     systemPackages = with pkgs; [
+      age
+      sops
+      htop
       xsel
       neovim
       moc
@@ -75,7 +78,7 @@
 
     libinput.enable = true;
 
-    getty.autologinUser = "markus";
+    getty.autologinUser = user;
 
     printing.enable = true;
 
@@ -105,7 +108,7 @@
       defaultSession = "none+i3";
       autoLogin = {
         enable = true;
-        user = "markus";
+        user = user;
       };
     };
 
@@ -175,7 +178,7 @@
 
   nix = {
     settings.auto-optimise-store = true;
-    settings.allowed-users = [ "markus" ];
+    settings.allowed-users = [ user ];
     settings.experimental-features = [ "nix-command" "flakes" ];
     gc = {
       automatic = true;
@@ -198,7 +201,7 @@
   };
 
   networking = {
-    hostName = "x230";
+    hostName = hostname;
     networkmanager.enable = true;
     # needed for zfs
     hostId = "8425e349";
@@ -260,24 +263,28 @@
 
   # Ensure the uinput group exists
   users.groups.uinput = { };
-  users.users.markus = {
-    shell = pkgs.zsh;
-    isNormalUser = true;
-    hashedPassword = "$6$igRbgm5cDL1ZG0Zc$tmrJZPcQtk7sul2Zumk7XidoVta8xE4sSZvPCCmRIbyDmw7b9bx5BG6XlXUfcOVVPh/wor.YirIZ3Sw5zB.tN0";
-    home = "/home/markus";
-    extraGroups = [
-      "wheel"
-      "networkmanager"
+  users.users = let
+    # TODO: auto evaluate
+    authorizedKeys = [
+      builtins.readFile (config.sops.secrets."keys/x230/public".path)
     ];
-    packages = with pkgs; [
-    ];
-    openssh.authorizedKeys.keys = [
-      "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCuknMwnBgC9ZS/iAP+Uxs6uWQ6Q4YLxZb0XU6B+rEjQ8pNTO9Fry8OO0UQCuONmDk2e5UCZdRd072lThWFuEQ3OLv9Q5GXOBd7Yd2w6ov5orGTPLVDiHhT4Hhl8EBj/bZf4kP5fQeBmkWnN+7MLJQCCwLwdhyCMXDVCIYTkSispNVGTvUbZr0fdxy49Ey65XSGm2ib270o0mNgEnmcr81NnSxIxMNLnpoCJ8Sir4/TmNyrVBSm5Se2VYlCLiYgKj93flF3rR2QmuEHW1vURkOJKip+XhmmWbJ2J6eZqQrLCY9i8b8C9B/5xS+84Pz8EoqrNefRAzE6/xqcS9O+Ko2xqBo/V0jimfSpU1Mp9O8zgYIP9YXiuRLFFxLtKcJ+Qy6RoOukUcdILDVy9R8dCkv65l4125TbTXShXcQML3BL1L562FGIpQvCCA+8E29mLfvOZkfyHUGOcrB+Uw/58Qjq03BGiJ6hR4HhB3WGw3/aJL1NG1L8jcf+vvOFVf34X9DUYaQSJIT8B32PZEUwk/Hk3tLlhhdrLWOLek6RpIlcAT8Z3umOif0taMiRlilo2qHYDGjY9QSdo30ugqzUIDH20PxPyViR6/Af8WdGAThINMVVth4ltGSz7Hl3jbaVdhac+Y/ShGmHac6w8uAFz8C6zaCxCj59YvYtsz50LK0ukw== markus@n2"
-    ];
+    "${user}" = {
+      shell = pkgs.zsh;
+      isNormalUser = true;
+      hashedPassword = "$6$igRbgm5cDL1ZG0Zc$tmrJZPcQtk7sul2Zumk7XidoVta8xE4sSZvPCCmRIbyDmw7b9bx5BG6XlXUfcOVVPh/wor.YirIZ3Sw5zB.tN0";
+      home = "/home/${user}";
+      extraGroups = [
+        "wheel"
+        "networkmanager"
+      ];
+      packages = with pkgs; [
+      ];
+      openssh.authorizedKeys.keys = authorizedKeys;
+    };
+    root = {
+      openssh.authorizedKeys.keys = authorizedKeys;
+    };
   };
-  users.users.root.openssh.authorizedKeys.keys = [
-    "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCuknMwnBgC9ZS/iAP+Uxs6uWQ6Q4YLxZb0XU6B+rEjQ8pNTO9Fry8OO0UQCuONmDk2e5UCZdRd072lThWFuEQ3OLv9Q5GXOBd7Yd2w6ov5orGTPLVDiHhT4Hhl8EBj/bZf4kP5fQeBmkWnN+7MLJQCCwLwdhyCMXDVCIYTkSispNVGTvUbZr0fdxy49Ey65XSGm2ib270o0mNgEnmcr81NnSxIxMNLnpoCJ8Sir4/TmNyrVBSm5Se2VYlCLiYgKj93flF3rR2QmuEHW1vURkOJKip+XhmmWbJ2J6eZqQrLCY9i8b8C9B/5xS+84Pz8EoqrNefRAzE6/xqcS9O+Ko2xqBo/V0jimfSpU1Mp9O8zgYIP9YXiuRLFFxLtKcJ+Qy6RoOukUcdILDVy9R8dCkv65l4125TbTXShXcQML3BL1L562FGIpQvCCA+8E29mLfvOZkfyHUGOcrB+Uw/58Qjq03BGiJ6hR4HhB3WGw3/aJL1NG1L8jcf+vvOFVf34X9DUYaQSJIT8B32PZEUwk/Hk3tLlhhdrLWOLek6RpIlcAT8Z3umOif0taMiRlilo2qHYDGjY9QSdo30ugqzUIDH20PxPyViR6/Af8WdGAThINMVVth4ltGSz7Hl3jbaVdhac+Y/ShGmHac6w8uAFz8C6zaCxCj59YvYtsz50LK0ukw== markus@n2"
-  ];
 
   # don't touch
   system.stateVersion = "24.11"; # Did you read the comment?

@@ -1,13 +1,3 @@
-{ config, pkgs, ... }: {
-  services.polybar = {
-    package = pkgs.polybar.override {
-      i3Support = true;
-      pulseSupport  = true;
-    };
-    enable = true;
-    script = "restart_polybar";
-    # extraConfig = (builtins.readFile ./config);
-    config = {
       "colors" = {
         background = "#1e1e20";
         #button_text_color = \${colors.background};
@@ -80,7 +70,7 @@
       "module/wlan" = {
         type = "internal/network";
         interface = "wlp0s20f3";
-        interval = 3;
+        interval = 3.0;
         format-connected = "<ramp-signal> <label-connected>";
         format-connected-foreground = "\${colors.text_normal_color}";
         format-connected-background = "\${colors.background}";
@@ -98,7 +88,7 @@
       "module/eth" = {
         type = "internal/network";
         interface = "eno1";
-        interval = 3;
+        interval = 3.0;
         format-connected-padding = 2;
         format-connected-foreground = "\${colors.text_normal_color}";
         format-connected-background = "\${colors.background}";
@@ -225,7 +215,7 @@
         type = "custom/script";
         #passing variables to exec seems to be not supported...;
         #exec = get_mail_count --colornormal "\${colors.background}" --colorhighlight "\${colors.highlight}";
-        exec = "get_mail_count --colornormal \"#1e1e20\" --colorhighlight \"#e06c75\" --mail_password_file ${config.sops.secrets.imap-password.path}";
+        exec = "get_mail_count --colornormal \"#1e1e20\" --colorhighlight \"#e06c75\" --mail_password_file ${inputs.sops.secrets.imap-password.path}";
         click-left = "st -e neomutt";
         tail = "true";
       };
@@ -252,6 +242,3 @@
         margin-top = 0;
         margin-bottom = 0;
       };
-    };
-  };
-}

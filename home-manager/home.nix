@@ -1,15 +1,20 @@
-{ pkgs, inputs, lib, ... }: {
+{ pkgs, inputs, lib, user, hostname, ... }: {
   imports = [
-    ./apps/git
+    inputs.sops-nix.homeManagerModules.sops
+    ./sops.nix
+
     ./apps/firefox
-    ./apps/zsh
+    ./apps/git
     ./apps/i3
+    ./sops.nix
     ./apps/polybar
+    ./apps/ssh
+    ./apps/zsh
   ];
   
   home = {
-    username = "markus";
-    homeDirectory = "/home/markus";
+    username = user;
+    homeDirectory = "/home/${user}";
     stateVersion = "24.11";
     packages = with pkgs; [
       python3

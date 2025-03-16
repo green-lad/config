@@ -18,10 +18,10 @@ def print_count(count, colornormal, colorhighlight, prefix):
     print(f'{prefix_output} {number_output}', flush=True)
 
 
-def get_count(args):
+def get_count(args, password):
     # Connect to mail server
     imap = imaplib.IMAP4_SSL(args.mail_server, args.mail_port)
-    imap.login(args.mail_username, args.mail_password)
+    imap.login(args.mail_username, password)
     imap.select(mailbox=args.mail_box)
     typ, data = imap.search(None, '(Unseen)')
     if typ != 'OK':
@@ -32,9 +32,12 @@ def get_count(args):
 
 def loop(args):
     count_was = -1
+    password = ""
+    with open(args.mail_password_file, "r") as f:
+        password = f.readline()
 
     while True:
-        count = get_count(args)
+        count = get_count(args, password)
         if count != count_was:
             print_count(count, args.colornormal, args.colorhighlight, args.prefix)
             count_was = count
@@ -47,7 +50,7 @@ def parse_args():
     parser.add_argument('-ms', '--mail_server', default='faumail.fau.de')
     parser.add_argument('-mp', '--mail_port', default='993')
     parser.add_argument('-mu', '--mail_username', default='markus.schoetz@fau.de')
-    parser.add_argument('-mpw', '--mail_password', default='genericPsw')
+    parser.add_argument('-mpw', '--mail_password_file', default='blub')
     parser.add_argument('-mb', '--mail_box', default='INBOX')
 
     parser.add_argument('-p', '--prefix', default='\uf0e0')

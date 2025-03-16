@@ -99,7 +99,46 @@
         "disko": "disko",
         "firefox-addons": "firefox-addons",
         "home-manager": "home-manager",
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs",
+        "sops-nix": "sops-nix",
+        "sops_secrets": "sops_secrets"
+      }
+    },
+    "sops-nix": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1741861888,
+        "narHash": "sha256-ynOgXAyToeE1UdLNfrUn/hL7MN0OpIS2BtNdLjpjPf0=",
+        "owner": "mic92",
+        "repo": "sops-nix",
+        "rev": "d016ce0365b87d848a57c12ffcfdc71da7a2b55f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "mic92",
+        "repo": "sops-nix",
+        "type": "github"
+      }
+    },
+    "sops_secrets": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1742161687,
+        "narHash": "sha256-HrbY3AeNDWNuifoU95kHtdp8hWmJjH3j6RIxGGhUzZ4=",
+        "ref": "refs/heads/master",
+        "rev": "2f516166190ce02763fc605e2edc3141d261d028",
+        "shallow": true,
+        "type": "git",
+        "url": "ssh://git@github.com/green-lad/sops_secrets.git"
+      },
+      "original": {
+        "shallow": true,
+        "type": "git",
+        "url": "ssh://git@github.com/green-lad/sops_secrets.git"
       }
     }
   },
