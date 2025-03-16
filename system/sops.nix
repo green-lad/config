@@ -1,4 +1,4 @@
-{ hostname, ... }:
+{ hostname, inputs, ... }:
 let 
   secretspath = builtins.toString input.sops_secrets;
 in {
