@@ -264,10 +264,11 @@
   # Ensure the uinput group exists
   users.groups.uinput = { };
   users.users = let
-    # TODO: auto evaluate
     authorizedKeys = [
-      builtins.readFile (config.sops.secrets."keys/x230/public".path)
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAP46k4CU/BnDnnrXA4NZKUXm00Exc3yEyZ4J4dIFPIf markus.schoetz@fau.de"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAP46k4CU/BnDnnrXA4NZKUXm00Exc3yEyZ4J4dIFPIf markus.schoetz@fau.de"
     ];
+  in {
     "${user}" = {
       shell = pkgs.zsh;
       isNormalUser = true;

@@ -1,10 +1,9 @@
 { hostname, inputs, ... }:
 let 
-  secretspath = builtins.toString input.sops_secrets;
+  secretspath = builtins.toString inputs.sops_secrets;
 in {
   sops = {
     defaultSopsFile = "${secretspath}/secrets.yaml";
-    # defaultSopsFile = ../secrets.yaml;
     validateSopsFiles = false;
     
     defaultSymlinkPath = "/run/user/1000/secrets";

@@ -9,8 +9,7 @@
 	user = "git";
 	identitiesOnly = true;
 	identityFile = [
-	  "~/.ssh/id_ed25519"
-	  # config.sops.secrets."keys/${hostname}/private".path
+	  config.sops.secrets."keys/${hostname}/private".path
 	];
       };
     };
