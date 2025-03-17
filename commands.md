@@ -45,3 +45,7 @@ age-keygen -y ~/.config/sops/age/keys.txt
 sops updatekeys secrets.yaml
 ```
 
+- evaluate nix expression, pretty print it and copy it to clipboard
+```
+nix-instantiate --eval <file/expression> | nixfmt | xsel -b
+```
