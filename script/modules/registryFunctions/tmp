@@ -1,0 +1,6 @@
+@{
+    ModuleVersion = "0.0.0";
+    NestedModules = @(
+        "registryFunctions.psm1"
+    )
+}

@@ -1,0 +1,18 @@
+snippet dflLoadPluginInCode
+options head
+    # constructor
+    [ServiceDependency] IPlugInManager plugInManager,
+    [Dependency(NotPresentBehavior = NotPresentBehavior.Throw)] WorkItem workItem,
+
+    # load specific plugin
+    private IInstalledEnvironmentManager GetInstalledEnvironmentManager()
+    {
+        plugInManager.LoadPlugIn("Datev.Arbeitsplatz.IEO.InstalledEnvironmentManager");
+        plugInManager.ActivatePlugIns();
+        return workItem.Services.Get<IInstalledEnvironmentManager>(true);
+    }
+
+
+snippet debug
+options head
+    System.Diagnostics.Debugger.Launch();

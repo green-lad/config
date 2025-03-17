@@ -1,0 +1,33 @@
+snippet validatedDirsParam
+option head
+    [ValidateScript(
+        $_.Count -eq ($_ | where-object {Test-Path -type Container $_}).Count
+    })]
+    [string[]]$dirs = @(".")
+
+# useful in classes where it seems the size of arrays have to be specifically given
+snippet listDecl
+option head
+    [System.Collections.Generic.List[<desired type>]]$Childs
+
+snippet isAdmin
+option head
+	(New-Object Security.Principal.WindowsPrincipal $([Security.Principal.WindowsIdentity]::GetCurrent())).IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
+
+snippet elevatingScript
+option head
+	if(!(New-Object Security.Principal.WindowsPrincipal $([Security.Principal.WindowsIdentity]::GetCurrent())).IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)) {
+		$scriptPath = $MyInvocation.InvocationName
+		$call = $scriptPath
+		$ParameterList = (Get-Command -Name $scriptPath).Parameters;
+		$vars = Get-Variable -Name $ParameterList.Values.Name -ErrorAction SilentlyContinue;
+		foreach($var in $vars) {
+		    if($var -and $var.value) {
+			$call += " -$($var.name) `"$($var.value)`" "
+		    }
+		}
+		$call += " $($MyInvocation.UnboundArguments)"
+		$command=[ScriptBlock]::Create("cd $((gi .).fullname);" + $call)
+		return Start-Process powershell.exe -Verb RunAs -ArgumentList ('-noprofile -noexit -command "{0}"' -f ($command))
+	}
+

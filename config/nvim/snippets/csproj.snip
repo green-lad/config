@@ -1,0 +1,101 @@
+snippet default
+options head
+    <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+        <ItemGroup>
+            <Compile Include="*.cs" />
+        </ItemGroup>
+        <Target Name="Build">
+            <Csc Sources="@(Compile)"/>  
+        </Target>
+    </Project>
+
+snippet test
+options head
+	<?xml version="1.0" encoding="utf-8"?>
+	<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+		<PropertyGroup>
+			<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+			<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+				<!-- <ProjectGuid>{0BA2AA27-F5F7-47C5-BC11-B0E4048EE820}</ProjectGuid> -->
+			<OutputType>Library</OutputType>
+			<AppDesignerFolder>Properties</AppDesignerFolder>
+			<RootNamespace>${1:`expand('%:p:h:t')`}</RootNamespace>
+			<AssemblyName>$1</AssemblyName>
+			<TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+			<FileAlignment>512</FileAlignment>
+			<ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+		</PropertyGroup>
+		<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+			<DebugSymbols>true</DebugSymbols>
+			<DebugType>full</DebugType>
+			<Optimize>false</Optimize>
+			<OutputPath>bin\DEBUG\</OutputPath>
+			<DefineConstants>DEBUG;TRACE</DefineConstants>
+			<ErrorReport>prompt</ErrorReport>
+			<WarningLevel>4</WarningLevel>
+		</PropertyGroup>
+		<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+			<DebugType>pdbonly</DebugType>
+			<Optimize>true</Optimize>
+			<OutputPath>bin\Release\</OutputPath>
+			<DefineConstants>TRACE</DefineConstants>
+			<ErrorReport>prompt</ErrorReport>
+			<WarningLevel>4</WarningLevel>
+		</PropertyGroup>
+		<ItemGroup>
+			<Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+				<HintPath>Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll</HintPath>
+			</Reference>
+			<Reference Include="System" />
+			<Reference Include="System.Core">
+				<RequiredTargetFramework>3.5</RequiredTargetFramework>
+			</Reference>
+		</ItemGroup>
+		<ItemGroup>
+			<Compile Include="${2}" />
+		</ItemGroup>
+		<ItemGroup>
+			<!-- <ProjectReference Include=""> -->
+			<!-- 	<Project>{2911AC73-7489-4E4A-AD9D-C034F2380F9D}</Project> -->
+			<!-- 	<Name></Name> -->
+			<!-- </ProjectReference> -->
+		</ItemGroup>
+		<ItemGroup>
+			<BootstrapperPackage Include=".NETFramework,Version=v4.0">
+				<Visible>False</Visible>
+				<ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>
+				<Install>true</Install>
+			</BootstrapperPackage>
+			<BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+				<Visible>False</Visible>
+				<ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+				<Install>false</Install>
+			</BootstrapperPackage>
+			<BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+				<Visible>False</Visible>
+				<ProductName>.NET Framework 3.5 SP1</ProductName>
+				<Install>false</Install>
+			</BootstrapperPackage>
+			<BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+				<Visible>False</Visible>
+				<ProductName>Windows Installer 3.1</ProductName>
+				<Install>true</Install>
+			</BootstrapperPackage>
+		</ItemGroup>
+		<ItemGroup>
+			<None Include="Base.Test.UnitTest.v3.ncrunchproject" />
+		</ItemGroup>
+		<Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+			<!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+				Other similar extension points exist, see Microsoft.Common.targets.
+				<Target Name="BeforeBuild">
+				</Target>
+				<Target Name="AfterBuild">
+				</Target>
+			-->
+		<Target Name="BeforeBuild">
+			<Message Text="TargetPath base.Test.UnitTest $(TargetPath)">
+			</Message>
+		</Target>
+		<PropertyGroup />
+	</Project>
