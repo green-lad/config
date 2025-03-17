@@ -6,6 +6,8 @@ import argparse
 import imaplib
 import time
 
+# alternative shell script without color (total via 'STATUS inbox (messages)'):
+# echo $(curl -s --url "imaps://faumail.fau.de:993" --user "<user_mail>":"<user_password" -x 'STATUS inbox (unseen)' | grep -o '[0-9]*')
 
 def print_count(count, colornormal, colorhighlight, prefix):
     output = ''
