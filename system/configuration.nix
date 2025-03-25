@@ -1,6 +1,7 @@
 { config, pkgs, inputs, user, hostname, ... }: {
   imports = [
-    ../host_hardware/${hostname}
+    # ../host_hardware/${hostname}
+    ../host_hardware/x230/default.nix
   ];
   
   environment = {
