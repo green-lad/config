@@ -9,11 +9,11 @@ To list a few, it uses:
 In [commands.md](./commands.md) is a list of usefule commands.
 
 # Installation
-- enable root login via ssh (/etc/sshd/sshd_config: PermitRootLogin yes)
+- enable root login via ssh (/etc/ssh/sshd_config: PermitRootLogin yes)
 - start sshd
-- change hostname to x230
-- deploy system:
-> sudo nix --experimental-features 'nix-command flakes' run github:nix-community/nixos-anywhere -- --flake 'github:green-lad/config?ref=nixos#x230' --target-host root@x230
+- change hostname to desired name (<host>)
+- deploy system: (add "--generate-hardware-config nixos-generate-config ./host_hardware/<host>/default.nix" to generate initial hardware config)
+> sudo nix --experimental-features 'nix-command flakes' run github:nix-community/nixos-anywhere -- --flake 'github:green-lad/config?ref=nixos#<host>' --target-host root@<host>
 - (sops-nix won't work, you need to create your own secrets)
 
 # Program info
