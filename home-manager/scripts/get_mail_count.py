@@ -52,7 +52,7 @@ def parse_args():
     parser.add_argument('-ms', '--mail_server', default='faumail.fau.de')
     parser.add_argument('-mp', '--mail_port', default='993')
     parser.add_argument('-mu', '--mail_username', default='markus.schoetz@fau.de')
-    parser.add_argument('-mpw', '--mail_password_file', default='blub')
+    parser.add_argument('-mpw', '--mail_password_file', default='')
     parser.add_argument('-mb', '--mail_box', default='INBOX')
 
     parser.add_argument('-p', '--prefix', default='\uf0e0')

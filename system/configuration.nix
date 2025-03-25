@@ -1,6 +1,6 @@
 { config, pkgs, inputs, user, hostname, ... }: {
   imports = [
-    ./hardware-configuration.nix
+    ../host_hardware/${hostname}
   ];
   
   environment = {
