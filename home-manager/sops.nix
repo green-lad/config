@@ -10,9 +10,8 @@ in {
     defaultSecretsMountPoint = "/run/user/1000/secrets.d";
 
     age = {
-      # TODO: this seems wrong
       sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
-      keyFile = "/var/lib/sops-nix/key.txt";
+      keyFile = "/var/lib/sops-nix/keys.txt";
       generateKey = true;
     };
 
