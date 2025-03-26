@@ -5,8 +5,16 @@
       pulseSupport  = true;
     };
     enable = true;
-    script = "restart_polybar";
-    # extraConfig = (builtins.readFile ./config);
+    # script = "polybar top &";
+    # script = "restart_polybar";
+    script = "PATH=$PATH:${pkgs.lib.makeBinPath [
+      pkgs.python3
+      (pkgs.writeScriptBin "get_mail_count" (builtins.readFile ../../scripts/get_mail_count.py))
+      pkgs.taskwarrior3
+      (pkgs.writeScriptBin "get_most_urgent_task" (builtins.readFile ../../scripts/get_most_urgent_task.sh))
+      (pkgs.writeScriptBin "restart_polybar" (builtins.readFile ../../scripts/restart_polybar.sh))
+      ]} restart_polybar";
+    # path = 
     config = {
       "colors" = {
         background = "#1e1e20";
@@ -144,7 +152,7 @@
         label-separator-foreground = "\${colors.text_normal_color}";
         label-separator-background = "\${colors.background}";
         menu-0-0 = "reload polybar";
-        menu-0-0-exec = "restart_polybar.sh";
+        menu-0-0-exec = "restart_polybar";
         menu-0-1 = "reload i3";
         menu-0-1-exec = "i3-msg restart";
         menu-0-2 = "log off";
