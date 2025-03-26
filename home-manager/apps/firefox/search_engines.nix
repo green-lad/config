@@ -1,6 +1,6 @@
 {
-  "Google".metaData.hidden = true;
-  "Bing".metaData.hidden = true;
+  "google".metaData.hidden = true;
+  "bing".metaData.hidden = true;
   "home-manager options" = {
     urls = [
       {
@@ -18,7 +18,7 @@
       }
     ];
 
-    iconUpdateURL = "https://wiki.nixos.org/favicon.png";
+    icon = "https://wiki.nixos.org/favicon.png";
     updateInterval = 24 * 60 * 60 * 1000; # every day
     definedAliases = [ "@hmo" ];
   };
@@ -44,7 +44,7 @@
       }
     ];
 
-    iconUpdateURL = "https://wiki.nixos.org/favicon.png";
+    icon = "https://wiki.nixos.org/favicon.png";
     updateInterval = 24 * 60 * 60 * 1000; # every day
     definedAliases = [ "@np" ];
   };
@@ -61,7 +61,7 @@
       }
     ];
 
-    iconUpdateURL = "https://www.mozilla.org/media/protocol/img/logos/firefox/logo.fedb52c912d6.svg";
+    icon = "https://www.mozilla.org/media/protocol/img/logos/firefox/logo.fedb52c912d6.svg";
     updateInterval = 24 * 60 * 60 * 1000; # every day
     definedAliases = [ "@fe" ];
   };

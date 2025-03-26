@@ -26,15 +26,18 @@
         ];
         userChrome = (builtins.readFile ./userChrome.css);
         userContent = (builtins.readFile ./userContent.css);
-        bookmarks = import ./bookmarks.nix ++ [{
-          name = "toolbar";
-          toolbar = true;
-          bookmarks = import ./bookmarks.nix;
-        }];
+        bookmarks = {
+	  force = true;
+	  settings = import ./bookmarks.nix ++ [{
+            name = "toolbar";
+            toolbar = true;
+            bookmarks = import ./bookmarks.nix;
+          }];
+	};
         #bookmarks.internal = false;
         search = {
           force = true;
-          default = "DuckDuckGo";
+          default = "ddg";
           engines = import ./search_engines.nix;
         };
         settings = {
