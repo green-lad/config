@@ -33,7 +33,7 @@ sudo nixos-rebuild switch --flake .
 home-manager switch --flake .
 ```
 
-- generate age key for sops
+- generate age key for sops (use ssh-add <private key> if the key was not generate on the machine)
 ```
 ssh-keygen -t ed25519 -C "example@example.com" -f ~/.ssh/id_ed25519
 nix-shell -p ssh-to-age --run "ssh-to-age -private-key -i ~/.ssh/id_ed25519 > ~/.config/sops/age/keys.txt"

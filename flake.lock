@@ -133,12 +133,12 @@
         "rev": "d239aa5883e575f7f6bf09d64c64ecdfd51a6435",
         "shallow": true,
         "type": "git",
-        "url": "ssh://git@github.com/green-lad/sops_secrets.git"
+        "url": "ssh://git@github.com/green-lad/sops_secrets"
       },
       "original": {
         "shallow": true,
         "type": "git",
-        "url": "ssh://git@github.com/green-lad/sops_secrets.git"
+        "url": "ssh://git@github.com/green-lad/sops_secrets"
       }
     }
   },

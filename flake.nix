@@ -29,8 +29,7 @@
     };
 
     sops_secrets = {
-      # url = "git+ssh://git@github.com/green-lad/sops_secrets.git?shallow=1";
-      url = "git+ssh://git@github.com/green-lad/sops_secrets?ref=master";
+      url = "git+ssh://git@github.com/green-lad/sops_secrets?shallow=1";
       flake = false;
     };
   };

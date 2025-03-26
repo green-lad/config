@@ -26,4 +26,5 @@ In the future I might want to switch to librewolf (currently some stuff does not
 - Use librewolf instead of firefox (didn't switch yet because bookmarks were not working immediately)
 - Reset root system (impermanence)
 - Get realtime kernel and linuxcnc working
-- Have another separate host (desktop)
+- Work on the split between hosts
+- Get nixos-anywhere working again (when running it, nixos-installer gets booted; disko stuff seems fine, maybe sops-nix is the problem) 
