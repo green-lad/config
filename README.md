@@ -28,3 +28,4 @@ In the future I might want to switch to librewolf (currently some stuff does not
 - Get realtime kernel and linuxcnc working
 - Work on the split between hosts
 - Get nixos-anywhere working again (when running it, nixos-installer gets booted; disko stuff seems fine, maybe sops-nix is the problem) 
+- Configure xdg-open (currently untested) and use yazi as file picker in firefox

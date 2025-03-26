@@ -9,6 +9,7 @@
     ./sops.nix
     ./apps/polybar
     ./apps/ssh
+    ./apps/xdg
     ./apps/zsh
   ];
   
@@ -29,6 +30,9 @@
       openscad
       lightburn
       blender
+      feh
+      zathura
+      yazi
     ];
   };
 }
