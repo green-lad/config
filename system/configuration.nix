@@ -43,7 +43,13 @@
     };
   };
 
-  hardware.uinput.enable = true;
+  hardware = {
+    uinput.enable = true;
+    bluetooth = {
+      enable = true;
+      powerOnBoot = true;
+    };
+  };
 
   # Add the Kanata service user to necessary groups
   systemd.services.kanata-internalKeyboard.serviceConfig = {
