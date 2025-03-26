@@ -23,7 +23,8 @@
               };
             };
             zfs = {
-              end = "-4G";
+              end = "-1G";
+              # end = "-4G";
               content = {
                 type = "zfs";
                 pool = "zroot";
