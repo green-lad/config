@@ -1,6 +1,7 @@
 { config, pkgs, inputs, user, hostname, ... }: {
   imports = [
-    ../host_hardware/${hostname}
+    ./harware-configuration.nix
+    # ${hostname}
   ];
   
   environment = {
@@ -253,21 +254,14 @@
         }
       }
     '';
-    # firewall = {
-    #   enable = true;
-    #   allowedTCPPorts = [ 443 80 ];
-    #   allowedUDPPorts = [ 443 80 44857 ];
-    #   allowPing = false;
+    # interfaces.enp0s25 = {
+    #   ipv4.addresses = [{
+    #     address = "10.10.10.1";
+    #     prefixLength = 24;
+    #   }];
     # };
-    interfaces.enp0s25 = {
-      ipv4.addresses = [{
-        address = "10.10.10.1";
-        prefixLength = 24;
-      }];
-    };
   };
 
-  # Ensure the uinput group exists
   users.groups.uinput = { };
   users.users = let
     authorizedKeys = [
@@ -295,6 +289,5 @@
 
   # don't touch
   system.stateVersion = "24.11"; # Did you read the comment?
-
 }
 
