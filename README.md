@@ -18,9 +18,9 @@ In [commands.md](./commands.md) is a list of usefule commands.
 
 # Program info
 ## Firefox
-I use [shyfox](https://github.com/Naezr/ShyFox) but mashed into (userchrome.css)[./home-manager/apps/firefox/userChrome.css] and (usercontent.css)[./home-manager/apps/firefox/userContent.css] with slight changes.
+I use [shyfox](https://github.com/Naezr/ShyFox) but mashed into [userchrome.css](./home-manager/apps/firefox/userChrome.css) and [usercontent.css](./home-manager/apps/firefox/userContent.css) with slight changes.
 To play around with it enable remote debugging in firefox and open it via ctrl+alt+shift+i.
-In the future I might want to switch to librewolf (currently some stuff does not work with the current setting, like (bookmarks)[https://www.reddit.com/r/NixOS/comments/1j0oky4/declaring_librewolf_bookmarks/]).
+In the future I might want to switch to librewolf (currently some stuff does not work with the current setting, like [bookmarks](https://www.reddit.com/r/NixOS/comments/1j0oky4/declaring_librewolf_bookmarks/)).
 
 # TODO
 - Use librewolf instead of firefox (didn't switch yet because bookmarks were not working immediately)

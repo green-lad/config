@@ -1,5 +1,11 @@
 # pretty printn via nixfmt
 [
+  
+  {
+    baseDomain = "duckduckgo.com";
+    label = "Duck.ai";
+    url = "https://duckduckgo.com/?q=DuckDuckGo+AI+Chat&ia=chat&duckai=1";
+  }
   {
     baseDomain = "studon.fau.de";
     label = "studon.fau";

@@ -6,7 +6,6 @@
     ./apps/firefox
     ./apps/git
     ./apps/i3
-    ./sops.nix
     ./apps/polybar
     ./apps/ssh
     ./apps/xdg

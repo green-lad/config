@@ -1,26 +1,58 @@
-{ config, pkgs, ... }: {
+{ config, pkgs, ... }:
+let
+  pkg = pkgs.polybar.override {
+    i3Support = true;
+    pulseSupport  = true;
+  };
+  dependency_path = "PATH=${pkg}/bin:/run/wrappers/bin:${pkgs.lib.makeBinPath [
+    pkgs.i3-gaps
+    pkgs.python3
+    pkgs.systemd
+    pkgs.unixtools.ping
+    pkgs.coreutils-full
+    pkgs.curl
+    pkgs.gnugrep
+    pkgs.gawk
+    pkgs.flameshot
+    # pkgs.neomutt
+    (pkgs.writeScriptBin "control_wlan_fritzbox" (builtins.readFile ../../scripts/control_wlan_fritzbox.sh))
+    (pkgs.writeScriptBin "get_mail_count" (builtins.readFile ../../scripts/get_mail_count.py))
+    pkgs.taskwarrior3
+    (pkgs.writeScriptBin "get_most_urgent_task" (builtins.readFile ../../scripts/get_most_urgent_task.sh))
+  ]}";
+  package_wrapped = pkgs.stdenv.mkDerivation {
+    pname = "polybar_with_dependencies";
+    version = "1.0";
+
+    # skip unpackPhase (no src)
+    unpackPhase = "true";
+  
+    buildInputs = [ pkg ];
+  
+    nativeBuildInputs = [ pkgs.makeWrapper ];
+
+    # Define the install phase
+    installPhase = ''
+      mkdir -p $out/bin
+  
+      # Copy the original hello binary to the output
+      cp ${pkg}/bin/polybar $out/bin/polybar
+  
+      # Wrap the program to adapt the PATH (or other variables)
+      wrapProgram $out/bin/polybar \
+        --set PATH "${dependency_path}:$PATH"
+    '';
+  };
+  restart_path = "PATH=${package_wrapped}/bin:${pkgs.lib.makeBinPath [
+    (pkgs.writeScriptBin "restart_polybar" (builtins.readFile ../../scripts/restart_polybar.sh))
+  ]}";
+
+in {
   services.polybar = {
-    package = pkgs.polybar.override {
-      i3Support = true;
-      pulseSupport  = true;
-    };
     enable = true;
-    script = "PATH=$PATH:${pkgs.lib.makeBinPath [
-      pkgs.python3
-      pkgs.systemd
-      pkgs.unixtools.ping
-      pkgs.coreutils-full
-      pkgs.curl
-      pkgs.gnugrep
-      pkgs.gawk
-      pkgs.flameshot
-      # pkgs.neomutt
-      (pkgs.writeScriptBin "control_wlan_fritzbox" (builtins.readFile ../../scripts/control_wlan_fritzbox.sh))
-      (pkgs.writeScriptBin "get_mail_count" (builtins.readFile ../../scripts/get_mail_count.py))
-      pkgs.taskwarrior3
-      (pkgs.writeScriptBin "get_most_urgent_task" (builtins.readFile ../../scripts/get_most_urgent_task.sh))
-      (pkgs.writeScriptBin "restart_polybar" (builtins.readFile ../../scripts/restart_polybar.sh))
-      ]} restart_polybar";
+    package = package_wrapped;
+
+    script = "${restart_path} restart_polybar";
     config = {
       "colors" = {
         background = "#1e1e20";
@@ -151,9 +183,9 @@
       
       "module/inbox-imap" = {
         type = "custom/script";
+        exec = "get_mail_count --mail_password_file '${config.sops.secrets.imap_password.path}'";
         tail = "true";
-        exec = "get_mail_count --mail_password_file ${config.sops.secrets.imap_password.path}";
-        click-left = "st -e neomutt";
+	click-left = "st -e neomutt";
       };
       
       "module/taskwarrior" = {
@@ -174,5 +206,28 @@
         margin-bottom = 0;
       };
     };
+  };
+  systemd.user.services.polybar = {
+    # Service.Environment = [
+    #   "PATH=${pkg}/bin:/run/wrappers/bin:${pkgs.lib.makeBinPath [
+    #     pkgs.i3-gaps
+    #     pkgs.python3
+    #     pkgs.systemd
+    #     pkgs.unixtools.ping
+    #     pkgs.coreutils-full
+    #     pkgs.curl
+    #     pkgs.gnugrep
+    #     pkgs.gawk
+    #     pkgs.flameshot
+    #     # pkgs.neomutt
+    #     (pkgs.writeScriptBin "control_wlan_fritzbox" (builtins.readFile ../../scripts/control_wlan_fritzbox.sh))
+    #     (pkgs.writeScriptBin "get_mail_count" (builtins.readFile ../../scripts/get_mail_count.py))
+    #     pkgs.taskwarrior3
+    #     (pkgs.writeScriptBin "get_most_urgent_task" (builtins.readFile ../../scripts/get_most_urgent_task.sh))
+    #     (pkgs.writeScriptBin "restart_polybar" (builtins.readFile ../../scripts/restart_polybar.sh))
+    #     ]}"
+    # ];
+    Unit.After = [ "graphical-session-i3.target" ];
+    Install.WantedBy = pkgs.lib.mkForce [ "graphical-session-i3.target" ];
   };
 }
