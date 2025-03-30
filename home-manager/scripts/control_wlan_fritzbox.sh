@@ -10,7 +10,7 @@ if ! $(ping -c 1 "$fritzbox_ip" &> /dev/null); then
   exit 1
 fi
 
-fritzbox_pw_path='/run/user/1000/secrets/wlan-password'
+fritzbox_pw_path='/run/user/1000/secrets/wlan_password'
 fritzbox_pw=''
 if [ -f "$fritzbox_pw_path" ]; then
   fritzbox_pw=`cat "$fritzbox_pw_path"`
@@ -94,20 +94,24 @@ toggle_wlan_5G() {
 
 get_wlan_status() {
   if [ $(get_wlan_state_x $number_2G) = "0" ] && [ $(get_wlan_state_x $number_5G) = "0" ]; then
-    echo "0"
+    echo $1
   else
-    echo "1"
+    echo $2
   fi
 }
 
 if [[ $# -eq 0 ]]; then
-  get_wlan_status
+  get_wlan_status "0" "1"
   exit 0
 fi
 
 case $1 in
   -s|--state)
-    get_wlan_status
+    get_wlan_status "0" "1"
+    exit 0
+    ;;
+  --symbol)
+    get_wlan_status "󰖪 " "󰤥 "
     exit 0
     ;;
   -t|--toggle)

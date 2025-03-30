@@ -13,6 +13,7 @@ in {
     };
 
     secrets = {
+      home_wlan = {};
       "keys/${hostname}/public" = {};
     };
   };

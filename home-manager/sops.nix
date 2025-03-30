@@ -16,7 +16,8 @@ in {
     };
 
     secrets = {
-      imap-password = {};
+      imap_password = {};
+      wlan_password = {};
       "keys/${hostname}/private" = {};
     };
   };

@@ -1,4 +1,5 @@
-{
+let interval = 24 * 60 * 60 * 1000;
+in {
   "google".metaData.hidden = true;
   "bing".metaData.hidden = true;
   "home-manager options" = {
@@ -17,9 +18,8 @@
         ];
       }
     ];
-
-    icon = "https://wiki.nixos.org/favicon.png";
-    updateInterval = 24 * 60 * 60 * 1000; # every day
+    icon = "https://wiki.nixos.org/nixos.png";
+    updateInterval = interval;
     definedAliases = [ "@hmo" ];
   };
 
@@ -43,11 +43,11 @@
         ];
       }
     ];
-
-    icon = "https://wiki.nixos.org/favicon.png";
-    updateInterval = 24 * 60 * 60 * 1000; # every day
+    icon = "https://wiki.nixos.org/nixos.png";
+    updateInterval = interval;
     definedAliases = [ "@np" ];
   };
+
   "firefox extensions" = {
     urls = [
       {
@@ -60,9 +60,48 @@
         ];
       }
     ];
-
     icon = "https://www.mozilla.org/media/protocol/img/logos/firefox/logo.fedb52c912d6.svg";
-    updateInterval = 24 * 60 * 60 * 1000; # every day
+    updateInterval = interval;
     definedAliases = [ "@fe" ];
+  };
+
+  "youtube" = {
+    urls = [
+      {
+        template = "youtube.de/results";
+        params = [
+          {
+            name = "search_query";
+            value = "{searchTerms}";
+          }
+        ];
+      }
+    ];
+    icon = "https://www.youtube.com/s/desktop/716a93d8/img/logos/favicon.ico";
+    # icon = "https://www.gstatic.com/youtube/img/branding/youtubelogo/svg/youtubelogo.svg";
+    updateInterval = interval;
+    definedAliases = [ "@y" ];
+  };
+
+  "chefkoch" = {
+    urls = [
+      {
+        template = "https://www.chefkoch.de/rs/s0/{searchTerms}/Rezepte.html";
+      }
+    ];
+    icon = "https://img.chefkoch-cdn.de/favicon.ico";
+    updateInterval = interval;
+    definedAliases = [ "@ch" ];
+  };
+
+  "google maps" = {
+    urls = [
+      {
+        template = "https://www.google.de/maps/place/{searchTerms}";
+      }
+    ];
+    icon = "https://www.google.com/images/branding/product/ico/maps15_bnuw3a_32dp.ico";
+    updateInterval = interval;
+    definedAliases = [ "@m" ];
   };
 }

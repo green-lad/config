@@ -9,6 +9,13 @@
     # script = "restart_polybar";
     script = "PATH=$PATH:${pkgs.lib.makeBinPath [
       pkgs.python3
+      pkgs.systemd
+      pkgs.unixtools.ping
+      pkgs.coreutils-full
+      pkgs.curl
+      pkgs.gnugrep
+      pkgs.gawk
+      (pkgs.writeScriptBin "control_wlan_fritzbox" (builtins.readFile ../../scripts/control_wlan_fritzbox.sh))
       (pkgs.writeScriptBin "get_mail_count" (builtins.readFile ../../scripts/get_mail_count.py))
       pkgs.taskwarrior3
       (pkgs.writeScriptBin "get_most_urgent_task" (builtins.readFile ../../scripts/get_most_urgent_task.sh))
@@ -57,7 +64,7 @@
         #font-2 = ;
         modules-left = "i3";
         modules-center = "date";
-        modules-right = "eth taskwarrior pulseaudio flameshot inbox-imap powermenu";
+        modules-right = "eth wlan taskwarrior pulseaudio flameshot inbox-imap powermenu";
         wm-restack = "i3";
         override-redirect = "false";
         enable-ipc = "true";
@@ -87,19 +94,24 @@
       
       "module/wlan" = {
         type = "internal/network";
-        interface = "wlp0s20f3";
-        interval = 3;
-        format-connected = "<ramp-signal> <label-connected>";
-        format-connected-foreground = "\${colors.text_normal_color}";
-        format-connected-background = "\${colors.background}";
+        interface = "wlan0";
+        interval = 60;
+        format-prefix = "%{T2}%{T-} ";
+        format-suffix-background = "\${colors.background}";
+        format-suffix-foreground = "\${colors.button_color}";
+        format-suffix = "%{R} %{R}%{T2}%{T-}";
+        format-foreground = "\${colors.button_text_color}";
+        format-background = "\${colors.button_color}";
+
+        format-connected = "%{A1:control_wlan_fritzbox --off:}<ramp-signal><label-connected>%{A}";
         format-connected-padding = 2;
         label-connected = "%essid%";
-        #format-disconnected =;
-        ramp-signal-0 = "";
-        ramp-signal-1 = "";
-        ramp-signal-2 = "";
-        ramp-signal-3 = "";
-        ramp-signal-4 = "";
+        format-disconnected = "%{A1:control_wlan_fritzbox --on:}󰖪 %{A}";
+        ramp-signal-0 = "󰤯 ";
+        ramp-signal-1 = "󰤟 " ;
+        ramp-signal-2 = "󰤢 ";
+        ramp-signal-3 = "󰤥 ";
+        ramp-signal-4 = "󰤨 ";
         ramp-signal-foreground = "\${colors.text_normal_color}";
       };
       
@@ -156,11 +168,11 @@
         menu-0-1 = "reload i3";
         menu-0-1-exec = "i3-msg restart";
         menu-0-2 = "log off";
-        menu-0-2-exec = "menu-open-1";
+        menu-0-2-exec = "#powermenu.open.1";
         menu-0-3 = "reboot";
-        menu-0-3-exec = "menu-open-2";
+        menu-0-3-exec = "#powermenu.open.2";
         menu-0-4 = "power off | ";
-        menu-0-4-exec = "menu-open-3";
+        menu-0-4-exec = "#powermenu.open.3";
         menu-1-0 = "log off | ";
         menu-1-0-exec = "i3 exit logout";
         menu-2-0 = "reboot | ";
@@ -207,7 +219,7 @@
         label-muted-padding = 2;
         format-muted = "<label-muted>";
         # Right and Middle click;
-        click-right = "st -e mocp";
+        # click-right = "st -e mocp";
         #click-middle = ;
       };
       
@@ -233,7 +245,7 @@
         type = "custom/script";
         #passing variables to exec seems to be not supported...;
         #exec = get_mail_count --colornormal "\${colors.background}" --colorhighlight "\${colors.highlight}";
-        exec = "get_mail_count --colornormal \"#1e1e20\" --colorhighlight \"#e06c75\" --mail_password_file ${config.sops.secrets.imap-password.path}";
+        exec = "get_mail_count --colornormal \"#1e1e20\" --colorhighlight \"#e06c75\" --mail_password_file ${config.sops.secrets.imap_password.path}";
         click-left = "st -e neomutt";
         tail = "true";
       };

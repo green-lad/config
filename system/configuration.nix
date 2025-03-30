@@ -209,7 +209,10 @@
 
   networking = {
     hostName = hostname;
-    networkmanager.enable = true;
+    networkmanager = {
+      enable = true;
+      ensureProfiles = import ./network_profiles.nix config.sops.secrets.home_wlan.path;
+    };
     # needed for zfs
     hostId = "8425e349";
     wireless.iwd.enable = true;
