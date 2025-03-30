@@ -208,25 +208,8 @@ in {
     };
   };
   systemd.user.services.polybar = {
-    # Service.Environment = [
-    #   "PATH=${pkg}/bin:/run/wrappers/bin:${pkgs.lib.makeBinPath [
-    #     pkgs.i3-gaps
-    #     pkgs.python3
-    #     pkgs.systemd
-    #     pkgs.unixtools.ping
-    #     pkgs.coreutils-full
-    #     pkgs.curl
-    #     pkgs.gnugrep
-    #     pkgs.gawk
-    #     pkgs.flameshot
-    #     # pkgs.neomutt
-    #     (pkgs.writeScriptBin "control_wlan_fritzbox" (builtins.readFile ../../scripts/control_wlan_fritzbox.sh))
-    #     (pkgs.writeScriptBin "get_mail_count" (builtins.readFile ../../scripts/get_mail_count.py))
-    #     pkgs.taskwarrior3
-    #     (pkgs.writeScriptBin "get_most_urgent_task" (builtins.readFile ../../scripts/get_most_urgent_task.sh))
-    #     (pkgs.writeScriptBin "restart_polybar" (builtins.readFile ../../scripts/restart_polybar.sh))
-    #     ]}"
-    # ];
+    # NOTE: setting Service.Environment instead of wrapping polybar in its dependencies does not work
+    #       because it gets "overwritten" (two entries, last one counts) by the home-manager polybar module
     Unit.After = [ "graphical-session-i3.target" ];
     Install.WantedBy = pkgs.lib.mkForce [ "graphical-session-i3.target" ];
   };
