@@ -14,6 +14,7 @@
       pkgs.gnugrep
       pkgs.gawk
       pkgs.flameshot
+      # pkgs.neomutt
       (pkgs.writeScriptBin "control_wlan_fritzbox" (builtins.readFile ../../scripts/control_wlan_fritzbox.sh))
       (pkgs.writeScriptBin "get_mail_count" (builtins.readFile ../../scripts/get_mail_count.py))
       pkgs.taskwarrior3
@@ -145,14 +146,14 @@
       "module/flameshot" = {
         type = "custom/text";
         click-left = "flameshot gui";
-        content = " 󰹑 ";
+        format = " 󰹑 ";
       };
       
       "module/inbox-imap" = {
         type = "custom/script";
-        exec = "get_mail_count --colornormal \"#ffffff\" --colorhighlight \"#e06c75\" --mail_password_file ${config.sops.secrets.imap_password.path}";
-        click-left = "st -e neomutt";
         tail = "true";
+        exec = "get_mail_count --mail_password_file ${config.sops.secrets.imap_password.path}";
+        click-left = "st -e neomutt";
       };
       
       "module/taskwarrior" = {

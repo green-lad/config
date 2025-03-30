@@ -4,24 +4,20 @@
 
 import argparse
 import imaplib
+import socket
 import time
 
 # alternative shell script without color (total via 'STATUS inbox (messages)'):
 # echo $(curl -s --url "imaps://faumail.fau.de:993" --user "<user_mail>":"<user_password" -x 'STATUS inbox (unseen)' | grep -o '[0-9]*')
 
-def print_count(count, colornormal, colorhighlight, prefix):
-    output = ''
-    prefix_output = '%{F' + colornormal + '}' + prefix + '%{F-}'
-    number_output = '%{F' + colornormal + '}' + str(count) + '%{F-}'
-
+def print_count(count):
     if count > 0:
-        prefix_output = '%{F' + colorhighlight + '}' + prefix + '%{F-}'
-
-    print(f'{prefix_output} {number_output}', flush=True)
+        print(f'\uf0e0 {count}', flush=True)
+    else:
+        print(f'\uf2b7 {count}', flush=True)
 
 
 def get_count(args, password):
-    # Connect to mail server
     imap = imaplib.IMAP4_SSL(args.mail_server, args.mail_port)
     imap.login(args.mail_username, password)
     imap.select(mailbox=args.mail_box)
@@ -39,26 +35,23 @@ def loop(args):
         password = f.readline()
 
     while True:
-        count = get_count(args, password)
-        if count != count_was:
-            print_count(count, args.colornormal, args.colorhighlight, args.prefix)
-            count_was = count
+        try:
+            count = get_count(args, password)
+            if count != count_was:
+                print_count(count)
+                count_was = count
+        except socket.error:
+            print("\uf421 -", flush=True)
         time.sleep(int(args.duration))
 
 
 def parse_args():
     parser = argparse.ArgumentParser()
-
     parser.add_argument('-ms', '--mail_server', default='faumail.fau.de')
     parser.add_argument('-mp', '--mail_port', default='993')
     parser.add_argument('-mu', '--mail_username', default='markus.schoetz@fau.de')
     parser.add_argument('-mpw', '--mail_password_file', default='')
     parser.add_argument('-mb', '--mail_box', default='INBOX')
-
-    parser.add_argument('-p', '--prefix', default='\uf0e0')
-    parser.add_argument('-c', '--colorhighlight', default='#ff0000')
-    parser.add_argument('-cn', '--colornormal', default='#000000')
-    parser.add_argument('-ns', '--nosound', action='store_true')
     parser.add_argument('-dr', '--duration', default=60)
     return parser.parse_args()
 
