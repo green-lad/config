@@ -12,6 +12,15 @@
 	  config.sops.secrets."keys/${hostname}/private".path
 	];
       };
+      "gitlab_fau" = {
+	host = "gitlab_fau";
+        hostname = "gitlab.cs.fau.de";
+	user = "git";
+	identitiesOnly = true;
+	identityFile = [
+	  config.sops.secrets."keys/${hostname}/private".path
+	];
+      };
     };
   };
 }

@@ -32,6 +32,10 @@
       feh
       zathura
       yazi
+      gnumake
+
+      texliveFull
+      texlivePackages.latexmk
     ];
   };
 }

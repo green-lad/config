@@ -25,7 +25,7 @@
       "preferences-button"
     ];
     nav-bar = [
-      "userchrome-toggle_joolee_nl-browser-action"
+      "userchrome-toggle-extended_n2ezr_ru-browser-action"
       "back-button"
       "forward-button"
       "stop-reload-button"
@@ -74,7 +74,6 @@
     "newtaboverride_agenedia_com-browser-action"
     "userchrome-toggle-extended_n2ezr_ru-browser-action"
     "tranquility_ushnisha_com-browser-action"
-    "userchrome-toggle_joolee_nl-browser-action"
     "_c7cf295f-fc8b-4218-91b1-2a2ea572da9f_-browser-action"
     "_7be2ba16-0f1e-4d93-9ebc-5164397477a9_-browser-action"
     "playbackspeed_waldemar_b-browser-action"

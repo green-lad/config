@@ -16,7 +16,7 @@
           darkreader
           sidebery
           violentmonkey
-          userchrome-toggle
+          userchrome-toggle-extended
           videospeed
           return-youtube-dislikes
           ublock-origin
