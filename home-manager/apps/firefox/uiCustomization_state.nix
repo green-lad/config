@@ -12,11 +12,11 @@
   placements = {
     PersonalToolbar = [ ];
     TabsToolbar = [
+      "userchrome-toggle-extended_n2ezr_ru-browser-action"
       "tabbrowser-tabs"
       "alltabs-button"
       "history-panelmenu"
       "downloads-button"
-      "userchrome-toggle-extended_n2ezr_ru-browser-action"
       "personal-bookmarks"
       "customizableui-special-spring16"
       "home-button"

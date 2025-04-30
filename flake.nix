@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+    nixvim.url = "github:green-lad/nixvim-config";
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -52,13 +53,19 @@
         hostname = "x230";
         system = "x86_64-linux";
         users = [ "markus" ];
-	unfreePackages = [ "lightburn" ];
+        unfreePackages = [
+          "lightburn"
+        ];
       };
       nuc = {
         hostname = "nuc";
         system = "x86_64-linux";
         users = [ "markus" ];
-	unfreePackages = [ "lightburn" ];
+        unfreePackages = [
+          "lightburn"
+          "zoom-us"
+          "steam"
+        ];
       };
     };
 
@@ -80,6 +87,7 @@
             inherit inputs;
             user = builtins.head v.users;
             hostname = v.hostname;
+            system = v.system;
           };
         }
       ];
@@ -94,6 +102,7 @@
           inherit inputs;
           user = builtins.head v.users;
           hostname = v.hostname;
+          system = v.system;
         };
       }) systems;
   };

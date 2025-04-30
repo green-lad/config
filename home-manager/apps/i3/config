@@ -14,7 +14,7 @@ for_window [class="Nitrogen"] floating enable sticky enable border normal
 	set $mod Mod4
 	# configs Mouse+$mod to drag floating windows
 	floating_modifier $mod
-	bindsym $mod+Return exec st
+	bindsym $mod+Return exec kitty
 	bindsym $mod+q kill
 	bindsym $mod+d exec --no-startup-id dmenu_run
 	bindsym $mod+h focus left

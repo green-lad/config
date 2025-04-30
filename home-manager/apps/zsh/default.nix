@@ -6,7 +6,7 @@
     syntaxHighlighting.enable = false;
 
     # TODO: history shortcuts don't work
-    initExtra = ''
+    initContent = ''
       source ${pkgs.zsh-vi-mode}/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
       cd() {
         builtin cd "$@" && ls --color=auto 
