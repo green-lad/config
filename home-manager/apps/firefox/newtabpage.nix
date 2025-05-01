@@ -22,7 +22,7 @@
   }
   {
     label = "miniflux";
-    url = "https://localhost:722";
+    url = "https://localhost:8002";
   }
   {
     baseDomain = "scribd.com";

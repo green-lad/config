@@ -22,6 +22,8 @@
       steam
       zoom-us
 
+      nautilus
+
       audacity
       pulsemixer
       guvcview
@@ -82,7 +84,28 @@
     };
   };
 
+  # TODO: for miniflux use separte config file and OAUTH2 (see: https://github.com/felschr/nixos-config/blob/41307308527cdf7a352e87e2ff36d91546eb29a4/services/miniflux.nix#L12)
+  users.groups.miniflux_secrets = {};
+  systemd.services.miniflux.serviceConfig.SupplementaryGroups = [ "miniflux_secrets" ];
   services = {
+    miniflux = {
+      enable = true;
+      createDatabaseLocally = true;
+      adminCredentialsFile = pkgs.writeTextFile {
+        name = "miniflux.conf";
+        text = ''
+          ADMIN_USERNAME=${user}
+          ADMIN_PASSWORD_FILE=${config.sops.secrets."miniflux/password".path}
+        '';
+      };
+      config = {
+        BASE_URL = "https://${hostname}/";
+        PORT = 8002;
+        FETCH_YOUTUBE_WATCH_TIME = "true";
+        CERT_FILE = "${config.sops.secrets."miniflux/certificate".path}";
+        KEY_FILE = "${config.sops.secrets."miniflux/key".path}";
+      };
+    };
     udev.extraRules = ''
       KERNEL=="uinput", MODE="0660", GROUP="uinput", OPTIONS+="static_node=uinput"
     '';

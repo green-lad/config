@@ -14,6 +14,21 @@ in {
 
     secrets = {
       home_wlan = {};
+      "miniflux/password" = {
+        restartUnits = [ "miniflux.service" ];
+        group = "miniflux_secrets";
+        mode = "440";
+      };
+      "miniflux/key" = {
+        restartUnits = [ "miniflux.service" ];
+        group = "miniflux_secrets";
+        mode = "440";
+      };
+      "miniflux/certificate" = {
+        restartUnits = [ "miniflux.service" ];
+        group = "miniflux_secrets";
+        mode = "440";
+      };
       "keys/${hostname}/public" = {};
     };
   };

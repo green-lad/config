@@ -49,3 +49,10 @@ sops updatekeys secrets.yaml
 ```
 nix-instantiate --eval <file/expression> | nixfmt | xsel -b
 ```
+
+- inspect system configuration
+```
+nix repl
+:lf <path to flake of system configuration>
+nixosConfigurations.<hostname>.<...>
+```
