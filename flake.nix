@@ -76,8 +76,8 @@
       modules = [
         disko.nixosModules.disko
         sops-nix.nixosModules.sops
-        ./system/configuration.nix
-        ./system/sops.nix
+        ./nixos/configuration.nix
+        ./nixos/sops.nix
         ./disk-config.nix
         home-manager.nixosModules.home-manager {
           home-manager.useGlobalPkgs = true;

@@ -35,11 +35,17 @@
       blender
       feh
       zathura
-      yazi
       gnumake
 
       texliveFull
       texlivePackages.latexmk
+
+      zenity
+      gnused
+      xdg-desktop-portal-gtk
+      # xdg-desktop-portal-gnome
+      xdg-desktop-portal-termfilechooser
+      yazi
     ];
 
     file = {
