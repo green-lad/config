@@ -18,9 +18,9 @@
         modes = {};
         keybindings = {};
         startup = [
-	  {
-              command = "${pkgs.systemd}/bin/systemctl --user start graphical-session-i3.target";
-              notification = false;
+          {
+            command = "${pkgs.systemd}/bin/systemctl --user start graphical-session-i3.target";
+            notification = false;
           }
         ];
       };

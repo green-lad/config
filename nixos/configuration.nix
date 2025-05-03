@@ -21,6 +21,7 @@
       ffmpeg_6
       steam
       zoom-us
+      gcc
 
       nautilus
 

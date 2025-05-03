@@ -2,18 +2,20 @@
   imports = [
     inputs.sops-nix.homeManagerModules.sops
     ./sops.nix
+    inputs.nixvim.homeManagerModules.nixvim
 
+    ./apps/clipmenu
     ./apps/firefox
     ./apps/git
     ./apps/i3
     ./apps/kitty
     ./apps/neomutt
+    ./apps/neovim
+    ./apps/pipewire_noise_cancelling
     ./apps/polybar
     ./apps/ssh
     ./apps/xdg
     ./apps/zsh
-
-    ./services/pipewire
   ];
   
   home = {
@@ -21,7 +23,7 @@
     homeDirectory = "/home/${user}";
     stateVersion = "24.11";
     packages = with pkgs; [
-      inputs.nixvim.packages."${system}".default
+      # inputs.nixvim.packages."${system}".default
       taskwarrior3
       dmenu
       (st.overrideAttrs (oldAttrs: rec {
@@ -38,6 +40,8 @@
       zathura
       gnumake
       urlscan
+      vimPlugins.kitty-scrollback-nvim
+
 
       texliveFull
       texlivePackages.latexmk
