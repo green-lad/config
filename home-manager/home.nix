@@ -7,6 +7,7 @@
     ./apps/git
     ./apps/i3
     ./apps/kitty
+    ./apps/neomutt
     ./apps/polybar
     ./apps/ssh
     ./apps/xdg
@@ -36,6 +37,7 @@
       feh
       zathura
       gnumake
+      urlscan
 
       texliveFull
       texlivePackages.latexmk

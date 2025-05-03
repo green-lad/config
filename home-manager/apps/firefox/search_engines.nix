@@ -23,6 +23,17 @@ in {
     definedAliases = [ "@hmo" ];
   };
 
+  "github nix code search" = {
+    urls = [
+      {
+        template = "https://github.com/search?q={searchTerms}%20language%3ANix&type=code";
+      }
+    ];
+    icon = "https://github.githubassets.com/favicons/favicon.svg";
+    updateInterval = interval;
+    definedAliases = [ "@gn" ];
+  };
+
   "nix packages" = {
     urls = [
       {
@@ -46,6 +57,31 @@ in {
     icon = "https://wiki.nixos.org/nixos.png";
     updateInterval = interval;
     definedAliases = [ "@np" ];
+  };
+
+  "nixos options" = {
+    urls = [
+      {
+        template = "https://search.nixos.org/options";
+        params = [
+          {
+            name = "channel";
+            value = "unstable";
+          }
+          {
+            name = "type";
+            value = "packages";
+          }
+          {
+            name = "query";
+            value = "{searchTerms}";
+          }
+        ];
+      }
+    ];
+    icon = "https://wiki.nixos.org/nixos.png";
+    updateInterval = interval;
+    definedAliases = [ "@no" ];
   };
 
   "firefox extensions" = {

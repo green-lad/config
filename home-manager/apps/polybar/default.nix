@@ -14,7 +14,8 @@ let
     pkgs.gnugrep
     pkgs.gawk
     pkgs.flameshot
-    # pkgs.neomutt
+    pkgs.neomutt
+    pkgs.kitty
     (pkgs.writeScriptBin "control_wlan_fritzbox" (builtins.readFile ../../scripts/control_wlan_fritzbox.sh))
     (pkgs.writeScriptBin "get_mail_count" (builtins.readFile ../../scripts/get_mail_count.py))
     pkgs.taskwarrior3
@@ -185,7 +186,7 @@ in {
         type = "custom/script";
         exec = "get_mail_count --mail_password_file '${config.sops.secrets.imap_password.path}'";
         tail = "true";
-	click-left = "st -e neomutt";
+        click-left = "kitty --title mail neomutt";
       };
       
       "module/taskwarrior" = {

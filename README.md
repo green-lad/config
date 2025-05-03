@@ -28,4 +28,7 @@ In the future I might want to switch to librewolf (currently some stuff does not
 - Get realtime kernel and linuxcnc working
 - Work on the split between hosts
 - Get nixos-anywhere working again (when running it, nixos-installer gets booted; disko stuff seems fine, maybe sops-nix is the problem) 
-- Configure xdg-open (currently untested) and use yazi as file picker in firefox
+- Also configure firefox plugins like sideberry or violetmonkey to not have to configure them on first use
+- Make a search engine for firefox which can query mutliple arguments (for example github search engine: searchTerm, language)
+- Use a clipboard manager for clipboard history
+- Work on separation of concerns and reflection of dependencies (for example polybar using neomutt)
