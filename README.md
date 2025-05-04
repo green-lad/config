@@ -31,3 +31,6 @@ In the future I might want to switch to librewolf (currently some stuff does not
 - Also configure firefox plugins like sideberry or violetmonkey to not have to configure them on first use
 - Make a search engine for firefox which can query mutliple arguments (for example github search engine: searchTerm, language)
 - Work on separation of concerns and reflection of dependencies (for example polybar using neomutt)
+- Fix xdg-desktop-portal-termfilechooser.service and mbsync.service not starting on switch
+- Use mbsync data for polybar instead of python script
+- Fix termfilechooser sporadically not working (for example when using file input in firefox)
