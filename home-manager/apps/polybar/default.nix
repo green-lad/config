@@ -84,12 +84,18 @@ in {
         font-1 = "SauceCodePro Nerd Font Propo,SauceCodePro NFP:style=Regular:pixelsize=17;3";
         modules-left = "i3";
         modules-center = "date";
-        modules-right = "eth wlan taskwarrior pulseaudio flameshot inbox-imap powermenu";
+        modules-right = "eth wlan taskwarrior pulseaudio flameshot inbox-imap battery powermenu";
         wm-restack = "i3";
         override-redirect = "false";
         enable-ipc = "true";
         cursor-click = "pointer";
         cursor-scroll = "ns-resize";
+      };
+
+      "module/battery" = {
+        type = "internal/battery";
+        battery = "BAT0";
+        adapater = "AC";
       };
       
       "module/i3" = {
