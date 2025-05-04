@@ -34,3 +34,4 @@ In the future I might want to switch to librewolf (currently some stuff does not
 - Fix xdg-desktop-portal-termfilechooser.service and mbsync.service not starting on switch
 - Use mbsync data for polybar instead of python script
 - Fix termfilechooser sporadically not working (for example when using file input in firefox)
+    A first look shows that after home-manager switch it seems to be working again, it seems like a (system) service is not running
