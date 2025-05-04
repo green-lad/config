@@ -30,4 +30,31 @@
       mouse_map ctrl+shift+right press ungrabbed combine : mouse_select_command_output : kitty_scrollback_nvim --config ksb_builtin_last_visited_cmd_output
     '';
   };
+
+  xdg.configFile."kitty/open-actions.conf".text = ''
+    # Open any file with a fragment in EDITOR, fragments are generated
+    # by the hyperlink_grep kitten and nothing else so far.
+    protocol file
+    fragment_matches [0-9]+
+    action launch --type=overlay ''${EDITOR} +''${FRAGMENT} ''${FILE_PATH}
+
+    # Open text files without fragments in the editor
+    protocol file
+    mime text/*
+    action launch --type=overlay ''${EDITOR} ''${FILE_PATH}
+
+    protocol file
+    ext csv
+    action launch --type=overlay ${pkgs.visidata}/bin/vd ''${FILE_PATH}
+
+    # Open directories
+    protocol file
+    mime inode/directory
+    action launch --type=os-window --cwd ''${FILE_PATH}
+
+    # Open any image in the full kitty window by clicking on it
+    protocol file
+    mime image/*
+    action launch --type=overlay kitty +kitten icat --hold ''${FILE_PATH}
+  '';
 }

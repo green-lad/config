@@ -34,3 +34,4 @@ In the future I might want to switch to librewolf (currently some stuff does not
 - Fix xdg-desktop-portal-termfilechooser.service and mbsync.service not starting on switch
 - Use mbsync data for polybar instead of python script
 - Fix termfilechooser sporadically not working (for example when using file input in firefox)
+- Make every path in every command output clickable (for example by making it a hyperlink: printf '\e]8;;%s\e\\%s\e]8;;\e\\\n' "file:///home/markus/config" "config")

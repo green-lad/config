@@ -52,6 +52,7 @@
 
     extraPlugins = with pkgs.vimPlugins; [
       kitty-scrollback-nvim
+      fileline-nvim # open files at line and char (example: nvim foo.lua:12:5)
     ]
     ++ [
       (pkgs.vimUtils.buildVimPlugin {

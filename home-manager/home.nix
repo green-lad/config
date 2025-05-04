@@ -13,6 +13,7 @@
     ./apps/neovim
     ./apps/pipewire_noise_cancelling
     ./apps/polybar
+    ./apps/ripgrep
     ./apps/ssh
     ./apps/xdg
     ./apps/zsh
