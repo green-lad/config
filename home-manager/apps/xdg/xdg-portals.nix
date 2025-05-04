@@ -17,6 +17,34 @@
     };
   };
 
+  systemd.user.services."xdg-desktop-portal-gtk" = {
+    Install.WantedBy = pkgs.lib.mkForce [ "graphical-session-i3.target" ];
+    Unit = {
+      After = [ "graphical-session-i3.target" ];
+      Description = "Portal service (GTK/GNOME implementation)";
+    };
+    Service = {
+      Type = "dbus";
+      BusName = "org.freedesktop.impl.portal.desktop.gtk";
+      ExecStart="${pkgs.xdg-desktop-portal-gtk}/libexec/xdg-desktop-portal-gtk";
+      Restart = "on-failure";
+    };
+  };
+
+  systemd.user.services."xdg-desktop-portal-termfilechooser" = {
+    Install.WantedBy = pkgs.lib.mkForce [ "graphical-session-i3.target" ];
+    Unit = {
+      After = [ "graphical-session-i3.target" ];
+      Description = "Portal service (terminal file chooser implementation)";
+    };
+    Service = {
+      Type = "dbus";
+      BusName = "org.freedesktop.impl.portal.desktop.termfilechooser";
+      ExecStart="${pkgs.xdg-desktop-portal-termfilechooser}/libexec/xdg-desktop-portal-termfilechooser";
+      Restart = "on-failure";
+    };
+  };
+
   # src: https://discourse.nixos.org/t/how-to-install-xdg-desktop-portal-termfilechooser/62819/12
   xdg.configFile."xdg-desktop-portal-termfilechooser/config".text = let
       launcherDeps = pkgs.buildEnv {
