@@ -56,3 +56,10 @@ nix repl
 :lf <path to flake of system configuration>
 nixosConfigurations.<hostname>.<...>
 ```
+
+- test overlay in repl (here with an rust overlay as example)
+```
+nix repl
+rust_overlay = import (builtins.fetchTarball "https://github.com/oxalica/rust-overlay/archive/master.tar.gz")
+pkgs = import <nixpkgs> { overlays = [ rust_overlay ]; }
+```
