@@ -4,22 +4,32 @@ let
     i3Support = true;
     pulseSupport  = true;
   };
-  dependency_path = "PATH=${pkg}/bin:/run/wrappers/bin:${pkgs.lib.makeBinPath [
-    pkgs.i3-gaps
-    pkgs.python3
-    pkgs.systemd
-    pkgs.unixtools.ping
-    pkgs.coreutils-full
-    pkgs.curl
-    pkgs.gnugrep
-    pkgs.gawk
-    pkgs.flameshot
-    pkgs.neomutt
-    pkgs.kitty
-    (pkgs.writeScriptBin "control_wlan_fritzbox" (builtins.readFile ../../scripts/control_wlan_fritzbox.sh))
-    (pkgs.writeScriptBin "get_mail_count" (builtins.readFile ../../scripts/get_mail_count.py))
-    pkgs.taskwarrior3
-    (pkgs.writeScriptBin "get_most_urgent_task" (builtins.readFile ../../scripts/get_most_urgent_task.sh))
+  # TODO: this can't be the solution...
+  dependency_path = with pkgs; "PATH=${pkg}/bin:/run/wrappers/bin:${lib.makeBinPath [
+    # neomutt dependencies
+    neomutt
+    coreutils-full
+    urlscan
+    msmtp
+    abook
+    xdg-utils
+    zathura
+    firefox
+    neovim
+
+    i3-gaps
+    systemd
+    unixtools.ping
+    curl
+    gnugrep
+    gawk
+    flameshot
+    taskwarrior3
+    kitty
+    networkmanager
+    (writeScriptBin "control_wlan_fritzbox" (builtins.readFile ../../scripts/control_wlan_fritzbox.sh))
+    (writeScriptBin "get_mail_count" (builtins.readFile ../../scripts/get_mail_count.sh))
+    (writeScriptBin "get_most_urgent_task" (builtins.readFile ../../scripts/get_most_urgent_task.sh))
   ]}";
   package_wrapped = pkgs.stdenv.mkDerivation {
     pname = "polybar_with_dependencies";
@@ -84,7 +94,7 @@ in {
         font-1 = "SauceCodePro Nerd Font Propo,SauceCodePro NFP:style=Regular:pixelsize=17;3";
         modules-left = "i3";
         modules-center = "date";
-        modules-right = "eth wlan taskwarrior pulseaudio flameshot inbox-imap battery powermenu";
+        modules-right = "eth wlan taskwarrior pulseaudio flameshot mail battery powermenu";
         wm-restack = "i3";
         override-redirect = "false";
         enable-ipc = "true";
@@ -137,7 +147,7 @@ in {
       
       "module/date" = {
         type = "internal/date";
-        interval = 5;
+        interval = 1;
         date-alt = " %Y-%m-%d";
         time = "%H:%M";
         time-alt = "%H:%M:%S";
@@ -188,10 +198,10 @@ in {
         format = " 󰹑 ";
       };
       
-      "module/inbox-imap" = {
+      "module/mail" = {
         type = "custom/script";
-        exec = "get_mail_count --mail_password_file '${config.sops.secrets.imap_password.path}'";
-        tail = "true";
+        exec = "get_mail_count";
+        interval = 60;
         click-left = "kitty --title mail neomutt";
       };
       

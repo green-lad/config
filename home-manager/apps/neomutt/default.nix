@@ -1,10 +1,14 @@
-# src: https://github.com/wochap/nix-config/blob/d4fa225f42131ee8e7486aaa25ae99eb4b140ec4/modules/nixos/desktop/wm-addons/email/mixins/accounts/helper.nix
 { config, pkgs, inputs, ... }: {
-  # mbsync = {
-  #   enable = true;
-  #   boxes = [ "INBOX" ];
-  #   # onNotify = "${pkgs.isync}/bin/mbsync ${name}:%s";
-  # };
+  config.xdg.configFile = {
+    "neomutt/mailcap" = {
+      enable = true;
+      text = ''
+        text/*; xdg-open %s; needsterminal=false
+        application/*; xdg-open %s; needsterminal=false
+        image/*; xdg-open %s; needsterminal=false
+      '';
+    };
+  };
 
   config.programs.abook = {
     enable = true;
@@ -15,7 +19,7 @@
 
   config.services.mbsync = {
     enable = true;
-    frequency = "*:0/10";
+    frequency = "*:0/2";
   };
 
   config.accounts.email.accounts.Personal = {
@@ -159,7 +163,7 @@
       forward_quote = "yes"; # include message in forwards
       include = "yes"; # include message in replies
       mail_check = "0"; # how often look for new mail
-      # mailcap_path = "${config.xdg.configHome}/neomutt/mailcap"; # MIMEs
+      mailcap_path = "${config.xdg.configHome}/neomutt/mailcap";
       mark_old = "no"; # read/new is good enough for me
       markers = "no"; # show '+' at start of wrapped lines
       move = "no"; # gmail does that
@@ -205,6 +209,8 @@
 
       # color index color0 default '~R'
       set query_command= "abook --mutt-query '%s'"
+      macro index,pager  a "<pipe-message>abook --add-email-quiet<return>" "Add this sender to Abook"
+      bind editor        <Tab> complete-query
     '';
   };
 }
