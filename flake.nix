@@ -38,6 +38,11 @@
       url = "git+ssh://git@github.com/green-lad/sops_secrets?shallow=1";
       flake = false;
     };
+
+    nix-your-shell = {
+      url = "github:MercuryTechnologies/nix-your-shell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { nixpkgs, home-manager, disko, sops-nix, ... } @ inputs:

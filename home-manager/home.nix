@@ -11,6 +11,7 @@
     ./apps/kitty
     ./apps/neomutt
     ./apps/neovim
+    ./apps/papis
     ./apps/pipewire_noise_cancelling
     ./apps/polybar
     ./apps/ripgrep

@@ -140,4 +140,48 @@ in {
     updateInterval = interval;
     definedAliases = [ "@m" ];
   };
+
+  "crossref" = {
+    urls = [
+      {
+        template = "https://search.crossref.org/search/works?q={searchTerms}&from_ui=yes";
+      }
+    ];
+    icon = "https://assets.crossref.org/favicon/android-chrome-192x192.png";
+    updateInterval = interval;
+    definedAliases = [ "@rc" ];
+  };
+
+  "arxiv" = {
+    urls = [
+      {
+        template = "https://arxiv.org/search/?query={searchTerms}&searchtype=all&source=header";
+      }
+    ];
+    icon = "https://static.arxiv.org/static/base/1.0.0a5/images/arxiv-logo-one-color-white.svg";
+    updateInterval = interval;
+    definedAliases = [ "@ra" ];
+  };
+
+  "dl.acm.org" = {
+    urls = [
+      {
+        template = "https://dl.acm.org/action/doSearch?AllField={searchTerms}";
+      }
+    ];
+    icon = "https://dl.acm.org/pb-assets/head-metadata/apple-touch-icon-1574252172393.png";
+    updateInterval = interval;
+    definedAliases = [ "@racm" ];
+  };
+
+  "google scholar" = {
+    urls = [
+      {
+        template = "https://scholar.google.com/scholar?q={searchTerms}";
+      }
+    ];
+    icon = "https://scholar.google.com/favicon.ico";
+    updateInterval = interval;
+    definedAliases = [ "@rg" ];
+  };
 }

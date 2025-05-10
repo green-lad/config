@@ -45,6 +45,20 @@
     };
   };
 
+  systemd.user.services."xdg-desktop-portal" = {
+    Install.WantedBy = pkgs.lib.mkForce [ "graphical-session-i3.target" ];
+    Unit = {
+      After = [ "graphical-session-i3.target" ];
+      Description = "Portal service";
+    };
+    Service = {
+      Type = "dbus";
+      BusName = "org.freedesktop.portal.Desktop";
+      ExecStart="${pkgs.xdg-desktop-portal}/libexec/xdg-desktop-portal";
+      Restart = "on-failure";
+    };
+  };
+
   # src: https://discourse.nixos.org/t/how-to-install-xdg-desktop-portal-termfilechooser/62819/12
   xdg.configFile."xdg-desktop-portal-termfilechooser/config".text = let
       launcherDeps = pkgs.buildEnv {

@@ -3,6 +3,9 @@
     ./harware-configuration.nix
     # ${hostname}
   ];
+  nixpkgs.overlays = [
+    inputs.nix-your-shell.overlays.default
+  ];
   
   environment = {
     # Remove unecessary preinstalled packages
@@ -22,12 +25,10 @@
       steam
       zoom-us
       gcc
-
-      nautilus
-
       audacity
       pulsemixer
       guvcview
+      nix-your-shell
     ];
     sessionVariables = {
     };
