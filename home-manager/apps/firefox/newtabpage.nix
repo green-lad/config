@@ -25,6 +25,10 @@
     url = "https://localhost:8002";
   }
   {
+    label = "papis";
+    url = "http://localhost:8888/library/papers/all";
+  }
+  {
     baseDomain = "scribd.com";
     label = "scribd";
     url =

@@ -45,11 +45,7 @@ let
     # Define the install phase
     installPhase = ''
       mkdir -p $out/bin
-  
-      # Copy the original hello binary to the output
       cp ${pkg}/bin/polybar $out/bin/polybar
-  
-      # Wrap the program to adapt the PATH (or other variables)
       wrapProgram $out/bin/polybar \
         --set PATH "${dependency_path}:$PATH"
     '';
