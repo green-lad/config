@@ -83,8 +83,44 @@
   };
 
   config.programs.neomutt = {
+    # package = let
+    #   dependency_path = with pkgs; "PATH=${pkgs.neomutt}/bin:/run/wrappers/bin:${lib.makeBinPath [
+    #     abook
+    #     isync
+    #     coreutils-full
+    #     urlscan
+    #     msmtp
+    #     abook
+    #     xdg-utils
+    #     zathura
+    #     firefox
+    #     neovim
+    #   ]}";
+    # in pkgs.stdenv.mkDerivation {
+    #   pname = "neomutt_with_dependencies";
+    #   version = "1.0";
+    #
+    #   # skip unpackPhase (no src)
+    #   unpackPhase = "true";
+    #
+    #   buildInputs = [ pkgs.neomutt ];
+    #
+    #   nativeBuildInputs = [ pkgs.makeWrapper ];
+    #
+    #   # Define the install phase
+    #   installPhase = ''
+    #     mkdir -p $out/bin
+    #     cp ${pkgs.neomutt}/bin/neomutt $out/bin/neomutt
+    #     mkdir -p $out/share/doc/neomutt/vim-keys
+    #     cp ${pkgs.neomutt}/share/doc/neomutt/vim-keys/vim-keys.rc $out/share/doc/neomutt/vim-keys
+    #     wrapProgram $out/bin/neomutt \
+    #       --set PATH "${dependency_path}:$PATH"
+    #   '';
+    # };
+
     enable = true;
     vimKeys = true;
+    editor = "nvim";
     binds = [
       {
         action = "complete-query";

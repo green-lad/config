@@ -46,6 +46,12 @@
       clipboard = "unnamedplus";
     };
 
+    # TODO: explicitly add plugins for when neovim gets started with a wrapped package (see polybar) by not hardcoding them
+    extraConfigLuaPre = ''
+      vim.opt.runtimepath:prepend("/nix/store/jr2z31afi2bj8y36wylff36p0g01n7jz-vim-pack-dir")
+      vim.opt.runtimepath:prepend("/nix/store/jr2z31afi2bj8y36wylff36p0g01n7jz-vim-pack-dir/pack/*/start/*")
+    '';
+
     extraConfigLua = ''
       require("kitty-scrollback").setup()
     '';

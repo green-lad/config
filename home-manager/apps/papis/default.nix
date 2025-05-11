@@ -19,6 +19,9 @@ in {
         };
       };
     };
+    settings = {
+      picktool = "fzf";
+    };
   };
 
   # Dummy `scripts` directory to silence `papis`'s message

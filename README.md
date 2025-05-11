@@ -35,3 +35,4 @@ In the future I might want to switch to librewolf (currently some stuff does not
 - Fix termfilechooser sporadically not working (for example when using file input in firefox)
     A first look shows that after home-manager switch it seems to be working again, it seems like a (system) service is not running
 - Make every path in every command output clickable (for example by making it a hyperlink: printf '\e]8;;%s\e\\%s\e]8;;\e\\\n' "file:///home/markus/config" "config")
+- Change hardcoded runtimepath plugin values to dynamic nix store entry in home-manager/apps/neovim/default.nix
