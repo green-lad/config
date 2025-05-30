@@ -7,7 +7,7 @@
       "-g"
       "!debug"
       "--hyperlink-format"
-      "kitty"
+      "default"
       "--no-heading"
     ];
   };

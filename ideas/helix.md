@@ -1,0 +1,11 @@
+# Missing features
+- folds
+- narrowing
+- regex match with backreference (eg: in helix tutor first task match repeating characters)
+- same motions in search and command mode (like command-line window in vim)
+- disable language server features on the fly (eg: run diagnostics only when prompted)
+- selection undo (with history tree)
+- auto complete with words from current buffers as source (vim: C-n)
+- sometimes the cursor in not visible when selecting (t -> , -> A-;)
+- always show current working directory
+- open url in selection in browser

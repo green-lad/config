@@ -23,6 +23,17 @@ in {
     definedAliases = [ "@hmo" ];
   };
 
+  "github code search" = {
+    urls = [
+      {
+        template = "https://github.com/search?q={searchTerms}&type=code";
+      }
+    ];
+    icon = "https://github.githubassets.com/favicons/favicon.svg";
+    updateInterval = interval;
+    definedAliases = [ "@g" ];
+  };
+
   "github nix code search" = {
     urls = [
       {
@@ -149,7 +160,7 @@ in {
     ];
     icon = "https://assets.crossref.org/favicon/android-chrome-192x192.png";
     updateInterval = interval;
-    definedAliases = [ "@rc" ];
+    definedAliases = [ "@rfc" ];
   };
 
   "arxiv" = {
@@ -160,7 +171,7 @@ in {
     ];
     icon = "https://static.arxiv.org/static/base/1.0.0a5/images/arxiv-logo-one-color-white.svg";
     updateInterval = interval;
-    definedAliases = [ "@ra" ];
+    definedAliases = [ "@rfa" ];
   };
 
   "dl.acm.org" = {
@@ -171,7 +182,7 @@ in {
     ];
     icon = "https://dl.acm.org/pb-assets/head-metadata/apple-touch-icon-1574252172393.png";
     updateInterval = interval;
-    definedAliases = [ "@racm" ];
+    definedAliases = [ "@rfacm" ];
   };
 
   "google scholar" = {
@@ -182,6 +193,72 @@ in {
     ];
     icon = "https://scholar.google.com/favicon.ico";
     updateInterval = interval;
-    definedAliases = [ "@rg" ];
+    definedAliases = [ "@rfg" ];
+  };
+
+  "rust book" = {
+    urls = [
+      {
+        template = "https://doc.rust-lang.org/book/?search={searchTerms}";
+      }
+    ];
+    icon = "https://www.rust-lang.org/static/images/favicon.svg";
+    updateInterval = interval;
+    definedAliases = [ "@rb" ];
+  };
+
+  "rust language reference" = {
+    urls = [
+      {
+        template = "https://doc.rust-lang.org/reference/index.html?search={searchTerms}";
+      }
+    ];
+    icon = "https://www.rust-lang.org/static/images/favicon.svg";
+    updateInterval = interval;
+    definedAliases = [ "@rr" ];
+  };
+
+  "rust themis" = {
+    urls = [
+      {
+        template = "file:///home/markus/themis/target/doc/bench_client/index.html?search={searchTerms}";
+      }
+    ];
+    icon = "https://www.rust-lang.org/static/images/favicon.svg";
+    updateInterval = interval;
+    definedAliases = [ "@rt" ];
+  };
+
+  "rust by examlpe" = {
+    urls = [
+      {
+        template = "https://doc.rust-lang.org/rust-by-example/index.html?search={searchTerms}";
+      }
+    ];
+    icon = "https://www.rust-lang.org/static/images/favicon.svg";
+    updateInterval = interval;
+    definedAliases = [ "@re" ];
+  };
+
+  "helix config" = {
+    urls = [
+      {
+        template = "https://docs.helix-editor.com/editor.html?search={searchTerms}";
+      }
+    ];
+    icon = "https://helix-editor.com/favicon.svg";
+    updateInterval = interval;
+    definedAliases = [ "@hc" ];
+  };
+
+  "thingiverse" = {
+    urls = [
+      {
+        template = "https://www.thingiverse.com/search?q={searchTerms}";
+      }
+    ];
+    icon = "https://cdn.thingiverse.com/site/img/favicons/favicon-192x192.png";
+    updateInterval = interval;
+    definedAliases = [ "@th" ];
   };
 }

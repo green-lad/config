@@ -6,16 +6,20 @@
 
     ./apps/clipmenu
     ./apps/firefox
+    ./apps/fzf
     ./apps/git
+    ./apps/helix
     ./apps/i3
     ./apps/kitty
     ./apps/neomutt
     ./apps/neovim
+    ./apps/nushell
     ./apps/papis
     ./apps/pipewire_noise_cancelling
     ./apps/polybar
     ./apps/ripgrep
     ./apps/ssh
+    ./apps/wezterm
     ./apps/xdg
     ./apps/zsh
   ];

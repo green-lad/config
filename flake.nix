@@ -43,6 +43,10 @@
       url = "github:MercuryTechnologies/nix-your-shell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    helix.url = "github:helix-editor/helix/master";
+
+    wezterm.url = "github:wez/wezterm?dir=nix";
   };
 
   outputs = { nixpkgs, home-manager, disko, sops-nix, ... } @ inputs:

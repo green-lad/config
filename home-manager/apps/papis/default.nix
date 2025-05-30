@@ -18,6 +18,18 @@ in {
           dir = "~/Documents/papers";
         };
       };
+      books = {
+        name = "books";
+        settings = {
+          dir = "~/Documents/books";
+        };
+      };
+      nyt = {
+        name = "nyt";
+        settings = {
+          dir = "~/Documents/nyt";
+        };
+      };
     };
     settings = {
       picktool = "fzf";

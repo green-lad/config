@@ -17,6 +17,8 @@ let
     firefox
     neovim
 
+    home-manager
+    nushell
     i3-gaps
     systemd
     unixtools.ping
@@ -25,8 +27,9 @@ let
     gawk
     flameshot
     taskwarrior3
-    kitty
+    wezterm
     networkmanager
+    moc
     (writeScriptBin "control_wlan_fritzbox" (builtins.readFile ../../scripts/control_wlan_fritzbox.sh))
     (writeScriptBin "get_mail_count" (builtins.readFile ../../scripts/get_mail_count.sh))
     (writeScriptBin "get_most_urgent_task" (builtins.readFile ../../scripts/get_most_urgent_task.sh))
@@ -90,7 +93,7 @@ in {
         font-1 = "SauceCodePro Nerd Font Propo,SauceCodePro NFP:style=Regular:pixelsize=17;3";
         modules-left = "i3";
         modules-center = "date";
-        modules-right = "eth wlan taskwarrior pulseaudio flameshot mail battery powermenu";
+        modules-right = "eth wlan taskwarrior pulseaudio flameshot mail battery restart powermenu";
         wm-restack = "i3";
         override-redirect = "false";
         enable-ipc = "true";
@@ -149,6 +152,22 @@ in {
         time-alt = "%H:%M:%S";
         label = " %date% %time%";
       };
+
+      "module/restart" = {
+        type = "custom/menu";
+        expand-right = "false";
+        format-spacing = 1;
+        label-open = "  󰜉  ";
+        label-close = "  󰜺  ";
+        menu-0-0 = "polybar";
+        menu-0-0-exec = "restart_polybar";
+        menu-0-1 = "i3";
+        menu-0-1-exec = "i3-msg restart";
+        menu-0-2 = "home-manager";
+        menu-0-2-exec = ''wezterm start --cwd '$"('$env.HOME)/config" -- nu -c "home-manager switch --flake path:#nuc; input"'';
+        # menu-0-3 = "nixos";
+        # menu-0-3-exec = "wezterm -e sudo nixos-rebuild switch --flake path:$HOME/config#";
+      };
       
       "module/powermenu" = {
         type = "custom/menu";
@@ -156,16 +175,12 @@ in {
         format-spacing = 1;
         label-open = "  󰐥  ";
         label-close = "  󰜺  ";
-        menu-0-0 = "reload_polybar";
-        menu-0-0-exec = "restart_polybar";
-        menu-0-1 = "reload_i3";
-        menu-0-1-exec = "i3-msg restart";
-        menu-0-2 = "log_off";
-        menu-0-2-exec = "#powermenu.open.1";
-        menu-0-3 = "reboot";
-        menu-0-3-exec = "#powermenu.open.2";
-        menu-0-4 = "power_off";
-        menu-0-4-exec = "#powermenu.open.3";
+        menu-0-0 = "log_off";
+        menu-0-0-exec = "#powermenu.open.1";
+        menu-0-1 = "reboot";
+        menu-0-1-exec = "#powermenu.open.2";
+        menu-0-2 = "power_off";
+        menu-0-2-exec = "#powermenu.open.3";
         menu-1-0 = "log_off";
         menu-1-0-exec = "i3 exit logout";
         menu-2-0 = "reboot";
@@ -186,6 +201,7 @@ in {
         label-muted = "󰝟";
         label-muted-padding = 2;
         format-muted = "<label-muted>";
+        click-right = "wezterm -e mocp";
       };
       
       "module/flameshot" = {
@@ -198,7 +214,7 @@ in {
         type = "custom/script";
         exec = "get_mail_count";
         interval = 60;
-        click-left = "kitty --title mail neomutt";
+        click-left = "wezterm -e neomutt";
       };
       
       "module/taskwarrior" = {

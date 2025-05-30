@@ -73,7 +73,7 @@
     in ''
       [filechooser]
       env=PATH='${launcherDeps}/bin'
-      env=TERMCMD='${pkgs.kitty}/bin/kitty'
+      env=TERMCMD='${pkgs.wezterm}/bin/wezterm'
       cmd='${pkgs.xdg-desktop-portal-termfilechooser}/share/xdg-desktop-portal-termfilechooser/yazi-wrapper.sh'
       default_dir=$HOME
       open_mode=suggested

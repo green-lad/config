@@ -56,9 +56,14 @@
       require("kitty-scrollback").setup()
     '';
 
+    plugins = {
+    };
+
     extraPlugins = with pkgs.vimPlugins; [
       kitty-scrollback-nvim
       fileline-nvim # open files at line and char (example: nvim foo.lua:12:5)
+      nvim-rg
+      nvim-lspconfig
     ]
     ++ [
       (pkgs.vimUtils.buildVimPlugin {

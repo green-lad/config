@@ -13,22 +13,24 @@
     # packages that have no home-manager configs
     systemPackages = with pkgs; [
       age
-      sops
-      htop
-      xsel
-      neovim
-      moc
-      killall
-      home-manager
-      yt-dlp
-      ffmpeg_6
-      steam
-      zoom-us
-      gcc
       audacity
-      pulsemixer
+      cura-appimage
+      ffmpeg_6
+      gcc
       guvcview
+      home-manager
+      htop
+      killall
+      moc
+      neovim
       nix-your-shell
+      pulsemixer
+      sops
+      steam
+      unzip
+      xsel
+      yt-dlp
+      zoom-us
     ];
     sessionVariables = {
     };
@@ -41,7 +43,9 @@
       GTK2_RC_FILES = "$HOME/.local/share/gtk-2.0/gtkrc";
       MOZ_ENABLE_WAYLAND = "1";
       ZK_NOTEBOOK_DIR = "$HOME/stuff/notes/";
-      EDITOR = "nvim";
+      EDITOR = "hx";
+      TERMINAL = "wezterm";
+      BROWSER = "firefox";
       DIRENV_LOG_FORMAT = "";
       ANKI_WAYLAND = "1";
       DISABLE_QT5_COMPAT = "0";
@@ -75,7 +79,7 @@
   programs = {
     adb.enable = true;
     steam.enable = true;
-    zsh.enable = true;
+    # zsh.enable = true;
     # hyprland = {
     #   enable = true;
     #   xwayland.enable = true;
@@ -361,7 +365,7 @@
     ];
   in {
     "${user}" = {
-      shell = pkgs.zsh;
+      shell = pkgs.nushell;
       isNormalUser = true;
       hashedPassword = "$6$igRbgm5cDL1ZG0Zc$tmrJZPcQtk7sul2Zumk7XidoVta8xE4sSZvPCCmRIbyDmw7b9bx5BG6XlXUfcOVVPh/wor.YirIZ3Sw5zB.tN0";
       home = "/home/${user}";
