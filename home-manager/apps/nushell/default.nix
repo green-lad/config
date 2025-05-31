@@ -9,6 +9,27 @@ let
       }
     '') (lib.range 1 5)
   );
+  fzf-event = [
+    {
+      send = "ExecuteHostCommand";
+      cmd = ''commandline edit --insert (
+        history
+          | get command
+          | reverse
+          | uniq
+          | str join (char -i 0)
+          | fzf
+            --scheme history
+            --read0
+            --layout reverse
+            --height 40%
+            --preview='echo {} | nu-highlight'
+            --preview-window='wrap'
+          | decode utf-8
+          | str trim
+      )'';
+    }
+  ];
 in {
   programs.nushell = {
     enable = true;
@@ -37,6 +58,15 @@ in {
           ];
         }
         {
+          name = "fuzzy_history_normal";
+          modifier = "none";
+          keycode = "char_/";
+          mode = [
+            "vi_normal"
+          ];
+          event = fzf-event;
+        }
+        {
           name = "fuzzy_history";
           modifier = "control";
           keycode = "char_r";
@@ -45,30 +75,7 @@ in {
             "vi_normal"
             "vi_insert"
           ];
-          event = [
-            {
-              send = "ExecuteHostCommand";
-
-              # TODO: make preview work with word wrap and syntax highlighting
-              # --preview={}
-              # --preview='echo -n {} | nu --stdin -c \'nu-highlight\'''
-              cmd = ''commandline edit --insert (
-                history
-                  | get command
-                  | reverse
-                  | uniq
-                  | str join (char -i 0)
-                  | fzf
-                    --scheme history
-                    --read0
-                    --layout reverse
-                    --height 40%
-                    --query (commandline)
-                  | decode utf-8
-                  | str trim
-              )'';
-            }
-          ];
+          event = fzf-event;
         }
       ];
     };

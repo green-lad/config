@@ -35,14 +35,15 @@
     sessionVariables = {
     };
     variables = {
-      NIXOS_CONFIG = "$HOME/config/nixos/configuration.nix";
-      NIXOS_CONFIG_DIR = "$HOME/config/nixos/";
+      HOST = "${hostname}";
+      NIX_CONFIG_DIR = "$HOME/config";
+      NIXOS_CONFIG_DIR = "$NIX_CONFIG_DIR/nixos";
+      NIXOS_CONFIG = "$NIXOS_CONFIG_DIR/configuration.nix";
       XDG_DATA_HOME = "$HOME/.local/share";
       PASSWORD_STORE_DIR = "$HOME/.local/share/password-store";
       GTK_RC_FILES = "$HOME/.local/share/gtk-1.0/gtkrc";
       GTK2_RC_FILES = "$HOME/.local/share/gtk-2.0/gtkrc";
       MOZ_ENABLE_WAYLAND = "1";
-      ZK_NOTEBOOK_DIR = "$HOME/stuff/notes/";
       EDITOR = "hx";
       TERMINAL = "wezterm";
       BROWSER = "firefox";

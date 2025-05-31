@@ -1,68 +1,26 @@
-{ config, pkgs, ... }:
+{ config, pkgs, hostname, user, ... }:
 let
-  pkg = pkgs.polybar.override {
-    i3Support = true;
-    pulseSupport  = true;
-  };
-  # TODO: this can't be the solution...
-  dependency_path = with pkgs; "PATH=${pkg}/bin:/run/wrappers/bin:${lib.makeBinPath [
-    # neomutt dependencies
-    neomutt
-    coreutils-full
-    urlscan
-    msmtp
-    abook
-    xdg-utils
-    zathura
-    firefox
-    neovim
-
-    home-manager
-    nushell
-    i3-gaps
-    systemd
-    unixtools.ping
-    curl
-    gnugrep
-    gawk
-    flameshot
-    taskwarrior3
-    wezterm
-    networkmanager
-    moc
-    (writeScriptBin "control_wlan_fritzbox" (builtins.readFile ../../scripts/control_wlan_fritzbox.sh))
-    (writeScriptBin "get_mail_count" (builtins.readFile ../../scripts/get_mail_count.sh))
-    (writeScriptBin "get_most_urgent_task" (builtins.readFile ../../scripts/get_most_urgent_task.sh))
-  ]}";
-  package_wrapped = pkgs.stdenv.mkDerivation {
-    pname = "polybar_with_dependencies";
-    version = "1.0";
-
-    # skip unpackPhase (no src)
-    unpackPhase = "true";
-  
-    buildInputs = [ pkg ];
-  
-    nativeBuildInputs = [ pkgs.makeWrapper ];
-
-    # Define the install phase
-    installPhase = ''
-      mkdir -p $out/bin
-      cp ${pkg}/bin/polybar $out/bin/polybar
-      wrapProgram $out/bin/polybar \
-        --set PATH "${dependency_path}:$PATH"
-    '';
-  };
-  restart_path = "PATH=${package_wrapped}/bin:${pkgs.lib.makeBinPath [
-    (pkgs.writeScriptBin "restart_polybar" (builtins.readFile ../../scripts/restart_polybar.sh))
-  ]}";
-
+  local_flake = ''$"path:($env.HOME)/config#${hostname}"'';
+  dependency_path = with pkgs; lib.concatStringsSep ":" [
+    "/run/current-system/sw/bin"
+    "/etc/profiles/per-user/${user}/bin"
+    "/run/wrappers/bin"
+    "${pkgs.lib.makeBinPath [
+      (pkgs.writeScriptBin "control_wlan_fritzbox" (builtins.readFile ../../scripts/control_wlan_fritzbox.sh))
+      (pkgs.writeScriptBin "get_mail_count" (builtins.readFile ../../scripts/get_mail_count.sh))
+      (pkgs.writeScriptBin "get_most_urgent_task" (builtins.readFile ../../scripts/get_most_urgent_task.sh))
+      (pkgs.writeScriptBin "restart_polybar" (builtins.readFile ../../scripts/restart_polybar.sh))
+    ]}"
+  ];
 in {
   services.polybar = {
     enable = true;
-    package = package_wrapped;
+    package = pkgs.polybar.override {
+      i3Support = true;
+      pulseSupport  = true;
+    };
 
-    script = "${restart_path} restart_polybar";
+    script = "PATH=${dependency_path} restart_polybar";
     config = {
       "colors" = {
         background = "#1e1e20";
@@ -71,7 +29,6 @@ in {
       };
       
       "bar/top" = {
-        # alternatively use powermenu via "%{T2}%{T-} <module text> %{R T2}%{T-}" (T2: use font-1; T-: reset font; R: switch fore-/backgroundcolor)
         separator = "%{F#666666}|%{F-}";
         monitor = "\${env:MONITOR:}";
         width = "100%";
@@ -87,8 +44,6 @@ in {
         padding-right = 0;
         module-margin-left = 0;
         module-margin-right = 0;
-        #search for icons: https://www.nerdfonts.com/cheat-sheet;
-        #list monospace fonts: fc-list :spacing=100 | less;
         font-0 = "SauceCodePro Nerd Font Propo,SauceCodePro NFP:style=Regular:pixelsize=10;0";
         font-1 = "SauceCodePro Nerd Font Propo,SauceCodePro NFP:style=Regular:pixelsize=17;3";
         modules-left = "i3";
@@ -115,10 +70,6 @@ in {
         label-focused = " %index% ";
         label-focused-foreground = "\${colors.highlight}";
         label-unfocused = " %index% ";
-        # label-unfocused-foreground = "\${colors.text}";
-        # label-visible = "%{T2}%{T-} %index% %{R T2}%{T-}";
-        # label-visible-background = "\${colors.button_color}";
-        # label-visible-foreground = "\${colors.button_text_color}";
       };
       
       "module/wlan" = {
@@ -160,13 +111,13 @@ in {
         label-open = "  󰜉  ";
         label-close = "  󰜺  ";
         menu-0-0 = "polybar";
-        menu-0-0-exec = "restart_polybar";
+        menu-0-0-exec = "systemctl --user restart polybar";
         menu-0-1 = "i3";
         menu-0-1-exec = "i3-msg restart";
         menu-0-2 = "home-manager";
-        menu-0-2-exec = ''wezterm start --cwd '$"('$env.HOME)/config" -- nu -c "home-manager switch --flake path:#nuc; input"'';
-        # menu-0-3 = "nixos";
-        # menu-0-3-exec = "wezterm -e sudo nixos-rebuild switch --flake path:$HOME/config#";
+        menu-0-2-exec = ''wezterm start -- nu -c 'try { home-manager switch --flake ${local_flake} }; input' '';
+        menu-0-3 = "nixos";
+        menu-0-3-exec = ''wezterm start -- nu -c 'try { sudo nixos-rebuild switch --flake ${local_flake} }; input' '';
       };
       
       "module/powermenu" = {
@@ -215,6 +166,7 @@ in {
         exec = "get_mail_count";
         interval = 60;
         click-left = "wezterm -e neomutt";
+        click-middle = "mbsync -a && systemctl --user restart polybar";
       };
       
       "module/taskwarrior" = {

@@ -42,6 +42,7 @@
           enable = true;
           max-wrap = 0;
         };
+        shell = ["nu" "--stdin" "-c"];
 
         cursor-shape = {
           normal = "block";
@@ -71,22 +72,14 @@
       keys = {
         normal = {
           "\\" = ":pipe 'eval \"$(cat -)\"'";
-          space.i = [
-            ":vnew"
-            ":config-open"
-            ":sh rm %{buffer_name}"
+          "*" = [
+            "search_selection"
+            "search_next"
           ];
-          space.L = ":config-reload";
-          space.e = [
-            ":sh rm -f /tmp/unique-file-u41ae14"
-            ":insert-output yazi '%{buffer_name}' --chooser-file=/tmp/unique-file-u41ae14"
-            ":insert-output echo \"\x1b[?1049h\" > /dev/tty"
-            ":open %sh{cat /tmp/unique-file-u41ae14}"
-            ":redraw"
+          "A-*" = [
+            "search_selection_detect_word_boundaries"
+            "search_next"
           ];
-          # TODO
-          # space.E = [
-          # ];
           C-space = "completion";
           C-m = "signature_help";
           C-g = [
@@ -126,13 +119,28 @@
               x = ":toggle whitespace.render all none";
               n = ":toggle-option indent-guides.render";
               p = ":toggle-option lsp.display-progress-messages";
-              # d = ":toggle enable-diagnostics";
             };
             l = {
               r = ":lsp-restart";
               s = ":lsp-stop";
               w = ":lsp-workspace-command";
             };
+            u = ":sh rm %{buffer_name}";
+            i = ":open ${config.xdg.configHome}";
+            L = ":config-reload";
+            e = [
+              ":sh rm -f /tmp/unique-file-u41ae14"
+              ":insert-output yazi '%{buffer_name}' --chooser-file=/tmp/unique-file-u41ae14"
+              ":insert-output echo \"\x1b[?1049h\" > /dev/tty"
+              ":open %sh{cat /tmp/unique-file-u41ae14}"
+              ":redraw"
+            ];
+            E = [
+              ":sh rm -f /tmp/unique-file-u41ae15"
+              ":insert-output yazi '%{buffer_name}' --chooser-file=/tmp/unique-file-u41ae15"
+              ":insert-output echo \"\x1b[?1049h\" > /dev/tty"
+              ":cd %sh{cat /tmp/unique-file-u41ae14}"
+            ];
           };
         };
         insert = {

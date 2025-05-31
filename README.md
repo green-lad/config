@@ -26,15 +26,13 @@ In the future I might want to switch to librewolf (currently some stuff does not
 - Use librewolf instead of firefox (didn't switch yet because bookmarks were not working immediately)
 - Reset root system (impermanence)
 - Get realtime kernel and linuxcnc working
-- Work on the split between hosts
 - Get nixos-anywhere working again (when running it, nixos-installer gets booted; disko stuff seems fine, maybe sops-nix is the problem) 
 - Also configure firefox plugins like sideberry or violetmonkey to not have to configure them on first use
 - Make a search engine for firefox which can query mutliple arguments (for example github search engine: searchTerm, language)
-- Work on separation of concerns and reflection of dependencies (for example polybar using neomutt)
 - Fix termfilechooser sporadically not working (for example when using file input in firefox)
     A first look shows that after home-manager switch it seems to be working again, it seems like a (system) service is not running
 - Make every path in every command output clickable (for example by making it a hyperlink: printf '\e]8;;%s\e\\%s\e]8;;\e\\\n' "file:///home/markus/config" "config")
 - Change hardcoded runtimepath plugin values to dynamic nix store entry in home-manager/apps/neovim/default.nix
 - Run mbsync on connection up (to that mails can be read right after startup)
-- Trigger mbsync by hand over polybar
-- In nushell fzf enable word wrap in preview window and syntax highlighting
+- Get iampfilter working (https://github.com/RaitoBezarius/nixos-home/blob/a6e318e7385daf673808384729c3de111b061e49/emails/imapfilter/default.nix#L16)
+- Find a way to speedup configuring home-manager apps and testing them

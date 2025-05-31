@@ -30,7 +30,7 @@
 
     mbsync = {
       enable = true;
-      create = "both";
+      create = "maildir";
       remove = "both";
       expunge = "both";
     };
@@ -52,6 +52,12 @@
     neomutt = {
       enable = true;
       sendMailCommand = "${pkgs.msmtp}/bin/msmtp -a Personal";
+      extraMailboxes = [
+        "Archive"
+        "Drafts"
+        "Sent"
+        "Trash"
+      ];
 
       # extraConfig = ''
       #   set pgp_default_key = "${pgpKey}"
@@ -132,23 +138,18 @@
         key = "R";
         map = [ "index" "pager" ];
       }
+    ];
+    macros = [
       {
-        action = "sidebar-prev";
+        action = "<sidebar-prev><sidebar-open>";
         key = "[";
         map = [ "index" "pager" ];
       }
       {
-        action = "sidebar-next";
+        action = "<sidebar-next><sidebar-open>";
         key = "]";
         map = [ "index" "pager" ];
       }
-      {
-        action = "sidebar-open";
-        key = "\\Cm";
-        map = [ "index" "pager" ];
-      }
-    ];
-    macros = [
       {
         action = "!systemctl --user start mbsync &^M";
         key = "<F5>";
@@ -159,6 +160,11 @@
           "<change-folder>${config.accounts.email.accounts.Personal.maildir.absPath}/INBOX<enter>";
         key = "P";
         map = [ "index" ];
+      }
+      {
+        action = "<save-message>+Archive<enter>";
+        key = "A";
+        map = [ "index" "pager" ];
       }
       {
         action = "<save-message>?<tab>";

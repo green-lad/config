@@ -1,4 +1,4 @@
-{ inputs, pkgs, ... }: {
+{ config, inputs, pkgs, ... }: {
   programs.wezterm = {
     enable = true;
     # currently, font rendering is broken in the new wezterm versions https://github.com/NixOS/nixpkgs/issues/336069
@@ -18,19 +18,23 @@
       config.use_fancy_tab_bar = false
 
       config.adjust_window_size_when_changing_font_size = false
+      wezterm.add_to_config_reload_watch_list("${config.xdg.configHome}/wezterm")
 
       config.keys = {
       	{ key = "F11", action = wezterm.action.ToggleFullScreen },
       	{ key = "+", mods = "CTRL", action = wezterm.action.IncreaseFontSize },
       	{ key = "-", mods = "CTRL", action = wezterm.action.DecreaseFontSize },
-      	{ key = "n", mods = "CTRL", action = wezterm.action.ActivateTabRelative(1) },
-      	{ key = "p", mods = "CTRL", action = wezterm.action.ActivateTabRelative(-1) },
+      	{ key = "]", mods = "CTRL", action = wezterm.action.ActivateTabRelative(1) },
+      	{ key = "[", mods = "CTRL", action = wezterm.action.ActivateTabRelative(-1) },
       	{ key = "X", mods = "CTRL", action = wezterm.action.CloseCurrentTab({ confirm = true }) },
       	{ key = "=", mods = "CTRL", action = wezterm.action.ResetFontSize },
       	{ key = "LeftArrow", mods = "OPT", action = wezterm.action({ SendString = "\x1bb" }) },
       	{ key = "RightArrow", mods = "OPT", action = wezterm.action({ SendString = "\x1bf" }) },
       	{ key = "\\", mods = "CTRL", action = wezterm.action.ActivateCopyMode },
       	{ key = "Backspace", mods = "CTRL", action = wezterm.action.SendKey({ mods = "CTRL", key = "w" }) },
+
+      	{ key = "n", mods = "CTRL", action = wezterm.action.DisableDefaultAssignment },
+      	{ key = "p", mods = "CTRL", action = wezterm.action.DisableDefaultAssignment },
       	{
       		key = "Enter",
       		mods = "ALT",
