@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="data:,">
+    <title>new tab</title>
+    <style>
+      html {
+        min-height: 100%;
+      }
+      body {
+        display:flex;
+        flex-direction:column;
+        justify-content:center;
+        min-height:100vh;
+        position: absolute;
+        background: black;
+        margin: 0;
+      }
+      #container {
+        padding: 20px;
+        * {
+          margin: 20px 0;
+          border-radius:10px;
+        }
+      }
+      input {
+        width: 100%;
+        font-size: 30px;
+        color: yellowgreen;
+        background: darkslategrey;
+        border: 2px solid gray;
+        padding: 10px;
+        box-sizing: border-box;
+      }
+      #flex {
+        display: flex;
+        flex-wrap: wrap;
+        a {
+          padding: 20px;
+          border: 1px gray solid;
+          margin: 10px;
+          color: yellowgreen;
+          text-decoration: none;
+        }
+        a:hover {
+          background: darkslategrey;
+        }
+      }
+    </style>
+  </head>
+  <html>
+  <body>
+    <div id="container">
+      <input id="filter" type="text" onchange = "filter(event);"
+        oninput    = "this.onchange(event);"/>
+      <hr>
+      <div id="flex"></div>
+      <hr>
+    </div>
+
+    <script>
+    let urls = [
+      {
+        "label": "Duck.ai",
+        "url": "https://duckduckgo.com/?q=DuckDuckGo+AI+Chat&ia=chat&duckai=1"
+      },
+      {
+        "label": "studon.fau",
+        "url": "https://www.studon.fau.de/studon/ilias.php?baseClass=ilrepositorygui&reloadpublic=1&cmd=frameset&ref_id=1"
+      },
+      {
+        "url": "https://www.kleinanzeigen.de/"
+      },
+      {
+        "url": "https://faumail.uni-erlangen.de/"
+      },
+      {
+        "label": "miniflux",
+        "url": "https://localhost:8002"
+      },
+      {
+        "label": "papis",
+        "url": "http://localhost:8888/library/papers/all"
+      },
+      {
+        "label": "scribd",
+        "url": "https://www.scribd.com/document/498201474/Language-Proof-and-Logic-2nd-D-Barker-Plummer-J-Barwise-J-Etchemendy"
+      },
+      {
+        "label": "amazon",
+        "url": "https://amazon.de"
+      },
+      {
+        "url": "https://www.sparkasse-nuernberg.de/de/home.html"
+      },
+      {
+        "label": "consorsbank",
+        "url": "https://www.consorsbank.de/home"
+      },
+      {
+        "label": "thingiverse",
+        "url": "https://www.thingiverse.com/"
+      },
+      {
+        "label": "github",
+        "url": "https://github.com/green-lad"
+      },
+      {
+        "label": "homeassistant",
+        "url": "http://homeassistant:8123/"
+      },
+      {
+        "label": "fritz",
+        "url": "https://fritz.box/"
+      },
+      {
+        "label": "my.remarkable",
+        "url": "https://my.remarkable.com/"
+      },
+      {
+        "label": "pocketnc",
+        "url": "http://192.168.178.55"
+      },
+      {
+        "label": "campo.fau",
+        "url": "https://www.campo.fau.de/qisserver/pages/cs/sys/portal/hisinoneStartPage.faces"
+      },
+      {
+        "label": "home",
+        "url": "http://greenlad.xyz/"
+      },
+      {
+        "label": "fsi.cs.fau",
+        "url": "https://fsi.cs.fau.de/"
+      },
+      {
+        "url": "https://www.vgn.de/"
+      },
+      {
+        "label": "pocket_nc_simulator",
+        "url": "https://sim.pentamachine.com/"
+      },
+      {
+        "label": "chomsky",
+        "url": "https://chomsky.info/"
+      },
+      {
+        "label": "leanpub",
+        "url": "https://leanpub.com/"
+      },
+      {
+        "label": "radicale",
+        "url": "http://localhost:5232"
+      },
+      {
+        "label": "youtube",
+        "url": "https://www.youtube.com"
+      },
+      {
+        "label": "twitch",
+        "url": "https://www.twitch.tv/barbarousking"
+      },
+      {
+        "label": "maps",
+        "url": "https://maps.google.de"
+      },
+      {
+        "url": "https://www.currentaffairs.org/"
+      },
+      {
+        "label": "DHL Sendungsverfolgung",
+        "url": "https://www.dhl.de/de/privatkunden/dhl-sendungsverfolgung.html"
+      },
+      {
+        "url": "https://www.dict.cc/"
+      },
+      {
+        "label": "Chefkoch",
+        "url": "http://chefkoch.de"
+      }
+    ];
+
+    let flex = document.getElementById("flex");
+    let url_divs = [];
+    for (const url of urls) {
+      let a= document.createElement('a');
+      let l = document.createTextNode(url.label);
+      a.appendChild(l);
+      a.title = url.label;
+      a.href = url.url;
+      flex.appendChild(a);
+      url_divs.push(a);
+    }
+    document.getElementById("filter").value = "";
+
+    function filter(event) {
+      <!-- console.log(url_divs); -->
+      let filter = new RegExp(event.target.value, "i");
+      for (const url_div of url_divs) {
+        if (url_div.text.match(filter)) {
+          <!-- url_div.style.display = "inherit"; -->
+          url_div.style.visibility = "inherit";
+        }
+        else {
+          url_div.style.visibility = "hidden";
+        }
+      }
+    }
+    </script>
+
+  </body>
+</html>

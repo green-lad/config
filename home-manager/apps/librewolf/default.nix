@@ -1,39 +1,47 @@
-{ config, pkgs, inputs, ... }: {
-  # info to https://www.reddit.com/r/NixOS/comments/1j0oky4/declaring_librewolf_bookmarks/ if "bookmarks.internal = false" works
-  programs.firefox = {
-  # in librewolf the configuration of bookmarks is not working with the configuration of firefox
-  # programs.librewolf = {
+{ config, pkgs, inputs, ... }:
+let newTabPage = "file://${pkgs.writeText "index.html" (builtins.readFile ./index.html)}";
+in {
+  config.home.file.".librewolf/librewolf.overrides.cfg".text = ''
+    // sets the new tab page to our local newtab.
+    ChromeUtils.importESModule("resource:///modules/AboutNewTab.sys.mjs").AboutNewTab.newTabURL = "${newTabPage}";
+
+    // sets our home page to the same URL.
+    pref("browser.startup.homepage", "${newTabPage}");
+
+    // don't firefox sync the homepage, stops it overwriting on windows.
+    pref("services.sync.prefs.sync.browser.startup.homepage", false);
+  '';
+  config.programs.librewolf = {
     enable = true;
-    policies = {
-      NoDefaultBookmarks = false;
-    };
+    policies = { NoDefaultBookmarks = false; };
     profiles = {
       default = {
         id = 0;
         name = "default";
         isDefault = true;
-        extensions.packages = with inputs.firefox-addons.packages.${pkgs.system}; [
-          darkreader
-          sidebery
-          violentmonkey
-          userchrome-toggle-extended
-          videospeed
-          return-youtube-dislikes
-          ublock-origin
-          don-t-fuck-with-paste
-          sponsorblock
-          ublacklist
-        ];
+        extensions.packages =
+          with inputs.firefox-addons.packages.${pkgs.system}; [
+            darkreader
+            sidebery
+            violentmonkey
+            userchrome-toggle-extended
+            videospeed
+            return-youtube-dislikes
+            ublock-origin
+            don-t-fuck-with-paste
+            sponsorblock
+            ublacklist
+          ];
         userChrome = (builtins.readFile ./userChrome.css);
         userContent = (builtins.readFile ./userContent.css);
         bookmarks = {
-	  force = true;
-	  settings = import ./bookmarks.nix ++ [{
+          force = true;
+          settings = import ./bookmarks.nix ++ [{
             name = "toolbar";
             toolbar = true;
             bookmarks = import ./bookmarks.nix;
           }];
-	};
+        };
         #bookmarks.internal = false;
         search = {
           force = true;
@@ -45,32 +53,42 @@
           "devtools.debugger.remote-enabled" = true;
           "browser.urlbar.trimHttps" = false;
           "browser.urlbar.trimURLs" = false;
-          "permissions.default.shortcuts" = 2; # dont allow sites overriding default shortcuts like ctrl+f
+          "permissions.default.shortcuts" =
+            2; # dont allow sites overriding default shortcuts like ctrl+f
           "app.update.auto" = false;
-          "browser.urlbar.suggest.calculator" = true; # Integrated calculator at urlbar
-          "browser.urlbar.unitConversion.enabled" = true; # Integrated unit convertor at urlbar
+          "browser.urlbar.suggest.calculator" =
+            true; # Integrated calculator at urlbar
+          "browser.urlbar.unitConversion.enabled" =
+            true; # Integrated unit convertor at urlbar
           "browser.aboutConfig.showWarning" = false;
           "browser.warnOnQuit" = false;
           "browser.quitShortcut.disabled" = true;
           "browser.theme.dark-private-windows" = true;
           "browser.startup.page" = 3; # Restore previous session
           "dom.forms.autocomplete.formautofill" = false; # Disable autofill
-          "extensions.formautofill.creditCards.enabled" = false; # Disable credit cards
+          "extensions.formautofill.creditCards.enabled" =
+            false; # Disable credit cards
           "dom.payments.defaults.saveAddress" = false; # Disable address save
           "general.autoScroll" = true; # Drag middle-mouse to scroll
-          "services.sync.prefs.sync.general.autoScroll" = false; # Prevent disabling autoscroll
+          "services.sync.prefs.sync.general.autoScroll" =
+            false; # Prevent disabling autoscroll
           "extensions.pocket.enabled" = false;
-          "toolkit.legacyUserProfileCustomizations.stylesheets" = true; # Allow userChrome.css
+          "toolkit.legacyUserProfileCustomizations.stylesheets" =
+            true; # Allow userChrome.css
           "layout.css.color-mix.enabled" = true;
           "layout.css.has-selector.enabled" = true;
           "ui.systemUsesDarkTheme" = 1;
-          "media.ffmpeg.vaapi.enabled" = true; # Enable hardware video acceleration
+          "media.ffmpeg.vaapi.enabled" =
+            true; # Enable hardware video acceleration
           "cookiebanners.ui.desktop.enabled" = true; # Reject cookie popups
-          "cookiebanners.service.mode" = 2; # TODO: if reject all is not an option i fear that it might accept cookies
-          "devtools.command-button-screenshot.enabled" = true; # Scrolling screenshot of entire page
+          "cookiebanners.service.mode" =
+            2; # TODO: if reject all is not an option i fear that it might accept cookies
+          "devtools.command-button-screenshot.enabled" =
+            true; # Scrolling screenshot of entire page
           "svg.context-properties.content.enabled" = true; # Sidebery styling
           "browser.tabs.hoverPreview.enabled" = false; # Disable tab previews
-          "browser.tabs.hoverPreview.showThumbnails" = false; # Disable tab previews
+          "browser.tabs.hoverPreview.showThumbnails" =
+            false; # Disable tab previews
           "widget.use-xdg-desktop-portal.file-picker" = 1;
           "widget.use-xdg-desktop-portal.mime-handler" = 1;
           "widget.gtk.ignore-bogus-leave-notify" = 1;
@@ -84,12 +102,10 @@
           "browser.urlbar.suggest.addons" = false;
           "browser.urlbar.suggest.pocket" = false;
           "browser.urlbar.suggest.topsites" = false;
-          "browser.newtabpage.activity-stream.showSponsoredTopSites" = false;
-          "browser.newtabpage.activity-stream.topSitesRows" = 4;
-          "browser.newtabpage.pinned" = import ./newtabpage.nix;
           "extensions.autoDisableScopes" = 0; # enable plugins on first startup
           "extensions.enabledScopes" = 15; # enable plugins on first startup
-          "shyfox.disable.floating.search" = true; # don't display urlbar floating on focus
+          "shyfox.disable.floating.search" =
+            true; # don't display urlbar floating on focus
           "browser.translations.automaticallyPopup" = false;
           "browser.uiCustomization.state" = import ./uiCustomization_state.nix;
 
@@ -104,14 +120,13 @@
           "browser.startup.homepage_override.mstone" = "ignore";
           "browser.uitour.enabled" = false;
           "startup.homepage_override_url" = "";
-          "trailhead.firstrun.didSeeAboutWelcome" = true; # Disable welcome splash
+          "trailhead.firstrun.didSeeAboutWelcome" =
+            true; # Disable welcome splash
           "browser.bookmarks.restore_default_bookmarks" = false;
           "browser.bookmarks.addedImportButton" = true;
           # Disable some telemetry
           "app.shield.optoutstudies.enabled" = false;
           "browser.discovery.enabled" = false;
-          "browser.newtabpage.activity-stream.feeds.telemetry" = false;
-          "browser.newtabpage.activity-stream.telemetry" = false;
           "browser.ping-centre.telemetry" = false;
           "datareporting.healthreport.service.enabled" = false;
           "datareporting.healthreport.uploadEnabled" = false;
@@ -139,4 +154,3 @@
     };
   };
 }
-

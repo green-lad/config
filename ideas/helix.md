@@ -9,3 +9,4 @@
 - sometimes the cursor in not visible when selecting (t -> , -> A-;)
 - always show current working directory
 - open url in selection in browser
+- calling edit from lazygit hangs the whole process

@@ -5,7 +5,7 @@
     inputs.nixvim.homeManagerModules.nixvim
 
     ./apps/clipmenu
-    ./apps/firefox
+    ./apps/librewolf
     ./apps/fzf
     ./apps/git
     ./apps/helix

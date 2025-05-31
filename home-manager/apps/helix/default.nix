@@ -2,6 +2,11 @@
   programs.helix = {
     extraPackages = with pkgs; [
       lazygit
+      rust-analyzer
+      rustfmt
+      nixfmt-rfc-style
+      nil
+      jq
     ];
     enable = true;
     package = inputs.helix.packages.${pkgs.system}.helix;
@@ -9,13 +14,18 @@
       language = [
         {
           name = "rust";
-          language-servers = [
-            "rust-analyzer"
-            # {
-            #   name = "rust-analyzer";
-            #   except-features = [ "diagnostics" "inlay-hints" "completion" ];
-            # }
-          ];
+          formatter = {
+            command = "rustfmt";
+            args = [ "+nightly" ];
+          };
+        }
+        {
+          name = "nix";
+          formatter.command = "${pkgs.nixfmt}/bin/nixfmt";
+        }
+        {
+          name = "json";
+          formatter.command = "${pkgs.jq}/bin/jq";
         }
       ];
       language-server = {
@@ -42,7 +52,7 @@
           enable = true;
           max-wrap = 0;
         };
-        shell = ["nu" "--stdin" "-c"];
+        shell = [ "nu" "--stdin" "-c" ];
 
         cursor-shape = {
           normal = "block";
@@ -50,17 +60,11 @@
           select = "underline";
         };
 
-        file-picker = {
-          hidden = false;
-        };
+        file-picker = { hidden = false; };
 
-        lsp = {
-          auto-signature-help = false;
-        };
+        lsp = { auto-signature-help = false; };
 
-        whitespace = {
-          render = "all";
-        };
+        whitespace = { render = "all"; };
 
         indent-guides = {
           render = false;
@@ -72,14 +76,8 @@
       keys = {
         normal = {
           "\\" = ":pipe 'eval \"$(cat -)\"'";
-          "*" = [
-            "search_selection"
-            "search_next"
-          ];
-          "A-*" = [
-            "search_selection_detect_word_boundaries"
-            "search_next"
-          ];
+          "*" = [ "search_selection" "search_next" ];
+          "A-*" = [ "search_selection_detect_word_boundaries" "search_next" ];
           C-space = "completion";
           C-m = "signature_help";
           C-g = [
@@ -90,14 +88,8 @@
             ":redraw"
             ":reload-all"
           ];
-          H = [
-            "jump_backward"
-            "align_view_center"
-          ];
-          L = [
-            "jump_forward"
-            "align_view_center"
-          ];
+          H = [ "jump_backward" "align_view_center" ];
+          L = [ "jump_forward" "align_view_center" ];
           X = "extend_line_above";
           W = "@miw";
           C-h = "jump_view_left";
@@ -131,14 +123,14 @@
             e = [
               ":sh rm -f /tmp/unique-file-u41ae14"
               ":insert-output yazi '%{buffer_name}' --chooser-file=/tmp/unique-file-u41ae14"
-              ":insert-output echo \"\x1b[?1049h\" > /dev/tty"
+              '':insert-output echo "x1b[?1049h" > /dev/tty''
               ":open %sh{cat /tmp/unique-file-u41ae14}"
               ":redraw"
             ];
             E = [
               ":sh rm -f /tmp/unique-file-u41ae15"
               ":insert-output yazi '%{buffer_name}' --chooser-file=/tmp/unique-file-u41ae15"
-              ":insert-output echo \"\x1b[?1049h\" > /dev/tty"
+              '':insert-output echo "x1b[?1049h" > /dev/tty''
               ":cd %sh{cat /tmp/unique-file-u41ae14}"
             ];
           };
@@ -147,12 +139,7 @@
           C-m = "signature_help";
           C-space = "completion";
         };
-        select = {
-          X = [
-            "extend_line_up"
-            "extend_to_line_bounds"
-          ];
-        };
+        select = { X = [ "extend_line_up" "extend_to_line_bounds" ]; };
       };
     };
   };

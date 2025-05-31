@@ -172,6 +172,11 @@
         map = [ "index" ];
       }
       {
+        action = "<tag-prefix><save-message>+Trash<enter>";
+        key = "S";
+        map = [ "index" ];
+      }
+      {
         action = "<pipe-message>urlscan -dc<Enter>";
         key = "\\Cl";
         map = [ "index" "pager" ];

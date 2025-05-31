@@ -2,9 +2,9 @@
 let
   local_flake = ''$"path:($env.HOME)/config#${hostname}"'';
   dependency_path = with pkgs; lib.concatStringsSep ":" [
+    "/run/wrappers/bin"
     "/run/current-system/sw/bin"
     "/etc/profiles/per-user/${user}/bin"
-    "/run/wrappers/bin"
     "${pkgs.lib.makeBinPath [
       (pkgs.writeScriptBin "control_wlan_fritzbox" (builtins.readFile ../../scripts/control_wlan_fritzbox.sh))
       (pkgs.writeScriptBin "get_mail_count" (builtins.readFile ../../scripts/get_mail_count.sh))
@@ -115,9 +115,9 @@ in {
         menu-0-1 = "i3";
         menu-0-1-exec = "i3-msg restart";
         menu-0-2 = "home-manager";
-        menu-0-2-exec = ''wezterm start -- nu -c 'try { home-manager switch --flake ${local_flake} }; input' '';
+        menu-0-2-exec = ''wezterm start -- nu -c 'try { home-manager switch --flake ${local_flake} } catch { |err| $err.msg; input }' '';
         menu-0-3 = "nixos";
-        menu-0-3-exec = ''wezterm start -- nu -c 'try { sudo nixos-rebuild switch --flake ${local_flake} }; input' '';
+        menu-0-3-exec = ''wezterm start -- nu -c 'try { sudo nixos-rebuild switch --flake ${local_flake} } catch { |err| $err.msg; input }' '';
       };
       
       "module/powermenu" = {
