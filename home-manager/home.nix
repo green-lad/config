@@ -47,6 +47,8 @@
       gnumake
       urlscan
       vimPlugins.kitty-scrollback-nvim
+      # for polybar custom/scripts which wait for events
+      inotify-tools
 
 
       texliveFull

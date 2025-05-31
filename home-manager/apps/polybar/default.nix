@@ -9,6 +9,7 @@ let
       (pkgs.writeScriptBin "control_wlan_fritzbox" (builtins.readFile ../../scripts/control_wlan_fritzbox.sh))
       (pkgs.writeScriptBin "get_mail_count" (builtins.readFile ../../scripts/get_mail_count.sh))
       (pkgs.writeScriptBin "get_most_urgent_task" (builtins.readFile ../../scripts/get_most_urgent_task.sh))
+      (pkgs.writeScriptBin "manage_display_sleep_enabled" (builtins.readFile ../../scripts/manage_display_sleep_enabled.sh))
       (pkgs.writeScriptBin "restart_polybar" (builtins.readFile ../../scripts/restart_polybar.sh))
     ]}"
   ];
@@ -48,7 +49,7 @@ in {
         font-1 = "SauceCodePro Nerd Font Propo,SauceCodePro NFP:style=Regular:pixelsize=17;3";
         modules-left = "i3";
         modules-center = "date";
-        modules-right = "eth wlan taskwarrior pulseaudio flameshot mail battery restart powermenu";
+        modules-right = "eth wlan taskwarrior pulseaudio flameshot mail display_sleep_management battery restart powermenu";
         wm-restack = "i3";
         override-redirect = "false";
         enable-ipc = "true";
@@ -159,6 +160,13 @@ in {
         type = "custom/text";
         click-left = "flameshot gui";
         format = " 󰹑 ";
+      };
+      
+      "module/display_sleep_management" = {
+        type = "custom/script";
+        exec = "manage_display_sleep_enabled";
+        tail = true;
+        click-left = "manage_display_sleep_enabled --toggle";
       };
       
       "module/mail" = {
