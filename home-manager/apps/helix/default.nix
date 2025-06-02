@@ -92,6 +92,18 @@
             '':sh rm "%{buffer_name}.a" "%{buffer_name}.b" "%{buffer_name}"''
             "goto_file_start"
           ];
+          C-e = [
+            '':pipe-to save "%{buffer_name}.tmp.a"''
+            ":clipboard-paste-after"
+            '':pipe-to save "%{buffer_name}.tmp.b"''
+            "undo"
+            '':hs "%{buffer_name}.tmp"''
+            ''
+              :insert-output diff "%{buffer_name}.a" "%{buffer_name}.b" | str replace -ra "(<|>) " "''${1}" | str replace -a ' ' '·' ''
+            ":write"
+            '':sh rm "%{buffer_name}.a" "%{buffer_name}.b" "%{buffer_name}"''
+            "goto_file_start"
+          ];
           C-g = [
             ":write-all"
             ":new"
