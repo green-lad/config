@@ -1,24 +1,29 @@
-{ config, pkgs, hostname, user, ... }:
+{ pkgs, hostname, user, ... }:
 let
   local_flake = ''$"path:($env.HOME)/config#${hostname}"'';
-  dependency_path = with pkgs; lib.concatStringsSep ":" [
-    "/run/wrappers/bin"
-    "/run/current-system/sw/bin"
-    "/etc/profiles/per-user/${user}/bin"
-    "${pkgs.lib.makeBinPath [
-      (pkgs.writeScriptBin "control_wlan_fritzbox" (builtins.readFile ../../scripts/control_wlan_fritzbox.sh))
-      (pkgs.writeScriptBin "get_mail_count" (builtins.readFile ../../scripts/get_mail_count.sh))
-      (pkgs.writeScriptBin "get_most_urgent_task" (builtins.readFile ../../scripts/get_most_urgent_task.sh))
-      (pkgs.writeScriptBin "manage_display_sleep_enabled" (builtins.readFile ../../scripts/manage_display_sleep_enabled.sh))
-      (pkgs.writeScriptBin "restart_polybar" (builtins.readFile ../../scripts/restart_polybar.sh))
-    ]}"
-  ];
+  dependency_path = with pkgs;
+    pkgs.lib.makeBinPath [
+      "/run/wrappers"
+      "/run/current-system/sw"
+      "/etc/profiles/per-user/${user}"
+      (writeScriptBin "control_wlan_fritzbox"
+        (builtins.readFile ../../scripts/control_wlan_fritzbox.sh))
+      (writeScriptBin "get_mail_count"
+        (builtins.readFile ../../scripts/get_mail_count.sh))
+      (writeScriptBin "get_most_urgent_task"
+        (builtins.readFile ../../scripts/get_most_urgent_task.sh))
+      "${inotify-tools}"
+      (writeScriptBin "manage_display_sleep_enabled"
+        (builtins.readFile ../../scripts/manage_display_sleep_enabled.sh))
+      (writeScriptBin "restart_polybar"
+        (builtins.readFile ../../scripts/restart_polybar.sh))
+    ];
 in {
   services.polybar = {
     enable = true;
     package = pkgs.polybar.override {
       i3Support = true;
-      pulseSupport  = true;
+      pulseSupport = true;
     };
 
     script = "PATH=${dependency_path} restart_polybar";
@@ -28,7 +33,7 @@ in {
         text = "#ffffff";
         highlight = "#e06c75";
       };
-      
+
       "bar/top" = {
         separator = "%{F#666666}|%{F-}";
         monitor = "\${env:MONITOR:}";
@@ -45,11 +50,14 @@ in {
         padding-right = 0;
         module-margin-left = 0;
         module-margin-right = 0;
-        font-0 = "SauceCodePro Nerd Font Propo,SauceCodePro NFP:style=Regular:pixelsize=10;0";
-        font-1 = "SauceCodePro Nerd Font Propo,SauceCodePro NFP:style=Regular:pixelsize=17;3";
+        font-0 =
+          "SauceCodePro Nerd Font Propo,SauceCodePro NFP:style=Regular:pixelsize=10;0";
+        font-1 =
+          "SauceCodePro Nerd Font Propo,SauceCodePro NFP:style=Regular:pixelsize=17;3";
         modules-left = "i3";
         modules-center = "date";
-        modules-right = "eth wlan taskwarrior pulseaudio flameshot mail display_sleep_management battery restart powermenu";
+        modules-right =
+          "eth wlan taskwarrior pulseaudio flameshot mail display_sleep_management battery restart powermenu";
         wm-restack = "i3";
         override-redirect = "false";
         enable-ipc = "true";
@@ -62,7 +70,7 @@ in {
         battery = "BAT0";
         adapater = "AC";
       };
-      
+
       "module/i3" = {
         type = "internal/i3";
         format = "<label-state> <label-mode>";
@@ -72,22 +80,23 @@ in {
         label-focused-foreground = "\${colors.highlight}";
         label-unfocused = " %index% ";
       };
-      
+
       "module/wlan" = {
         type = "internal/network";
         interface = "wlan0";
         interval = 60;
 
-        format-connected = "%{A1:control_wlan_fritzbox --off:}<ramp-signal><label-connected>%{A}";
+        format-connected =
+          "%{A1:control_wlan_fritzbox --off:}<ramp-signal><label-connected>%{A}";
         label-connected = "%essid%";
         format-disconnected = "%{A1:control_wlan_fritzbox --on:}󰖪 %{A}";
         ramp-signal-0 = "󰤯 ";
-        ramp-signal-1 = "󰤟 " ;
+        ramp-signal-1 = "󰤟 ";
         ramp-signal-2 = "󰤢 ";
         ramp-signal-3 = "󰤥 ";
         ramp-signal-4 = "󰤨 ";
       };
-      
+
       "module/eth" = {
         type = "internal/network";
         interface = "eno1";
@@ -95,7 +104,7 @@ in {
         format-connected-prefix = " ";
         label-connected = "%local_ip%";
       };
-      
+
       "module/date" = {
         type = "internal/date";
         interval = 1;
@@ -116,11 +125,13 @@ in {
         menu-0-1 = "i3";
         menu-0-1-exec = "i3-msg restart";
         menu-0-2 = "home-manager";
-        menu-0-2-exec = ''wezterm start -- nu -c 'try { home-manager switch --flake ${local_flake} } catch { |err| $err.msg; input }' '';
+        menu-0-2-exec =
+          "wezterm start -- nu -c 'try { home-manager switch --flake ${local_flake} } catch { |err| $err.msg; input }' ";
         menu-0-3 = "nixos";
-        menu-0-3-exec = ''wezterm start -- nu -c 'try { sudo nixos-rebuild switch --flake ${local_flake} } catch { |err| $err.msg; input }' '';
+        menu-0-3-exec =
+          "wezterm start -- nu -c 'try { sudo nixos-rebuild switch --flake ${local_flake} } catch { |err| $err.msg; input }' ";
       };
-      
+
       "module/powermenu" = {
         type = "custom/menu";
         expand-right = "false";
@@ -140,7 +151,7 @@ in {
         menu-3-0 = "power_off";
         menu-3-0-exec = "poweroff";
       };
-      
+
       "module/pulseaudio" = {
         type = "internal/pulseaudio";
         use-ui-max = "true";
@@ -155,20 +166,20 @@ in {
         format-muted = "<label-muted>";
         click-right = "wezterm -e mocp";
       };
-      
+
       "module/flameshot" = {
         type = "custom/text";
         click-left = "flameshot gui";
         format = " 󰹑 ";
       };
-      
+
       "module/display_sleep_management" = {
         type = "custom/script";
         exec = "manage_display_sleep_enabled";
         tail = true;
         click-left = "manage_display_sleep_enabled --toggle";
       };
-      
+
       "module/mail" = {
         type = "custom/script";
         exec = "get_mail_count";
@@ -176,20 +187,20 @@ in {
         click-left = "wezterm -e neomutt";
         click-middle = "mbsync -a && systemctl --user restart polybar";
       };
-      
+
       "module/taskwarrior" = {
         interval = 30;
         type = "custom/script";
         exec = "get_most_urgent_task";
         format = "<label>";
-        click-left = "task \"\$((`cat /tmp/tw_polybar_id`))\" done";
+        click-left = ''task "$((`cat /tmp/tw_polybar_id`))" done'';
       };
-      
+
       "settings" = {
         screenchange-reload = "true";
-	format-padding = 1;
+        format-padding = 1;
       };
-      
+
       "global/wm" = {
         margin-top = 0;
         margin-bottom = 0;

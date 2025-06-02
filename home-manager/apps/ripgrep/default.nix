@@ -1,4 +1,4 @@
-{ config, pkgs, inputs, ... }: {
+{ ... }: {
   programs.ripgrep = {
     enable = true;
     arguments = [

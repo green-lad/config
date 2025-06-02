@@ -1,9 +1,9 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 let
-  pdfjs = let
-    version = "5.2.133";
+  pdfjs = let version = "5.2.133";
   in pkgs.fetchzip {
-    url = "https://github.com/mozilla/pdf.js/releases/download/v${version}/pdfjs-${version}-dist.zip";
+    url =
+      "https://github.com/mozilla/pdf.js/releases/download/v${version}/pdfjs-${version}-dist.zip";
     hash = "sha256-7kfT3+ZwoGqZ5OwkO9h3DIuBFd0v8fRlcufxoBdcy8c=";
     stripRoot = false;
   };
@@ -14,26 +14,18 @@ in {
       papers = {
         name = "papers";
         isDefault = true;
-        settings = {
-          dir = "~/Documents/papers";
-        };
+        settings = { dir = "~/Documents/papers"; };
       };
       books = {
         name = "books";
-        settings = {
-          dir = "~/Documents/books";
-        };
+        settings = { dir = "~/Documents/books"; };
       };
       nyt = {
         name = "nyt";
-        settings = {
-          dir = "~/Documents/nyt";
-        };
+        settings = { dir = "~/Documents/nyt"; };
       };
     };
-    settings = {
-      picktool = "fzf";
-    };
+    settings = { picktool = "fzf"; };
   };
 
   # Dummy `scripts` directory to silence `papis`'s message
@@ -51,7 +43,7 @@ in {
       Description = "Serve papis web app";
     };
     Service = {
-      ExecStart="${pkgs.papis}/bin/papis serve";
+      ExecStart = "${pkgs.papis}/bin/papis serve";
       Restart = "on-failure";
     };
   };

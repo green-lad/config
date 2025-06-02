@@ -1,4 +1,4 @@
-{ config, pkgs, inputs, ... }: {
+{ config, pkgs, ... }: {
   config.xdg.configFile = {
     "neomutt/mailcap" = {
       enable = true;
@@ -10,9 +10,7 @@
     };
   };
 
-  config.programs.abook = {
-    enable = true;
-  };
+  config.programs.abook = { enable = true; };
 
   config.programs.msmtp.enable = true;
   config.programs.mbsync.enable = true;
@@ -26,7 +24,8 @@
     address = "markus.schoetz@fau.de";
     realName = "Markus Schoetz";
     userName = "markus.schoetz@fau.de";
-    passwordCommand = "${pkgs.coreutils}/bin/cat ${config.sops.secrets.imap_password.path}";
+    passwordCommand =
+      "${pkgs.coreutils}/bin/cat ${config.sops.secrets.imap_password.path}";
 
     mbsync = {
       enable = true;
@@ -52,12 +51,7 @@
     neomutt = {
       enable = true;
       sendMailCommand = "${pkgs.msmtp}/bin/msmtp -a Personal";
-      extraMailboxes = [
-        "Archive"
-        "Drafts"
-        "Sent"
-        "Trash"
-      ];
+      extraMailboxes = [ "Archive" "Drafts" "Sent" "Trash" ];
 
       # extraConfig = ''
       #   set pgp_default_key = "${pgpKey}"
@@ -89,44 +83,9 @@
   };
 
   config.programs.neomutt = {
-    # package = let
-    #   dependency_path = with pkgs; "PATH=${pkgs.neomutt}/bin:/run/wrappers/bin:${lib.makeBinPath [
-    #     abook
-    #     isync
-    #     coreutils-full
-    #     urlscan
-    #     msmtp
-    #     abook
-    #     xdg-utils
-    #     zathura
-    #     firefox
-    #     neovim
-    #   ]}";
-    # in pkgs.stdenv.mkDerivation {
-    #   pname = "neomutt_with_dependencies";
-    #   version = "1.0";
-    #
-    #   # skip unpackPhase (no src)
-    #   unpackPhase = "true";
-    #
-    #   buildInputs = [ pkgs.neomutt ];
-    #
-    #   nativeBuildInputs = [ pkgs.makeWrapper ];
-    #
-    #   # Define the install phase
-    #   installPhase = ''
-    #     mkdir -p $out/bin
-    #     cp ${pkgs.neomutt}/bin/neomutt $out/bin/neomutt
-    #     mkdir -p $out/share/doc/neomutt/vim-keys
-    #     cp ${pkgs.neomutt}/share/doc/neomutt/vim-keys/vim-keys.rc $out/share/doc/neomutt/vim-keys
-    #     wrapProgram $out/bin/neomutt \
-    #       --set PATH "${dependency_path}:$PATH"
-    #   '';
-    # };
-
     enable = true;
     vimKeys = true;
-    editor = "nvim";
+    editor = "hx";
     binds = [
       {
         action = "complete-query";
@@ -177,12 +136,12 @@
         map = [ "index" ];
       }
       {
-        action = "<pipe-message>urlscan -dc<Enter>";
+        action = "<pipe-message>${pkgs.urlscan}/bin/urlscan -dc<Enter>";
         key = "\\Cl";
         map = [ "index" "pager" ];
       }
       {
-        action = "<pipe-entry>urlscan -dc<Enter>";
+        action = "<pipe-entry>${pkgs.urlscan}/bin/urlscan -dc<Enter>";
         key = "\\Cl";
         map = [ "attach" "compose" ];
       }
@@ -215,8 +174,7 @@
       markers = "no"; # show '+' at start of wrapped lines
       move = "no"; # gmail does that
       pager_context = "3";
-      pager_index_lines =
-        "10"; # shows 10 lines of index when pager is active
+      pager_index_lines = "10"; # shows 10 lines of index when pager is active
       pager_stop = "yes";
       quit = "yes"; # don't ask, just do!!
       reply_to = "yes"; # reply to Reply to: field

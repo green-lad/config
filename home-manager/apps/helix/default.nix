@@ -1,12 +1,12 @@
 { config, pkgs, inputs, ... }: {
   programs.helix = {
     extraPackages = with pkgs; [
+      jq
       lazygit
+      nil
+      nixfmt-rfc-style
       rust-analyzer
       rustfmt
-      nixfmt-rfc-style
-      nil
-      jq
     ];
     enable = true;
     package = inputs.helix.packages.${pkgs.system}.helix;
@@ -75,11 +75,23 @@
 
       keys = {
         normal = {
-          "\\" = ":pipe 'eval \"$(cat -)\"'";
+          "\\" = ":pipe 'nu -c $in'";
           "*" = [ "search_selection" "search_next" ];
           "A-*" = [ "search_selection_detect_word_boundaries" "search_next" ];
           C-space = "completion";
           C-m = "signature_help";
+          C-q = [
+            '':pipe-to save "%{buffer_name}.tmp.a"''
+            ":clipboard-paste-after"
+            '':pipe-to save "%{buffer_name}.tmp.b"''
+            "undo"
+            '':hs "%{buffer_name}.tmp"''
+            ''
+              :insert-output diff --tabsize=4 -y "%{buffer_name}.a" "%{buffer_name}.b" | str replace -ra "(<|>) " "''${1}" | str replace -a ' ' '·' ''
+            ":write"
+            '':sh rm "%{buffer_name}.a" "%{buffer_name}.b" "%{buffer_name}"''
+            "goto_file_start"
+          ];
           C-g = [
             ":write-all"
             ":new"
@@ -91,7 +103,7 @@
           H = [ "jump_backward" "align_view_center" ];
           L = [ "jump_forward" "align_view_center" ];
           X = "extend_line_above";
-          W = "@miw";
+          W = "@glGs";
           C-h = "jump_view_left";
           C-l = "jump_view_right";
           C-k = "jump_view_up";
@@ -103,6 +115,7 @@
           };
           space = {
             space = "last_picker";
+            C-q = ":buffer-close!";
             q = ":buffer-close";
             Q = ":buffer-close-others";
             t = {
@@ -119,6 +132,7 @@
             };
             u = ":sh rm %{buffer_name}";
             i = ":open ${config.xdg.configHome}";
+            I = ":config-open";
             L = ":config-reload";
             e = [
               ":sh rm -f /tmp/unique-file-u41ae14"
@@ -133,6 +147,10 @@
               '':insert-output echo "x1b[?1049h" > /dev/tty''
               ":cd %sh{cat /tmp/unique-file-u41ae14}"
             ];
+            "|" = {
+              s = ":pipe 'lines | sort | to text --no-newline'";
+              u = ":pipe 'lines | uniq | to text --no-newline'";
+            };
           };
         };
         insert = {

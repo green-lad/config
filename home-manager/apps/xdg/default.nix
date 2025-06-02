@@ -1,8 +1,8 @@
 { config, pkgs, ... }:
 let
-  browser = ["firefox.desktop"];
-  editor = ["nvim.desktop"];
-  filechooser = ["yazi.desktop"];
+  browser = [ "firefox.desktop" ];
+  editor = [ "hx.desktop" ];
+  filechooser = [ "yazi.desktop" ];
 
   # XDG MIME types
   associations = {
@@ -37,9 +37,9 @@ let
     # "x-scheme-handler/discord" = browser;
     "x-scheme-handler/unknown" = browser;
 
-    "audio/*" = ["mpv.desktop"];
-    "video/*" = ["mpv.dekstop"];
-    "image/*" = ["feh.desktop"];
+    "audio/*" = [ "mpv.desktop" ];
+    "video/*" = [ "mpv.dekstop" ];
+    "image/*" = [ "feh.desktop" ];
   };
 in {
   imports = [ ./xdg-portals.nix ];

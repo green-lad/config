@@ -1,6 +1,5 @@
 { hostname, sops_secrets, ... }:
-let 
-  secretspath = builtins.toString sops_secrets;
+let secretspath = builtins.toString sops_secrets;
 in {
   sops = {
     defaultSopsFile = "${secretspath}/secrets.yaml";
@@ -13,7 +12,7 @@ in {
     };
 
     secrets = {
-      home_wlan = {};
+      home_wlan = { };
       "miniflux/password" = {
         restartUnits = [ "miniflux.service" ];
         group = "miniflux_secrets";
@@ -29,7 +28,7 @@ in {
         group = "miniflux_secrets";
         mode = "440";
       };
-      "keys/${hostname}/public" = {};
+      "keys/${hostname}/public" = { };
     };
   };
-}  
+}

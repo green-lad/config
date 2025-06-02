@@ -1,4 +1,4 @@
-{ config, pkgs, inputs, ... }: {
+{ pkgs, ... }: {
   systemd.user.targets.graphical-session-i3 = {
     Unit = {
       Description = "i3 X session";
@@ -14,15 +14,14 @@
       package = pkgs.i3-gaps;
       # define everything in config file for now
       config = {
-        bars = [];
-        modes = {};
-        keybindings = {};
-        startup = [
-          {
-            command = "${pkgs.systemd}/bin/systemctl --user start graphical-session-i3.target";
-            notification = false;
-          }
-        ];
+        bars = [ ];
+        modes = { };
+        keybindings = { };
+        startup = [{
+          command =
+            "${pkgs.systemd}/bin/systemctl --user start graphical-session-i3.target";
+          notification = false;
+        }];
       };
       extraConfig = (builtins.readFile ./config);
     };

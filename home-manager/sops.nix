@@ -1,11 +1,10 @@
 { hostname, inputs, ... }:
-let 
-  secretspath = builtins.toString inputs.sops_secrets;
+let secretspath = builtins.toString inputs.sops_secrets;
 in {
   sops = {
     defaultSopsFile = "${secretspath}/secrets.yaml";
     validateSopsFiles = false;
-    
+
     defaultSymlinkPath = "/run/user/1000/secrets";
     defaultSecretsMountPoint = "/run/user/1000/secrets.d";
 
@@ -16,9 +15,9 @@ in {
     };
 
     secrets = {
-      imap_password = {};
-      wlan_password = {};
-      "keys/${hostname}/private" = {};
+      imap_password = { };
+      wlan_password = { };
+      "keys/${hostname}/private" = { };
     };
   };
-}  
+}

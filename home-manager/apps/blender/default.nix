@@ -1,5 +1,5 @@
 # TODO: not used yet, to be continued ...
-{ pkgs ? import <nixpkgs> {} }:
+{ pkgs ? import <nixpkgs> { } }:
 
 pkgs.stdenv.mkDerivation {
   pname = "simple-blender-addons";
@@ -9,7 +9,8 @@ pkgs.stdenv.mkDerivation {
     owner = "green-lad";
     repo = "SimpleBlenderAddons";
     rev = "main"; # or a specific commit hash
-    sha256 = "0xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"; # Replace with the actual hash
+    sha256 =
+      "0xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"; # Replace with the actual hash
   };
 
   buildInputs = [ pkgs.blender ];
@@ -23,6 +24,7 @@ pkgs.stdenv.mkDerivation {
     description = "A collection of simple Blender addons";
     homepage = "https://github.com/green-lad/SimpleBlenderAddons";
     license = licenses.mit; # Adjust the license as necessary
-    maintainers = with maintainers; [ yourName ]; # Replace with your name or leave empty
+    maintainers = with maintainers;
+      [ yourName ]; # Replace with your name or leave empty
   };
 }

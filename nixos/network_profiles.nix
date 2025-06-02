@@ -9,9 +9,7 @@ environmentFile:
         id = "home_wlan";
         type = "wifi";
       };
-      ipv4 = {
-        method = "auto";
-      };
+      ipv4 = { method = "auto"; };
       ipv6 = {
         addr-gen-mode = "default";
         method = "auto";

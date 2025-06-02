@@ -10,12 +10,10 @@
     bookmarks = [
       {
         name = "homepage";
-        bookmarks = [
-          {
-            name = "nix org";
-            url = "https://nixos.org/";
-          }
-        ];
+        bookmarks = [{
+          name = "nix org";
+          url = "https://nixos.org/";
+        }];
       }
       {
         name = "wiki";

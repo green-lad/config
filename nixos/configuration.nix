@@ -3,53 +3,29 @@
     ./harware-configuration.nix
     # ${hostname}
   ];
-  nixpkgs.overlays = [
-    inputs.nix-your-shell.overlays.default
-  ];
-  
+  nixpkgs.overlays = [ inputs.nix-your-shell.overlays.default ];
+
   environment = {
     # Remove unecessary preinstalled packages
     defaultPackages = [ ];
-    # packages that have no home-manager configs
-    systemPackages = with pkgs; [
-      age
-      audacity
-      cura-appimage
-      ffmpeg_6
-      gcc
-      guvcview
-      home-manager
-      htop
-      killall
-      moc
-      neovim
-      nix-your-shell
-      pulsemixer
-      sops
-      steam
-      unzip
-      xsel
-      yt-dlp
-      zoom-us
-    ];
-    sessionVariables = {
-    };
+    systemPackages = with pkgs; [ age home-manager sops ];
+    sessionVariables = { };
     variables = {
-      HOST = "${hostname}";
-      NIX_CONFIG_DIR = "$HOME/config";
-      NIXOS_CONFIG_DIR = "$NIX_CONFIG_DIR/nixos";
-      NIXOS_CONFIG = "$NIXOS_CONFIG_DIR/configuration.nix";
-      XDG_DATA_HOME = "$HOME/.local/share";
-      PASSWORD_STORE_DIR = "$HOME/.local/share/password-store";
-      GTK_RC_FILES = "$HOME/.local/share/gtk-1.0/gtkrc";
-      GTK2_RC_FILES = "$HOME/.local/share/gtk-2.0/gtkrc";
-      MOZ_ENABLE_WAYLAND = "1";
-      EDITOR = "hx";
-      TERMINAL = "wezterm";
+      ANKI_WAYLAND = "1";
       BROWSER = "firefox";
       DIRENV_LOG_FORMAT = "";
-      ANKI_WAYLAND = "1";
       DISABLE_QT5_COMPAT = "0";
+      EDITOR = "hx";
+      GTK2_RC_FILES = "$HOME/.local/share/gtk-2.0/gtkrc";
+      GTK_RC_FILES = "$HOME/.local/share/gtk-1.0/gtkrc";
+      HOST = "${hostname}";
+      MOZ_ENABLE_WAYLAND = "1";
+      NIXOS_CONFIG = "$NIXOS_CONFIG_DIR/configuration.nix";
+      NIXOS_CONFIG_DIR = "$NIX_CONFIG_DIR/nixos";
+      NIX_CONFIG_DIR = "$HOME/config";
+      PASSWORD_STORE_DIR = "$HOME/.local/share/password-store";
+      TERMINAL = "wezterm";
+      XDG_DATA_HOME = "$HOME/.local/share";
     };
   };
 
@@ -71,16 +47,12 @@
 
   # Add the Kanata service user to necessary groups
   systemd.services.kanata-internalKeyboard.serviceConfig = {
-    SupplementaryGroups = [
-      "input"
-      "uinput"
-    ];
+    SupplementaryGroups = [ "input" "uinput" ];
   };
 
   programs = {
     adb.enable = true;
     steam.enable = true;
-    # zsh.enable = true;
     # hyprland = {
     #   enable = true;
     #   xwayland.enable = true;
@@ -92,8 +64,9 @@
   };
 
   # TODO: for miniflux use separte config file and OAUTH2 (see: https://github.com/felschr/nixos-config/blob/41307308527cdf7a352e87e2ff36d91546eb29a4/services/miniflux.nix#L12)
-  users.groups.miniflux_secrets = {};
-  systemd.services.miniflux.serviceConfig.SupplementaryGroups = [ "miniflux_secrets" ];
+  users.groups.miniflux_secrets = { };
+  systemd.services.miniflux.serviceConfig.SupplementaryGroups =
+    [ "miniflux_secrets" ];
   services = {
     miniflux = {
       enable = true;
@@ -140,30 +113,18 @@
       # in it even if I have another microphone.
       wireplumber.extraConfig = {
         "50-bluez" = {
-          "monitor.bluez.rules" = [
-            {
-              matches = [ { "device.name" = "~bluez_card.*"; } ];
-              actions = {
-                update-props = {
-                  "bluez5.auto-connect" = [
-                    "a2dp_sink"
-                    "a2dp_source"
-                  ];
-                  "bluez5.hw-volume" = [
-                    "a2dp_sink"
-                    "a2dp_source"
-                  ];
-                };
+          "monitor.bluez.rules" = [{
+            matches = [{ "device.name" = "~bluez_card.*"; }];
+            actions = {
+              update-props = {
+                "bluez5.auto-connect" = [ "a2dp_sink" "a2dp_source" ];
+                "bluez5.hw-volume" = [ "a2dp_sink" "a2dp_source" ];
               };
-            }
-          ];
+            };
+          }];
           "monitor.bluez.properties" = {
-            "bluez5.roles" = [
-              "a2dp_sink"
-              "a2dp_source"
-              "bap_sink"
-              "bap_source"
-            ];
+            "bluez5.roles" =
+              [ "a2dp_sink" "a2dp_source" "bap_sink" "bap_source" ];
 
             "bluez5.codecs" = [
               "ldac"
@@ -193,12 +154,8 @@
         layout = "de(us)";
         options = "eurosign:e,caps:swapescape";
       };
-      desktopManager = {
-        xterm.enable = false;
-      };
-      windowManager.i3 = {
-        enable = true;
-      };
+      desktopManager = { xterm.enable = false; };
+      windowManager.i3 = { enable = true; };
       # displayManager = {
       #   startx.enable = true;
       # };
@@ -248,7 +205,7 @@
     #          _oe (fork @oe @Oe (lsft rsft))
     #          sz (unicode ß)
     #          eu (unicode €)
- 
+
     #         )
     #         (deflayer base
     #          @caps @tab d h j k l ; [ ' - e
@@ -264,15 +221,11 @@
 
   # Install fonts
   fonts = {
-    packages = with pkgs; [
-      nerd-fonts.sauce-code-pro
-    ];
+    packages = with pkgs; [ nerd-fonts.sauce-code-pro ];
 
     fontconfig = {
       hinting.autohint = true;
-      defaultFonts = {
-       emoji = [ "OpenMoji Color" ];
-      };
+      defaultFonts = { emoji = [ "OpenMoji Color" ]; };
     };
   };
 
@@ -304,7 +257,8 @@
     hostName = hostname;
     networkmanager = {
       enable = true;
-      ensureProfiles = import ./network_profiles.nix config.sops.secrets.home_wlan.path;
+      ensureProfiles =
+        import ./network_profiles.nix config.sops.secrets.home_wlan.path;
     };
     # needed for zfs
     hostId = "8425e349";
@@ -316,34 +270,34 @@
         # Block all incoming connections traffic except SSH and "ping".
         chain input {
           type filter hook input priority 0;
-      
+
           # accept any localhost traffic
           iifname lo accept
-      
+
           # accept traffic originated from us
           ct state {established, related} accept
-      
+
           # ICMP
           # routers may also want: mld-listener-query, nd-router-solicit
           ip6 nexthdr icmpv6 icmpv6 type { destination-unreachable, packet-too-big, time-exceeded, parameter-problem, nd-router-advert, nd-neighbor-solicit, nd-neighbor-advert } accept
           ip protocol icmp icmp type { destination-unreachable, router-advertisement, time-exceeded, parameter-problem } accept
-      
+
           # allow "ping"
           ip6 nexthdr icmpv6 icmpv6 type echo-request accept
           ip protocol icmp icmp type echo-request accept
-      
+
           tcp dport {ssh,http,https} accept
-      
+
           # count and drop any other traffic
           counter drop
         }
-      
+
         # Allow all outgoing connections.
         chain output {
           type filter hook output priority 0;
           accept
         }
-      
+
         chain forward {
           type filter hook forward priority 0;
           accept
@@ -361,27 +315,21 @@
   users.groups.uinput = { };
   users.users = let
     authorizedKeys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAP46k4CU/BnDnnrXA4NZKUXm00Exc3yEyZ4J4dIFPIf markus.schoetz@fau.de" #x230
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINFEIGdKfvmy7cfhjnE6RAi2fw0qaUApBTRgTuLCI5Ji markus.schoetz@fau.de" #nuc
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAP46k4CU/BnDnnrXA4NZKUXm00Exc3yEyZ4J4dIFPIf markus.schoetz@fau.de" # x230
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINFEIGdKfvmy7cfhjnE6RAi2fw0qaUApBTRgTuLCI5Ji markus.schoetz@fau.de" # nuc
     ];
   in {
     "${user}" = {
       shell = pkgs.nushell;
       isNormalUser = true;
-      hashedPassword = "$6$igRbgm5cDL1ZG0Zc$tmrJZPcQtk7sul2Zumk7XidoVta8xE4sSZvPCCmRIbyDmw7b9bx5BG6XlXUfcOVVPh/wor.YirIZ3Sw5zB.tN0";
+      hashedPassword =
+        "$6$igRbgm5cDL1ZG0Zc$tmrJZPcQtk7sul2Zumk7XidoVta8xE4sSZvPCCmRIbyDmw7b9bx5BG6XlXUfcOVVPh/wor.YirIZ3Sw5zB.tN0";
       home = "/home/${user}";
-      extraGroups = [
-        "wheel"
-        "networkmanager"
-        "adbusers"
-      ];
-      packages = with pkgs; [
-      ];
+      extraGroups = [ "wheel" "networkmanager" "adbusers" ];
+      packages = [ ];
       openssh.authorizedKeys.keys = authorizedKeys;
     };
-    root = {
-      openssh.authorizedKeys.keys = authorizedKeys;
-    };
+    root = { openssh.authorizedKeys.keys = authorizedKeys; };
   };
 
   # don't touch

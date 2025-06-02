@@ -1,5 +1,7 @@
-{ config, pkgs, inputs, ... }:
-let newTabPage = "file://${pkgs.writeText "index.html" (builtins.readFile ./index.html)}";
+{ pkgs, inputs, ... }:
+let
+  newTabPage =
+    "file://${pkgs.writeText "index.html" (builtins.readFile ./index.html)}";
 in {
   config.home.file.".librewolf/librewolf.overrides.cfg".text = ''
     // sets the new tab page to our local newtab.

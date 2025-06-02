@@ -1,8 +1,3 @@
-# this file declares partitions for first install of nixos
-# sources:
-# Erase your darlings: immutable infrastructure for mutable systems
-# ZFS - NixOS Wiki
-# github disko - zfs-encrypted-root.nix
 {
   disko.devices = {
     disk = {
@@ -89,24 +84,6 @@
             options.mountpoint = "/home";
             mountpoint = "/home";
           };
-
-          # README MORE: https://wiki.archlinux.org/title/ZFS#Swap_volume
-          # "swap" = {
-          #   type = "zfs_volume";
-          #   size = "10M";
-          #   content = {
-          #     type = "swap";
-          #   };
-          #   options = {
-          #     volblocksize = "4096";
-          #     compression = "zle";
-          #     logbias = "throughput";
-          #     sync = "always";
-          #     primarycache = "metadata";
-          #     secondarycache = "none";
-          #     "com.sun:auto-snapshot" = "false";
-          #   };
-          # };
         };
       };
     };
