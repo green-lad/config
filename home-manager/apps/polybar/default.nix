@@ -15,6 +15,8 @@ let
       "${inotify-tools}"
       (writeScriptBin "manage_display_sleep_enabled"
         (builtins.readFile ../../scripts/manage_display_sleep_enabled.sh))
+      (writeScriptBin "manage_backlight"
+        (builtins.readFile ../../scripts/manage_backlight.nu))
       (writeScriptBin "restart_polybar"
         (builtins.readFile ../../scripts/restart_polybar.sh))
     ];
@@ -57,7 +59,7 @@ in {
         modules-left = "i3";
         modules-center = "date";
         modules-right =
-          "eth wlan taskwarrior pulseaudio flameshot mail display_sleep_management battery restart powermenu";
+          "eth wlan taskwarrior pulseaudio flameshot mail display_sleep_management backlight battery restart powermenu";
         wm-restack = "i3";
         override-redirect = "false";
         enable-ipc = "true";
@@ -69,6 +71,19 @@ in {
         type = "internal/battery";
         battery = "BAT0";
         adapater = "AC";
+      };
+
+      "module/backlight" = {
+        type = "internal/backlight";
+        card = "intel_backlight";
+        # https://github.com/polybar/polybar/wiki/Formatting#action-a
+        format = "%{A1:manage_backlight 10:}%{A3:manage_backlight -10:}<ramp><label>%{A}%{A}";
+        enable-scroll = "true";
+        ramp-0 = " ";
+        ramp-1 = "󰃞 ";
+        ramp-2 = "󰃝 ";
+        ramp-3 = "󰃟 ";
+        ramp-4 = "󰃠 ";
       };
 
       "module/i3" = {
@@ -87,9 +102,8 @@ in {
         interval = 60;
 
         format-connected =
-          "%{A1:control_wlan_fritzbox --off:}<ramp-signal><label-connected>%{A}";
-        label-connected = "%essid%";
-        format-disconnected = "%{A1:control_wlan_fritzbox --on:}󰖪 %{A}";
+          "%{A1:rfkill block wlan:}%{A3:control_wlan_fritzbox --off:}<ramp-signal>%{A}%{A}";
+        format-disconnected = "%{A1:rfkill unblock wlan:}%{A3:control_wlan_fritzbox --on:}󰖪 %{A}%{A}";
         ramp-signal-0 = "󰤯 ";
         ramp-signal-1 = "󰤟 ";
         ramp-signal-2 = "󰤢 ";
@@ -102,7 +116,7 @@ in {
         interface = "eno1";
         interval = 60;
         format-connected-prefix = " ";
-        label-connected = "%local_ip%";
+        label-connected = "";
       };
 
       "module/date" = {

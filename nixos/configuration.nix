@@ -122,6 +122,9 @@
     };
     udev.extraRules = ''
       KERNEL=="uinput", MODE="0660", GROUP="uinput", OPTIONS+="static_node=uinput"
+      SUBSYSTEM=="backlight", ACTION=="add", \
+        RUN+="${pkgs.coreutils}/bin/chgrp users %S%p/brightnss", \
+        RUN+="${pkgs.coreutils}/bin/chmod g+w %S%p/brightnss"
     '';
 
     openssh = {
