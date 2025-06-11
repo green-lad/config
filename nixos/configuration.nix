@@ -71,9 +71,9 @@
   # security.acme = {
   #   acceptTerms = true;
   #   defaults.email = "markus.schoetz@fau.de";
-    # certs."jellyfin.nuc.link" = {
-    #   listenHTTP = true;
-    # };
+  # certs."jellyfin.nuc.link" = {
+  #   listenHTTP = true;
+  # };
   # };
   services = {
     jellyfin = {
@@ -82,12 +82,13 @@
     };
     ollama = {
       enable = true;
-      loadModels = [ "deepseek-r1:latest"];
+      loadModels = [ "deepseek-r1:latest" "codellama:latest" ];
     };
     nginx = {
       enable = true;
       virtualHosts."${hostname}".locations."/" = {
-        root = pkgs.writeTextDir "index.html" (builtins.readFile ../home-manager/apps/librewolf/index.html);
+        root = pkgs.writeTextDir "index.html"
+          (builtins.readFile ../home-manager/apps/librewolf/index.html);
         extraConfig = "try_files /index.html =404;";
       };
       virtualHosts."jellyfin.${hostname}.link" = {

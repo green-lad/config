@@ -8,9 +8,8 @@
       rust-analyzer
       rustfmt
       typescript-language-server
-      # TODO
-      # codebook
-      # helix-gpt
+      codebook
+      helix-gpt
     ];
     enable = true;
     package = inputs.helix.packages.${pkgs.system}.helix;
@@ -18,10 +17,8 @@
       language = [
         {
           name = "rust";
-          formatter = {
-            command = "rustfmt";
-            args = [ "+nightly" ];
-          };
+          formatter = { command = "rustfmt"; };
+          language-servers = [ "rust-analyzer" "codebook" "gpt" ];
         }
         {
           name = "nix";
@@ -38,6 +35,11 @@
             tab-width = 4;
             unit = "    ";
           };
+          language-servers = [ "codebook" ];
+        }
+        {
+          name = "markdown";
+          language-servers = [ "codebook" ];
         }
         {
           name = "json";
@@ -51,14 +53,29 @@
             diagnostics = { enable = false; };
           };
         };
-        # TODO
-        # helix-gpt = {
-        #   command = "helix-gpt";
-        # };
-        # codebook-lsp = {
-        #   command = "codebook-lsp";
-        #   args = ["serve"];
-        # };
+        gpt = {
+          command = "helix-gpt";
+          args = [
+            "--handler"
+            "ollama"
+            "--ollamaModel"
+            "codellama"
+            "--fetchTimeout"
+            "300000"
+            "--actionTimeout"
+            "300000"
+            "--completionTimeout"
+            "300000"
+            "--ollamaTimeout"
+            "300000"
+            "--triggerCharacters"
+            ""
+          ];
+        };
+        codebook = {
+          command = "codebook-lsp";
+          args = [ "serve" ];
+        };
       };
     };
     settings = {
