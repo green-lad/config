@@ -27,10 +27,10 @@ case "$1" in
     fi
     ;;
   *)
-    # touch "$marker_file"
     print_state
     inotifywait -q -m -e modify "$marker_file" | while read -r "event" ; do
       print_state
     done
+    touch "$marker_file"
     ;;
 esac
