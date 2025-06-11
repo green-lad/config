@@ -10,3 +10,6 @@
 - always show current working directory
 - open url in selection in browser
 - calling edit from lazygit hangs the whole process
+- when running ":input-output rg <searchTerm>" the line number gets removed for some reason
+- when using gf also support line numbers at the end, eg "~/.zshrc:50"
+- opening a file in lazygit freezes the console

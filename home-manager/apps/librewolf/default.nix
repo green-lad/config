@@ -1,14 +1,20 @@
-{ pkgs, inputs, ... }:
+{ pkgs, inputs, hostname, ... }:
 let
+  # TODO: configure nginx here
   newTabPage =
-    "file://${pkgs.writeText "index.html" (builtins.readFile ./index.html)}";
+    # "https://kleinanzeigen.de";
+    "http://${hostname}/";
+    # "file://${pkgs.writeText "index.html" (builtins.readFile ./index.html)}";
 in {
+  # TODO: try to get sidebery configured too
+  # TODO: configure config.home.file."permissions.sqlite" here
   config.home.file.".librewolf/librewolf.overrides.cfg".text = ''
     // sets the new tab page to our local newtab.
     ChromeUtils.importESModule("resource:///modules/AboutNewTab.sys.mjs").AboutNewTab.newTabURL = "${newTabPage}";
 
     // sets our home page to the same URL.
     pref("browser.startup.homepage", "${newTabPage}");
+    pref("browser.newtab.url", "${newTabPage}");
 
     // don't firefox sync the homepage, stops it overwriting on windows.
     pref("services.sync.prefs.sync.browser.startup.homepage", false);
@@ -24,15 +30,16 @@ in {
         extensions.packages =
           with inputs.firefox-addons.packages.${pkgs.system}; [
             darkreader
-            sidebery
-            violentmonkey
-            userchrome-toggle-extended
-            videospeed
-            return-youtube-dislikes
-            ublock-origin
             don-t-fuck-with-paste
+            istilldontcareaboutcookies
+            return-youtube-dislikes
+            sidebery
             sponsorblock
             ublacklist
+            ublock-origin
+            userchrome-toggle-extended
+            videospeed
+            violentmonkey
           ];
         userChrome = (builtins.readFile ./userChrome.css);
         userContent = (builtins.readFile ./userContent.css);

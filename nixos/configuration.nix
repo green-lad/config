@@ -67,7 +67,40 @@
   users.groups.miniflux_secrets = { };
   systemd.services.miniflux.serviceConfig.SupplementaryGroups =
     [ "miniflux_secrets" ];
+
+  # security.acme = {
+  #   acceptTerms = true;
+  #   defaults.email = "markus.schoetz@fau.de";
+    # certs."jellyfin.nuc.link" = {
+    #   listenHTTP = true;
+    # };
+  # };
   services = {
+    jellyfin = {
+      enable = true;
+      openFirewall = true;
+    };
+    ollama = {
+      enable = true;
+      loadModels = [ "deepseek-r1:latest"];
+    };
+    nginx = {
+      enable = true;
+      virtualHosts."${hostname}".locations."/" = {
+        root = pkgs.writeTextDir "index.html" (builtins.readFile ../home-manager/apps/librewolf/index.html);
+        extraConfig = "try_files /index.html =404;";
+      };
+      virtualHosts."jellyfin.${hostname}.link" = {
+        # useACMEHost = "jellyfin.${hostname}.link";
+        # forceSSL = true;
+        # kTLS = true;
+        # enableACME = true;
+        locations."/" = {
+          proxyPass = "http://127.0.0.1:8096";
+          # proxyWebsockets = true;
+        };
+      };
+    };
     miniflux = {
       enable = true;
       createDatabaseLocally = true;
@@ -287,6 +320,8 @@
           ip protocol icmp icmp type echo-request accept
 
           tcp dport {ssh,http,https} accept
+
+          tcp dport 30000-60000 accept
 
           # count and drop any other traffic
           counter drop

@@ -15,6 +15,7 @@ for_window [class="Nitrogen"] floating enable sticky enable border normal
 	# configs Mouse+$mod to drag floating windows
 	floating_modifier $mod
 	bindsym $mod+Return exec wezterm
+	bindsym $mod+Shift+Return exec librewolf
 	bindsym $mod+q kill
 	bindsym $mod+d exec --no-startup-id SHELL=/bin/sh dmenu_run
 	bindsym $mod+c exec --no-startup-id SHELL=/bin/sh clipmenu

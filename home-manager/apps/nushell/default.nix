@@ -4,6 +4,7 @@
     enableNushellIntegration = true;
   };
 
+  # config info: config nu --doc | nu-highlight | less -R
   programs.nushell = let
     # TODO: fix fzf preview for nested nushell (eg "nix-shell -p git" -> "nu")
 
@@ -52,11 +53,12 @@
       in ''
         let choice = (
           let c = char --unicode 7F;
-          open ".nu_help.json"
+          open ~/.nu_help.json
           | to csv -n -s $c
           | str join (char -i 0)
           | fzf
             --scheme history
+            --tiebreak=begin
             --layout reverse
             --read0
             --delimiter $c
@@ -73,6 +75,9 @@
   in {
     enable = true;
     settings = {
+      history = {
+        sync_on_enter = false;
+      };
       show_banner = false;
       edit_mode = "vi";
 
@@ -82,6 +87,36 @@
       };
 
       keybindings = [
+        {
+          name = "reload_config";
+          modifier = "control";
+          keycode = "char_d";
+          mode = [ "emacs" "vi_normal" "vi_insert" ];
+          event = {
+            send = "executehostcommand";
+            cmd = ''$env.PWD | xsel -b'';
+          };
+        }
+        {
+          name = "reload_config";
+          modifier = "control";
+          keycode = "char_e";
+          mode = [ "emacs" "vi_normal" "vi_insert" ];
+          event = {
+            send = "executehostcommand";
+            cmd = ''commandline | xsel -b'';
+          };
+        }
+        {
+          name = "reload_config";
+          modifier = "none";
+          keycode = "f5";
+          mode = [ "emacs" "vi_normal" "vi_insert" ];
+          event = {
+            send = "executehostcommand";
+            cmd = ''$"source '($nu.env-path)'; source '($nu.config-path)'"'';
+          };
+        }
         {
           name = "unfreeze";
           modifier = "control";
@@ -118,12 +153,12 @@
 
     extraConfig = let preview = "${change_escape_command "'{1}\\n---\\n{2}'"}";
     in ''
-      if (".nu_help.json" | path type) != "file" {
+      if ("~/.nu_help.json" | path type) != "file" {
         (
           help commands
           | select name description
           | insert help {|r| help $"($r.name)"}
-          | save ".nu_help.json"
+          | save "~/.nu_help.json"
         )
       }
 

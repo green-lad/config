@@ -38,4 +38,5 @@ In the future I might want to switch to librewolf (currently some stuff does not
 - Get iampfilter working (https://github.com/RaitoBezarius/nixos-home/blob/a6e318e7385daf673808384729c3de111b061e49/emails/imapfilter/default.nix#L16)
 - Find a way to speedup configuring home-manager apps and testing them
 - Try using nushell for nix-shell, ... (currently bash)
+- wezterm kills itself on "rg sidebery" inside "~/.librefold/default" which is really bad - find the reason and try to fix it (atleast have a mechanism of controlled termination)
 

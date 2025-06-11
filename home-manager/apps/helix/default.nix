@@ -7,6 +7,10 @@
       nixfmt-rfc-style
       rust-analyzer
       rustfmt
+      typescript-language-server
+      # TODO
+      # codebook
+      # helix-gpt
     ];
     enable = true;
     package = inputs.helix.packages.${pkgs.system}.helix;
@@ -24,6 +28,18 @@
           formatter.command = "${pkgs.nixfmt}/bin/nixfmt";
         }
         {
+          name = "text";
+
+          # not sure why those are needed according to helix
+          file-types = [ "text" "txt" ];
+          scope = "source.text";
+
+          indent = {
+            tab-width = 4;
+            unit = "    ";
+          };
+        }
+        {
           name = "json";
           formatter.command = "${pkgs.jq}/bin/jq";
         }
@@ -35,6 +51,14 @@
             diagnostics = { enable = false; };
           };
         };
+        # TODO
+        # helix-gpt = {
+        #   command = "helix-gpt";
+        # };
+        # codebook-lsp = {
+        #   command = "codebook-lsp";
+        #   args = ["serve"];
+        # };
       };
     };
     settings = {
@@ -125,6 +149,7 @@
             h = "extend_to_line_start";
             l = "extend_to_line_end";
           };
+          F5 = ":config-reload";
           space = {
             space = "last_picker";
             C-q = ":buffer-close!";
@@ -162,6 +187,12 @@
             "|" = {
               s = ":pipe 'lines | sort | to text --no-newline'";
               u = ":pipe 'lines | uniq | to text --no-newline'";
+              a = [
+                "save_selection"
+                "select_all"
+                ":sh %{selection}"
+                "jump_backward"
+              ];
             };
           };
         };

@@ -23,7 +23,7 @@ in {
 
   "github code search" = {
     urls =
-      [{ template = "https://github.com/search?q={searchTerms}&type=code"; }];
+      [{ template = "https://github.com/search?q=%22{searchTerms}%22&type=code"; }];
     icon = "https://github.githubassets.com/favicons/favicon.svg";
     updateInterval = interval;
     definedAliases = [ "@g" ];
@@ -223,5 +223,13 @@ in {
     icon = "https://cdn.thingiverse.com/site/img/favicons/favicon-192x192.png";
     updateInterval = interval;
     definedAliases = [ "@th" ];
+  };
+
+  "amazon" = {
+    urls =
+      [{ template = "https://www.amazon.de/s?k={searchTerms}"; }];
+    icon = "https://www.amazon.de/favicon.ico";
+    updateInterval = interval;
+    definedAliases = [ "@a" ];
   };
 }
