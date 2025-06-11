@@ -183,9 +183,10 @@ in {
       "module/mail" = {
         type = "custom/script";
         exec = "get_mail_count";
-        interval = 60;
+        tail = true;
         click-left = "wezterm -e neomutt";
-        click-middle = "mbsync -a && systemctl --user restart polybar";
+        click-middle = "mbsync -a";
+        click-right = "mbsync -a";
       };
 
       "module/taskwarrior" = {

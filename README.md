@@ -27,16 +27,35 @@ In the future I might want to switch to librewolf (currently some stuff does not
     - Get bookmarks working (waiting for: https://github.com/NixOS/nixpkgs/issues/400250 -> https://github.com/NixOS/nixpkgs/pull/398612)
     - Also configure firefox plugins like sideberry or violetmonkey to not have to configure them on first use
     - Make a search engine which can query mutliple arguments (for example github search engine: searchTerm, language)
-    - Use newtabpage when using sideberry new tab 
-- Reset root system (impermanence)
-- Get realtime kernel and linuxcnc working
-- Get nixos-anywhere working again (when running it, nixos-installer gets booted; disko stuff seems fine, maybe sops-nix is the problem) 
-- Fix termfilechooser sporadically not working (for example when using file input in firefox)
-    A first look shows that after home-manager switch it seems to be working again, it seems like a (system) service is not running
-- Make every path in every command output clickable (for example by making it a hyperlink: printf '\e]8;;%s\e\\%s\e]8;;\e\\\n' "file:///home/markus/config" "config")
-- Run mbsync on connection up so that mails can be read right after startup
-- Get iampfilter working (https://github.com/RaitoBezarius/nixos-home/blob/a6e318e7385daf673808384729c3de111b061e49/emails/imapfilter/default.nix#L16)
-- Find a way to speedup configuring home-manager apps and testing them
-- Try using nushell for nix-shell, ... (currently bash)
-- wezterm kills itself on "rg sidebery" inside "~/.librefold/default" which is really bad - find the reason and try to fix it (atleast have a mechanism of controlled termination)
+    - think about adding other files to config (like permissions.sqlite)
+
+- nushell:
+    - ctrl-? to view help info about the nearest command in the pipe (ie: for cursor "_" in "ls | where name == _" it shows "help -f where")
+    - visualize whitespace characters like helix does
+    - there are problems withs tab completion when the element contains spaces (the auto completed stays when choosing an item making the choice invalid)
+
+- helix:
+    - setup:
+        - setup auto complete with words from current buffers as source (vim: C-n)
+        - sometimes the cursor in not clearly visible when selecting for example whitespace (color scheme problem)
+        - always show current working directory
+        - open url in selection in browser
+        - calling edit from lazygit hangs the whole process
+        - when running ":input-output rg <searchTerm>" the line number gets removed for some reason
+        - when using gf also support line numbers at the end, eg "~/.zshrc:50"
+    - missing features
+        - support folds / narrowing
+        - toggle using regex match with backreference (eg: in helix tutor first task match repeating characters)
+        - same motions in search and command mode (command line behaves just like another buffer with like 5 lines similar too vims command-line window, suggestions come from pseudo language server)
+        - disable language server features on the fly (eg: run diagnostics only when prompted)
+        - selection history tree (edited selections get removed?)
+
+- misc:
+    - Reset root system (impermanence)
+    - Get realtime kernel and linuxcnc working
+    - Get nixos-anywhere working again (when running it, nixos-installer gets booted; disko stuff seems fine, maybe sops-nix is the problem) 
+    - Fix termfilechooser sporadically not working (for example when using file input in firefox)
+        A first look shows that after home-manager switch it seems to be working again, it seems like a (system) service is not running
+    - Make every path in every command output clickable (for example by making it a hyperlink: printf '\e]8;;%s\e\\%s\e]8;;\e\\\n' "file:///home/markus/config" "config")
+    - Get iampfilter working (https://github.com/RaitoBezarius/nixos-home/blob/a6e318e7385daf673808384729c3de111b061e49/emails/imapfilter/default.nix#L16)
 
