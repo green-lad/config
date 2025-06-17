@@ -57,6 +57,5 @@ In the future I might want to switch to librewolf (currently some stuff does not
     - Get nixos-anywhere working again (when running it, nixos-installer gets booted; disko stuff seems fine, maybe sops-nix is the problem) 
     - Fix termfilechooser sporadically not working (for example when using file input in firefox)
         A first look shows that after home-manager switch it seems to be working again, it seems like a (system) service is not running
-    - Make every path in every command output clickable (for example by making it a hyperlink: printf '\e]8;;%s\e\\%s\e]8;;\e\\\n' "file:///home/markus/config" "config")
     - Get iampfilter working (https://github.com/RaitoBezarius/nixos-home/blob/a6e318e7385daf673808384729c3de111b061e49/emails/imapfilter/default.nix#L16)
 
