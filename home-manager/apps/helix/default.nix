@@ -1,28 +1,41 @@
 { config, pkgs, inputs, ... }: {
   programs.helix = {
     extraPackages = with pkgs; [
+      codebook
+      helix-gpt
       jq
       lazygit
       nil
       nixfmt-rfc-style
       rust-analyzer
       rustfmt
+      texlab
       typescript-language-server
-      codebook
-      helix-gpt
     ];
     enable = true;
     package = inputs.helix.packages.${pkgs.system}.helix;
     languages = {
       language = [
         {
-          name = "rust";
-          formatter = { command = "rustfmt"; };
-          language-servers = [ "rust-analyzer" "codebook" "gpt" ];
+          name = "json";
+          formatter.command = "${pkgs.jq}/bin/jq";
+        }
+        {
+          name = "latex";
+          language-servers = [ "texlab" ];
+        }
+        {
+          name = "markdown";
+          language-servers = [ "codebook" ];
         }
         {
           name = "nix";
           formatter.command = "${pkgs.nixfmt}/bin/nixfmt";
+        }
+        {
+          name = "rust";
+          formatter = { command = "rustfmt"; };
+          language-servers = [ "rust-analyzer" "codebook" "gpt" ];
         }
         {
           name = "text";
@@ -36,14 +49,6 @@
             unit = "    ";
           };
           language-servers = [ "codebook" ];
-        }
-        {
-          name = "markdown";
-          language-servers = [ "codebook" ];
-        }
-        {
-          name = "json";
-          formatter.command = "${pkgs.jq}/bin/jq";
         }
       ];
       language-server = {

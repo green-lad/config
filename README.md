@@ -26,13 +26,14 @@ In the future I might want to switch to librewolf (currently some stuff does not
 - librewolf:
     - Get bookmarks working (waiting for: https://github.com/NixOS/nixpkgs/issues/400250 -> https://github.com/NixOS/nixpkgs/pull/398612)
     - Also configure firefox plugins like sideberry or violetmonkey to not have to configure them on first use
-    - Make a search engine which can query mutliple arguments (for example github search engine: searchTerm, language)
+    - Make a search engine which can query multiple arguments (for example github search engine: searchTerm, language)
     - think about adding other files to config (like permissions.sqlite)
 
 - nushell:
     - ctrl-? to view help info about the nearest command in the pipe (ie: for cursor "_" in "ls | where name == _" it shows "help -f where")
     - visualize whitespace characters like helix does
-    - there are problems withs tab completion when the element contains spaces (the auto completed stays when choosing an item making the choice invalid)
+    - there are problems with tab completion when the element contains spaces (the auto completed stays when choosing an item making the choice invalid)
+    - use std/dirs in combination with pipelines (I don't know why it does not work, sth about env and pipes...): `[".." "../.."] | each {dirs add}` (better yet without the each)
 
 - helix:
     - setup:

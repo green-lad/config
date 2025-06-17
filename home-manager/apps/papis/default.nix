@@ -12,9 +12,9 @@ in {
     enable = true;
     libraries = {
       papers = {
-        name = "papers";
+        name = "themis";
         isDefault = true;
-        settings = { dir = "~/Documents/papers"; };
+        settings = { dir = "~/Documents/themis"; };
       };
       books = {
         name = "books";

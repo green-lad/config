@@ -3,11 +3,18 @@
 newmaildir="$HOME/Maildir/Personal/INBOX/new"
 
 print_state() {
-    STATE=`nmcli networking connectivity`
+    while true; do
+        STATE=`nmcli networking connectivity`
+        if [ $STATE != 'full' ]; then
+            printf "\uf421 -\n"
+            sleep 1
+        else
+            break
+        fi
+    done
+
     new_mails=$(ls "$newmaildir" | wc -l)
-    if [ $STATE != 'full' ]; then
-        printf "\uf421 -\n"
-    elif [[ -n "$new_mails" ]]; then
+    if [[ -n "$new_mails" ]]; then
         printf "\uf0e0 ${new_mails}\n"
     else
         printf "\uf2b7 0\n"

@@ -86,6 +86,11 @@
     };
     nginx = {
       enable = true;
+      virtualHosts."papis.${hostname}" = {
+        locations."/" = {
+          proxyPass = "http://127.0.0.1:8888";
+        };
+      };
       virtualHosts."${hostname}".locations."/" = {
         root = pkgs.writeTextDir "index.html"
           (builtins.readFile ../home-manager/apps/librewolf/index.html);

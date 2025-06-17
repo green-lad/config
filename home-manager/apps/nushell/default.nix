@@ -153,6 +153,7 @@
 
     extraConfig = let preview = "${change_escape_command "'{1}\\n---\\n{2}'"}";
     in ''
+      use std/dirs
       if ("~/.nu_help.json" | path type) != "file" {
         (
           help commands
