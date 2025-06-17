@@ -38,6 +38,7 @@
       ffmpeg_6
       htop
       killall
+      lazygit
       lightburn
       moc
       openscad

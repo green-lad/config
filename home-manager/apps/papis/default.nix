@@ -1,3 +1,4 @@
+# TODO: pdfjs is not working
 { pkgs, ... }:
 let
   pdfjs = let version = "5.2.133";
@@ -7,14 +8,17 @@ let
     hash = "sha256-7kfT3+ZwoGqZ5OwkO9h3DIuBFd0v8fRlcufxoBdcy8c=";
     stripRoot = false;
   };
+  papis_patch = pkgs.writeText "papis.patch" (builtins.readFile
+    ./override_empty_bibtex_ref_and_fix_fzf_using_nushell.patch);
 in {
   programs.papis = {
     enable = true;
+    package = pkgs.papis.overrideAttrs (old: { patches = [ papis_patch ]; });
     libraries = {
-      papers = {
-        name = "themis";
+      twins_themis = {
+        name = "twins_themis";
         isDefault = true;
-        settings = { dir = "~/Documents/themis"; };
+        settings = { dir = "~/Documents/twins_themis"; };
       };
       books = {
         name = "books";
@@ -25,7 +29,12 @@ in {
         settings = { dir = "~/Documents/nyt"; };
       };
     };
-    settings = { picktool = "fzf"; };
+    settings = rec {
+      picktool = "fzf";
+      ref-format = "{doc[author_list][0][family]} {doc[year]} {doc[title]:.15}";
+      add-folder-name = ref-format;
+      add-file-name = ref-format;
+    };
   };
 
   # Dummy `scripts` directory to silence `papis`'s message

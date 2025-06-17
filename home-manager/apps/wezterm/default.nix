@@ -1,3 +1,18 @@
+      # wezterm.on('open-uri', function(window, pane, uri)
+      #   wezterm.log_info('try opengin uri: ', uri)
+      #   window:perform_action(
+      #     wezterm.action.SpawnCommandInNewWindow {
+      #       args = { 'xdg-open', uri },
+      #     },
+      #     pane
+      #   )
+      #   -- prevent the default action from opening in a browser
+      #   -- otherwise, by not specifying a return value, we allow later
+      #   -- handlers and ultimately the default action to caused the
+      #   -- URI to be opened in the browser
+      #   return false
+      # end)
+
 { config, inputs, pkgs, ... }: {
   programs.wezterm = {
     enable = true;
@@ -11,11 +26,37 @@
       config.font = wezterm.font({ family = "SauceCodePro Nerd Font Propo", weight = "Regular" })
       config.window_close_confirmation = "NeverPrompt"
       config.window_decorations = "NONE"
-      config.automatically_reload_config = false
+      config.automatically_reload_config = true
       config.swallow_mouse_click_on_window_focus = true
       config.window_padding = { left = 0, right = 0, top = 0, bottom = 0 }
 
       config.use_fancy_tab_bar = false
+      config.hyperlink_rules = wezterm.default_hyperlink_rules()
+      table.insert(config.hyperlink_rules, {
+        regex = '[/.A-Za-z0-9_-]+\\.[A-Za-z0-9-_]+(:\\d+)*(?=\\s*|$)',
+        format = '$EDITOR://$0',
+    	})
+
+      wezterm.on('open-uri', function(window, pane, uri)
+        -- wezterm.log_info('uri: ', uri)
+        local p = '$EDITOR://'
+        if string.sub(uri, 1, string.len(p)) == p then
+          uri = uri:gsub(p, "")
+          local editor = os.getenv("EDITOR")
+          pane:send_text(wezterm.shell_join_args {
+              editor,
+              uri,
+            } .. '\r'
+          )
+        else
+          pane:send_text(wezterm.shell_join_args {
+              'xdg-open',
+              uri,
+            } .. '\r'
+          )
+        end
+        return false
+      end)
 
       config.adjust_window_size_when_changing_font_size = false
       wezterm.add_to_config_reload_watch_list("${config.xdg.configHome}/wezterm")

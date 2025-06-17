@@ -12,7 +12,7 @@
     sessionVariables = { };
     variables = {
       ANKI_WAYLAND = "1";
-      BROWSER = "firefox";
+      BROWSER = "librewolf";
       DIRENV_LOG_FORMAT = "";
       DISABLE_QT5_COMPAT = "0";
       EDITOR = "hx";

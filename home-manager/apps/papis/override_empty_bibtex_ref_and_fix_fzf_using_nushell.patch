@@ -1,0 +1,68 @@
+diff --git a/papis/__init__.py b/papis/__init__.py
+old mode 100644
+new mode 100755
+diff --git a/papis/__main__.py b/papis/__main__.py
+old mode 100644
+new mode 100755
+diff --git a/papis/commands/doctor.py b/papis/commands/doctor.py
+index 28bb4d75..975389da 100644
+--- a/papis/commands/doctor.py
++++ b/papis/commands/doctor.py
+@@ -344,7 +344,7 @@ def refs_check(doc: papis.document.Document) -> List[Error]:
+     ref = doc.get("ref")
+     ref = str(ref).strip() if ref is not None else ref
+ 
+-    if not ref:
++    if not ref or ref == "-":
+         return [Error(name=REFS_CHECK_NAME,
+                       path=folder,
+                       msg="Reference missing",
+diff --git a/papis/fzf.py b/papis/fzf.py
+index 5f0b82f8..1cbda0ad 100644
+--- a/papis/fzf.py
++++ b/papis/fzf.py
+@@ -49,7 +49,7 @@ class Command(ABC, Generic[T]):
+ 
+ class Browse(Command[T]):
+     regex = re.compile(r"browse ([\d ]+)")
+-    command = "become(echo browse {+n})"
++    command = "become(echo 'browse {+n}')"
+     key = "ctrl-b"
+ 
+     def run(self, docs: List[T]) -> List[T]:
+@@ -62,7 +62,7 @@ class Browse(Command[T]):
+ 
+ class Choose(Command[T]):
+     regex = re.compile(r"choose ([\d ]+)")
+-    command = "become(echo choose {+n})"
++    command = "become(echo 'choose {+n}')"
+     key = "enter"
+ 
+     def run(self, docs: List[T]) -> List[T]:
+@@ -71,7 +71,7 @@ class Choose(Command[T]):
+ 
+ class Edit(Command[T]):
+     regex = re.compile(r"edit ([\d ]+)")
+-    command = "become(echo edit {+n})"
++    command = "become(echo 'edit {+n}')"
+     key = "ctrl-e"
+ 
+     def run(self, docs: List[T]) -> List[T]:
+@@ -84,7 +84,7 @@ class Edit(Command[T]):
+ 
+ class EditNote(Command[T]):
+     regex = re.compile(r"edit_notes ([\d ]+)")
+-    command = "become(echo edit_notes {+n})"
++    command = "become(echo 'edit_notes {+n}')"
+     key = "ctrl-q"
+ 
+     def run(self, docs: List[T]) -> List[T]:
+@@ -97,7 +97,7 @@ class EditNote(Command[T]):
+ 
+ class Open(Command[T]):
+     regex = re.compile(r"open ([\d ]+)")
+-    command = "become(echo open {+n})"
++    command = "become(echo 'open {+n}')"
+     key = "ctrl-o"
+ 
+     def run(self, docs: List[T]) -> List[T]:

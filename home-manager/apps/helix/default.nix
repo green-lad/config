@@ -7,6 +7,9 @@
       lazygit
       nil
       nixfmt-rfc-style
+      (python3.withPackages (p: (with p; [
+        python-lsp-server
+      ])))
       rust-analyzer
       rustfmt
       texlab
@@ -22,7 +25,7 @@
         }
         {
           name = "latex";
-          language-servers = [ "texlab" ];
+          language-servers = [ "texlab" "codebook" ];
         }
         {
           name = "markdown";
@@ -31,6 +34,10 @@
         {
           name = "nix";
           formatter.command = "${pkgs.nixfmt}/bin/nixfmt";
+        }
+        {
+          name = "python";
+          language-servers = [ "pylsp" "gpt" ];
         }
         {
           name = "rust";
@@ -116,6 +123,18 @@
           render = false;
           character = "|";
           skip-levels = 0;
+        };
+
+        statusline = {
+          right = [
+            "diagnostics"
+            "selections"
+            "register"
+            "position"
+            "total-line-numbers"
+            "primary-selection-length"
+            "file-encoding"
+          ];
         };
       };
 

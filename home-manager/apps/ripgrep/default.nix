@@ -7,7 +7,9 @@
       "-g"
       "!debug"
       "--hyperlink-format"
-      "default"
+      # "file://{path}:{line}"
+      # "default"
+      "none"
       "--no-heading"
     ];
   };

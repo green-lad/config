@@ -1,45 +1,51 @@
 { config, pkgs, ... }:
 let
-  browser = [ "firefox.desktop" ];
+  browser = [ "librewolf.desktop" ];
   editor = [ "hx.desktop" ];
   filechooser = [ "yazi.desktop" ];
 
   # XDG MIME types
+  # get filetype: xdg-mime query filetype <file>
+  # get mime type (with a list of sourced files): XDG_UTILS_DEBUG_LEVEL=2 xdg-mime query default <mime type>
+  # 
+  # NOTE: specifying with * enables other apps to precede the application by matching more precisely
+  #       example: "image/*" = [ "feh.desktop" ];
   associations = {
-    "inode/directory" = filechooser;
-    "x-directory/normal" = filechooser;
-    "x-scheme-handler/trash" = filechooser;
-
-    "text/plain" = editor;
-    "text/xml" = browser;
-    "text/html" = browser;
     "application/json" = browser;
-    "application/xml" = browser;
-    "application/xhtml+xml" = browser;
-    "application/xhtml_xml" = browser;
+    "application/pdf" = "org.pwmt.zathura.desktop";
     "application/rdf+xml" = browser;
     "application/rss+xml" = browser;
+    "application/x-directory" = filechooser;
     "application/x-extension-htm" = browser;
     "application/x-extension-html" = browser;
     "application/x-extension-shtml" = browser;
     "application/x-extension-xht" = browser;
     "application/x-extension-xhtml" = browser;
     "application/x-gnome-saved-search" = filechooser;
-    "application/x-directory" = filechooser;
     "application/x-wine-extension-ini" = editor;
-    "application/pdf" = "org.pwmt.zathura.desktop";
-
+    "application/xhtml+xml" = browser;
+    "application/xhtml_xml" = browser;
+    "application/xml" = browser;
+    "audio/*" = [ "mpv.desktop" ];
+    "image/gif" = [ "feh.desktop" ];
+    "image/jpeg" = [ "feh.desktop" ];
+    "image/png" = [ "feh.desktop" ];
+    "inode/directory" = filechooser;
+    "text/*" = editor;
+    "text/csv" = editor;
+    "text/html" = browser;
+    "text/markdown" = editor;
+    "text/plain" = editor;
+    "text/x-bibtex" = editor;
+    "text/xml" = editor;
+    "video/*" = [ "mpv.dekstop" ];
+    "x-directory/normal" = filechooser;
     "x-scheme-handler/about" = browser;
     "x-scheme-handler/ftp" = browser;
     "x-scheme-handler/http" = browser;
     "x-scheme-handler/https" = browser;
-
-    # "x-scheme-handler/discord" = browser;
+    "x-scheme-handler/trash" = filechooser;
     "x-scheme-handler/unknown" = browser;
-
-    "audio/*" = [ "mpv.desktop" ];
-    "video/*" = [ "mpv.dekstop" ];
-    "image/*" = [ "feh.desktop" ];
   };
 in {
   imports = [ ./xdg-portals.nix ];
