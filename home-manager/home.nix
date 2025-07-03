@@ -18,6 +18,7 @@
     ./apps/pipewire_noise_cancelling
     ./apps/polybar
     ./apps/ripgrep
+    ./apps/rnote
     ./apps/ssh
     ./apps/taskwarrior
     ./apps/wezterm
@@ -38,7 +39,9 @@
       dmenu
       feh
       ffmpeg_6
+      graphviz
       htop
+      jq
       killall
       lazygit
       lightburn
@@ -50,5 +53,15 @@
       yt-dlp
       zathura
     ];
+  };
+
+  # src: https://github.com/gepbird/dotfiles/blob/82902d8e5681c42411ed6125f8e9a9322ac3c6c1/modules/gtk-qt.nix#L10 (there the colortheme also gets set, but lets use the default)
+  gtk = {
+    enable = true;
+    gtk3.extraConfig = {
+      gtk-application-prefer-dark-theme = true;
+      gtk-error-bell = false;
+    };
+    gtk4.extraConfig = { gtk-error-bell = false; };
   };
 }

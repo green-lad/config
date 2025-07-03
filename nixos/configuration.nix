@@ -8,7 +8,7 @@
   environment = {
     # Remove unecessary preinstalled packages
     defaultPackages = [ ];
-    systemPackages = with pkgs; [ age home-manager sops ];
+    systemPackages = with pkgs; [ age home-manager sops xf86_input_wacom ];
     sessionVariables = { };
     variables = {
       ANKI_WAYLAND = "1";
@@ -52,6 +52,7 @@
 
   programs = {
     adb.enable = true;
+    dconf.enable = true;
     steam.enable = true;
     # hyprland = {
     #   enable = true;
@@ -87,9 +88,7 @@
     nginx = {
       enable = true;
       virtualHosts."papis.${hostname}" = {
-        locations."/" = {
-          proxyPass = "http://127.0.0.1:8888";
-        };
+        locations."/" = { proxyPass = "http://127.0.0.1:8888"; };
       };
       virtualHosts."${hostname}".locations."/" = {
         root = pkgs.writeTextDir "index.html"
@@ -197,6 +196,7 @@
         options = "eurosign:e,caps:swapescape";
       };
       desktopManager = { xterm.enable = false; };
+      modules = [ pkgs.xf86_input_wacom ];
       windowManager.i3 = { enable = true; };
       # displayManager = {
       #   startx.enable = true;

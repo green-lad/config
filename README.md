@@ -36,6 +36,8 @@ In the future I might want to switch to librewolf (currently some stuff does not
     - use std/dirs in combination with pipelines (I don't know why it does not work, sth about env and pipes...): `[".." "../.."] | each {dirs add}` (better yet without the each)
 
 - helix:
+    - questions:
+        - what do I do if pipe command hangs?
     - setup:
         - setup auto complete with words from current buffers as source (vim: C-n)
         - sometimes the cursor in not clearly visible when selecting for example whitespace (color scheme problem)
@@ -58,4 +60,5 @@ In the future I might want to switch to librewolf (currently some stuff does not
     - Fix termfilechooser sporadically not working (for example when using file input in firefox)
         A first look shows that after home-manager switch it seems to be working again, it seems like a (system) service is not running
     - Get iampfilter working (https://github.com/RaitoBezarius/nixos-home/blob/a6e318e7385daf673808384729c3de111b061e49/emails/imapfilter/default.nix#L16)
+    - have a something that converts json to nix (see: https://github.com/sempruijs/json2nix) that can be called via helix pipe
 

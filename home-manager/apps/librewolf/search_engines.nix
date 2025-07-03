@@ -232,4 +232,12 @@ in {
     updateInterval = interval;
     definedAliases = [ "@a" ];
   };
+
+  "fdroid" = {
+    urls =
+      [{ template = "https://search.f-droid.org/?q={searchTerms}&lang=en"; }];
+    icon = "https://f-droid.org/assets/favicon-16x16_7yyppfDSTAVyGb3ycHY84PYjHUwP96NKICAibLRpnXw=.png";
+    updateInterval = interval;
+    definedAliases = [ "@fd" ];
+  };
 }
