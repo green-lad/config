@@ -46,6 +46,7 @@ In the future I might want to switch to librewolf (currently some stuff does not
         - calling edit from lazygit hangs the whole process
         - when running ":input-output rg <searchTerm>" the line number gets removed for some reason
         - when using gf also support line numbers at the end, eg "~/.zshrc:50"
+        - also toggle signature info for variables (signature_help), current alternative: toggle inlay hints for everything
     - missing features
         - support folds / narrowing
         - toggle using regex match with backreference (eg: in helix tutor first task match repeating characters)

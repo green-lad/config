@@ -12,6 +12,7 @@
     ./apps/helix
     ./apps/i3
     ./apps/librewolf
+    ./apps/moc
     ./apps/neomutt
     ./apps/nushell
     ./apps/papis
