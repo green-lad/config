@@ -62,7 +62,7 @@
         rust-analyzer = {
           config = {
             checkOnSave = { enable = true; };
-            diagnostics = { enable = false; };
+            diagnostics = { enable = true; };
           };
         };
         gpt = {
@@ -144,7 +144,7 @@
           "*" = [ "search_selection" "search_next" ];
           "A-*" = [ "search_selection_detect_word_boundaries" "search_next" ];
           C-space = "completion";
-          C-m = "signature_help";
+          C-p = "signature_help";
           C-q = [
             '':pipe-to save "%{buffer_name}.tmp.a"''
             ":clipboard-paste-after"
@@ -238,7 +238,7 @@
           };
         };
         insert = {
-          C-m = "signature_help";
+          C-p = "signature_help";
           C-space = "completion";
         };
         select = { X = [ "extend_line_up" "extend_to_line_bounds" ]; };
