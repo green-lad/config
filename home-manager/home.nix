@@ -53,6 +53,20 @@
       xsel
       yt-dlp
       zathura
+
+      # tmp latex stuff
+      gnumake
+      texliveFull
+      texlivePackages.latexmk
+      pandoc
+      # texlive.combined.scheme-full
+
+      # tmp themis
+      rustup
+      rustPlatform.bindgenHook
+      pkgs.tmux
+      pkgs.tmuxp
+      pkgs.python3
     ];
   };
 
