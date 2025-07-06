@@ -101,13 +101,9 @@ in {
 
   "youtube" = {
     urls = [{
-      template = "youtube.de/results";
-      params = [{
-        name = "search_query";
-        value = "{searchTerms}";
-      }];
+      template = "https://www.youtube.com/results?search_query={searchTerms}";
     }];
-    icon = "https://www.youtube.com/s/desktop/716a93d8/img/logos/favicon.ico";
+    icon = "https://www.youtube.com/s/desktop/2253fa3d/img/logos/favicon_144x144.png";
     # icon = "https://www.gstatic.com/youtube/img/branding/youtubelogo/svg/youtubelogo.svg";
     updateInterval = interval;
     definedAliases = [ "@y" ];

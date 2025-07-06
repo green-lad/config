@@ -12,6 +12,8 @@
       ])))
       rust-analyzer
       rustfmt
+      # snippet and used? word completion
+      simple-completion-language-server
       texlab
       typescript-language-server
     ];
@@ -20,29 +22,35 @@
     languages = {
       language = [
         {
+          name = "csv";
+          language-servers = [ "scls" ];
+        }
+        {
           name = "json";
           formatter.command = "${pkgs.jq}/bin/jq";
+          language-servers = [ "scls" ];
         }
         {
           name = "latex";
-          language-servers = [ "texlab" "codebook" ];
+          language-servers = [ "texlab" "codebook" "scls" ];
         }
         {
           name = "markdown";
-          language-servers = [ "codebook" ];
+          language-servers = [ "codebook" "scls" ];
         }
         {
           name = "nix";
           formatter.command = "${pkgs.nixfmt}/bin/nixfmt";
+          language-servers = [ "scls" ];
         }
         {
           name = "python";
-          language-servers = [ "pylsp" "gpt" ];
+          language-servers = [ "pylsp" "gpt" "scls" ];
         }
         {
           name = "rust";
           formatter = { command = "rustfmt"; };
-          language-servers = [ "rust-analyzer" "codebook" "gpt" ];
+          language-servers = [ "rust-analyzer" "codebook" "gpt" "scls" ];
         }
         {
           name = "text";
@@ -55,10 +63,27 @@
             tab-width = 4;
             unit = "    ";
           };
-          language-servers = [ "codebook" ];
+          language-servers = [ "codebook" "scls" ];
         }
       ];
       language-server = {
+        scls = {
+          command = "simple-completion-language-server";
+          config = {
+            max_completion_items = 100;           # set max completion results len for each group: words, snippets, unicode-input
+            feature_words = true;                 # enable completion by word
+            feature_snippets = true;              # enable snippets
+            snippets_first = true;                # completions will return before snippets by default
+            snippets_inline_by_word_tail = false; # suggest snippets by WORD tail, for example text `xsq|` become `x^2|` when snippet `sq` has body `^2`
+            feature_unicode_input = false;        # enable "unicode input"
+            feature_paths = false;                # enable path completion
+            feature_citations = false;            # enable citation completion (only on `citation` feature enabled)
+          };
+          environment = {
+            RUST_LOG = "info,simple-completion-language-server=info";
+            LOG_FILE = "/tmp/completion.log";
+          };
+        };
         rust-analyzer = {
           config = {
             checkOnSave = { enable = true; };

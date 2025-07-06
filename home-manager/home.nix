@@ -32,8 +32,6 @@
     homeDirectory = "/home/${user}";
     stateVersion = "24.11";
     packages = with pkgs; [
-      libreoffice
-
       blender
       cura-appimage
       delta
@@ -45,10 +43,12 @@
       jq
       killall
       lazygit
+      libreoffice
       lightburn
       moc
       openscad
       pulsemixer
+      songrec
       unzip
       xsel
       yt-dlp
