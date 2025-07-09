@@ -18,7 +18,7 @@ let
       (writeScriptBin "manage_backlight"
         (builtins.readFile ../../scripts/manage_backlight.nu))
       (writeScriptBin "restart_polybar"
-        (builtins.readFile ../../scripts/restart_polybar.sh))
+        (builtins.readFile ../../scripts/restart_polybar.nu))
     ];
 in {
   services.polybar = {
