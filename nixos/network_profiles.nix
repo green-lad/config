@@ -4,6 +4,37 @@ environmentFile:
 {
   environmentFiles = [ environmentFile ];
   profiles = {
+    eduroam = {
+      connection = {
+        id = "eduroam";
+        type = "wifi";
+        permissions = "user:markus:;";
+      };
+      ipv4 = {
+        method = "auto";
+      };
+      ipv6 = {
+        addr-gen-mode = "default";
+        method = "auto";
+      };
+      wifi = {
+        ssid = "eduroam";
+      };
+      wifi-security = {
+        group = "ccmp;tkip;";
+        key-mgmt= "wpa-eap";
+        pairwise = "ccmp;";
+        proto = "rsn;";
+      };
+      "802-1x" = {
+        anonymous-identity = "$eduroam_anonymous_user";
+        ca-cert = "/home/markus/.config/cat_installer/ca.pem";
+        eap = "peap;";
+        identity = "$eduroam_user";
+        password = "$fau_password";
+        phase2-auth = "mschapv2";
+      };
+    };
     fau_fm = {
       connection = {
         id = "fau";

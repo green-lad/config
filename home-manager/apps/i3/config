@@ -12,6 +12,24 @@ bindsym $mod+Shift+b move container to workspace back_and_forth; workspace back_
 for_window [class="Nitrogen"] floating enable sticky enable border normal
 
 	set $mod Mod4
+
+	bindsym XF86Launch1 exec --no-startup-id obs
+	bindsym XF86AudioPrev exec --no-startup-id mocp -r
+	bindsym XF86AudioNext exec --no-startup-id mocp -f
+	bindsym XF86AudioPlay exec --no-startup-id mocp -G
+	bindsym Control+XF86AudioPlay exec --no-startup-id "mocp -t r,n"
+	bindsym XF86AudioMicMute exec --no-startup-id wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle
+	bindsym XF86AudioMute exec --no-startup-id wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
+	bindsym XF86AudioRaiseVolume exec --no-startup-id wpctl set-volume @DEFAULT_AUDIO_SINK@ 1%+
+	bindsym XF86AudioLowerVolume exec --no-startup-id wpctl set-volume @DEFAULT_AUDIO_SINK@ 1%-
+	bindsym Control+XF86AudioRaiseVolume exec --no-startup-id wpctl set-volume @DEFAULT_AUDIO_SOURCE@ 1%+
+	bindsym Control+XF86AudioLowerVolume exec --no-startup-id wpctl set-volume @DEFAULT_AUDIO_SOURCE@ 1%-
+	bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl set 5%+
+	bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 5%-
+	bindsym XF86Display exec --no-startup-id obs-cmd recording toggle
+	bindsym XF86WebCam exec --no-startup-id flameshot screen -c
+	bindsym Control+XF86WebCam exec --no-startup-id flameshot screen -p ~/screenshot.png
+
 	# configs Mouse+$mod to drag floating windows
 	floating_modifier $mod
 	bindsym $mod+Return exec wezterm

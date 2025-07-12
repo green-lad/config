@@ -33,11 +33,13 @@
     stateVersion = "24.11";
     packages = with pkgs; [
       blender
+      brightnessctl
       cura-appimage
       delta
       dmenu
       feh
       ffmpeg_6
+      gimp
       graphviz
       htop
       jq
@@ -46,7 +48,11 @@
       libreoffice
       lightburn
       moc
+      mplayer
+      obs-cmd
+      obs-studio
       openscad
+      pulseaudio
       pulsemixer
       songrec
       unzip

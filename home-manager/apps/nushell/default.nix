@@ -129,7 +129,7 @@
         }
         {
           name = "fuzzy_history_normal";
-          modifier = "none";
+          modifier = "control";
           keycode = "char_/";
           mode = [ "vi_normal" ];
           event = fzf_search_history;

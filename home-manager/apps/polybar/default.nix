@@ -15,8 +15,6 @@ let
       "${inotify-tools}"
       (writeScriptBin "manage_display_sleep_enabled"
         (builtins.readFile ../../scripts/manage_display_sleep_enabled.sh))
-      (writeScriptBin "manage_backlight"
-        (builtins.readFile ../../scripts/manage_backlight.nu))
       (writeScriptBin "restart_polybar"
         (builtins.readFile ../../scripts/restart_polybar.nu))
     ];
@@ -77,7 +75,7 @@ in {
         type = "internal/backlight";
         card = "intel_backlight";
         # https://github.com/polybar/polybar/wiki/Formatting#action-a
-        format = "%{A1:manage_backlight 10:}%{A3:manage_backlight -10:}<ramp><label>%{A}%{A}";
+        format = "%{A1:brightnessctl set 10%+:}%{A3:brightnessctl set 10%-:}<ramp><label>%{A}%{A}";
         enable-scroll = "true";
         ramp-0 = " ";
         ramp-1 = "󰃞 ";
