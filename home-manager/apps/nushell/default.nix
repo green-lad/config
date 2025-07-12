@@ -1,4 +1,10 @@
 { ... }: {
+  services.lorri.enable = true;
+  programs.direnv = {
+    enable = true;
+    enableNushellIntegration = true;
+  };
+  
   programs.nix-your-shell = {
     enable = true;
     enableNushellIntegration = true;

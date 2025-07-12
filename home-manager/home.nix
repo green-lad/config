@@ -38,6 +38,7 @@
       dmenu
       feh
       ffmpeg_6
+      gnumake
       graphviz
       htop
       jq
@@ -48,25 +49,12 @@
       moc
       openscad
       pulsemixer
+      python3
       songrec
       unzip
       xsel
       yt-dlp
       zathura
-
-      # tmp latex stuff
-      gnumake
-      texliveFull
-      texlivePackages.latexmk
-      pandoc
-      # texlive.combined.scheme-full
-
-      # tmp themis
-      rustup
-      rustPlatform.bindgenHook
-      pkgs.tmux
-      pkgs.tmuxp
-      pkgs.python3
     ];
   };
 
