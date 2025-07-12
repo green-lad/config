@@ -63,3 +63,19 @@ nix repl
 rust_overlay = import (builtins.fetchTarball "https://github.com/oxalica/rust-overlay/archive/master.tar.gz")
 pkgs = import <nixpkgs> { overlays = [ rust_overlay ]; }
 ```
+
+- move workspace to monitor
+```
+i3-msg '[workspace="1"]' move workspace to output dp-3
+```
+
+- mirror the screen
+```
+xrandr --fb 1920x1200 --output LVDS-1 --scale 1.4x1.5625 --output DP-3 --same-as LVDS-1 --scale 1
+xrandr --fb 1366x768 --output LVDS-1 --scale 1 --output DP-3 --same-as LVDS-1 --scale 0.711458x0.64
+```
+
+- un-mirror the screen
+```
+xrandr --output LVDS-1 --scale 1x1 --output DP-3 --right-of LVDS-1 --scale 1x1
+```
