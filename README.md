@@ -27,9 +27,9 @@ In the future I might want to switch to librewolf (currently some stuff does not
     - Get bookmarks working (waiting for: https://github.com/NixOS/nixpkgs/issues/400250 -> https://github.com/NixOS/nixpkgs/pull/398612)
     - Also configure firefox plugins like sideberry or violetmonkey to not have to configure them on first use
     - Make a search engine which can query multiple arguments (for example github search engine: searchTerm, language)
-    - think about adding other files to config (like permissions.sqlite)
 
 - nushell:
+    - anonymous named pipes would be nice for something like: `diff <(foo | bar) <(baz | quux)`
     - ctrl-? to view help info about the nearest command in the pipe (ie: for cursor "_" in "ls | where name == _" it shows "help -f where")
     - visualize whitespace characters like helix does
     - there are problems with tab completion when the element contains spaces (the auto completed stays when choosing an item making the choice invalid)
@@ -58,8 +58,6 @@ In the future I might want to switch to librewolf (currently some stuff does not
     - Reset root system (impermanence)
     - Get realtime kernel and linuxcnc working
     - Get nixos-anywhere working again (when running it, nixos-installer gets booted; disko stuff seems fine, maybe sops-nix is the problem) 
-    - Fix termfilechooser sporadically not working (for example when using file input in firefox)
-        A first look shows that after home-manager switch it seems to be working again, it seems like a (system) service is not running
     - Get iampfilter working (https://github.com/RaitoBezarius/nixos-home/blob/a6e318e7385daf673808384729c3de111b061e49/emails/imapfilter/default.nix#L16)
     - have a something that converts json to nix (see: https://github.com/sempruijs/json2nix) that can be called via helix pipe
 

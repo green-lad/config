@@ -1,15 +1,15 @@
 { pkgs, ... }: {
   home.sessionVariables = { "GTK_USE_PORTAL" = 1; };
 
-  # TODO: building a new config does not restart xdg-desktop-portal or xdg-desktop-portal-termfilechooser
-  xdg.portal = {
-    enable = true;
-    extraPortals = with pkgs; [
-      xdg-desktop-portal-gtk
-      xdg-desktop-portal-termfilechooser
-    ];
-    config = { common = { default = "termfilechooser"; }; };
-  };
+  # NOTE: currently in configuration.nix, but is better here; waiting for https://github.com/nix-community/home-manager/issues/6770
+  # xdg.portal = {
+  #   enable = true;
+  #   extraPortals = with pkgs; [
+  #     xdg-desktop-portal-gtk
+  #     xdg-desktop-portal-termfilechooser
+  #   ];
+  #   config = { common = { default = "termfilechooser"; }; };
+  # };
 
   systemd.user.services."xdg-desktop-portal-gtk" = {
     Install.WantedBy = pkgs.lib.mkForce [ "graphical-session-i3.target" ];

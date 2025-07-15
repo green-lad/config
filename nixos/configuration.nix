@@ -45,6 +45,15 @@
     };
   };
 
+  xdg.portal = {
+    enable = true;
+    extraPortals = with pkgs; [
+      xdg-desktop-portal-gtk
+      xdg-desktop-portal-termfilechooser
+    ];
+    config = { common = { default = "termfilechooser"; }; };
+  };
+
   # Add the Kanata service user to necessary groups
   systemd.services.kanata-internalKeyboard.serviceConfig = {
     SupplementaryGroups = [ "input" "uinput" ];

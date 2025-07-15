@@ -1,13 +1,9 @@
-{ pkgs, inputs, hostname, ... }:
+{ pkgs, inputs, hostname, config, ... }:
 let
-  # TODO: configure nginx here
-  newTabPage =
-    # "https://kleinanzeigen.de";
-    "http://${hostname}/";
-    # "file://${pkgs.writeText "index.html" (builtins.readFile ./index.html)}";
+  newTabPage = "http://${hostname}/";
+  profile = "default";
 in {
   # TODO: try to get sidebery configured too
-  # TODO: configure config.home.file."permissions.sqlite" here
   config.home.file.".librewolf/librewolf.overrides.cfg".text = ''
     // sets the new tab page to our local newtab.
     ChromeUtils.importESModule("resource:///modules/AboutNewTab.sys.mjs").AboutNewTab.newTabURL = "${newTabPage}";
@@ -19,13 +15,83 @@ in {
     // don't firefox sync the homepage, stops it overwriting on windows.
     pref("services.sync.prefs.sync.browser.startup.homepage", false);
   '';
+  config.home.activation.librewolfPermissions = let
+    permissions = {
+      "https://github.com" = { "cookie" = "allow"; };
+      "https://kleinanzeigen.de" = { "cookie" = "allow"; };
+      "http://nuc" = { "https-only-load-insecure" = "allow"; };
+    };
+
+    permissionValue = {
+      allow = 1;
+      deny = 2;
+      prompt = 3;
+    };
+
+    escapeString = str: "'${builtins.replaceStrings [ "'" ] [ "''" ] str}'";
+    escapeInt = int: toString int;
+
+    dataSql = pkgs.writeText "data.sql" ''
+      CREATE UNIQUE INDEX IF NOT EXISTS moz_perms_upsert_index ON moz_perms(origin, type);
+      WITH now(unix_ms) AS (SELECT CAST((julianday('now') - 2440587.5) * 86400000 AS INTEGER))
+          INSERT INTO moz_perms(origin, type, permission, expireType, expireTime, modificationTime)
+          VALUES
+          ${
+            pkgs.lib.concatStringsSep ''
+              ,
+            '' (builtins.concatMap (origin:
+              let originPermissions = permissions.${origin};
+              in (builtins.map (type:
+                let permission = permissionValue.${originPermissions.${type}};
+                in "  (${escapeString origin}, ${escapeString type}, ${
+                    escapeInt permission
+                  }, 0, 0, (SELECT unix_ms FROM now))")
+                (builtins.attrNames originPermissions)))
+              (builtins.attrNames permissions))
+          } '';
+
+    schemaSQL = pkgs.writeText "schema.sql" ''
+      PRAGMA user_version = 12;
+
+      CREATE TABLE moz_perms(
+        id INTEGER,
+        origin TEXT,
+        type TEXT,
+        permission INTEGER,
+        expireType INTEGER,
+        expireTime INTEGER,
+        modificationTime INTEGER,
+        PRIMARY KEY(id)
+      );
+      -- Deprecated table, for backwards compatibility
+      CREATE TABLE moz_hosts(
+        id INTEGER,
+        host TEXT,
+        type TEXT,
+        permission INTEGER,
+        expireType INTEGER,
+        expireTime INTEGER,
+        modificationTime INTEGER,
+        isInBrowserElement INTEGER,
+        PRIMARY KEY(id)
+      );
+    '';
+    permissionsDbPath = pkgs.lib.escapeShellArg
+      "${config.home.homeDirectory}/.librewolf/${profile}/permissions.sqlite";
+  in ''
+    if [ ! -e ${permissionsDbPath} ]; then
+      mkdir -p $(dirname ${permissionsDbPath})
+      ${pkgs.sqlite}/bin/sqlite3 ${permissionsDbPath} ".read ${schemaSQL}"
+      ${pkgs.sqlite}/bin/sqlite3 ${permissionsDbPath} ".read ${dataSql}"
+    fi
+  '';
   config.programs.librewolf = {
     enable = true;
     policies = { NoDefaultBookmarks = false; };
     profiles = {
       default = {
         id = 0;
-        name = "default";
+        name = "${profile}";
         isDefault = true;
         extensions.packages =
           with inputs.firefox-addons.packages.${pkgs.system}; [

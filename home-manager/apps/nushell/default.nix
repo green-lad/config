@@ -25,7 +25,7 @@
     #    fzf sh replacement   review context for nushell            str replace        raw string evaluation
     change_escape_command = cmd:
       "r####${cmd}#### | str replace -a r#''\\\\'''# r#'''#";
-    fzf_search_history = [{
+    fzf_search_history = str: [{
       send = "ExecuteHostCommand";
       cmd = let
         preview = "${change_escape_command "{}"} | nu-highlight";
@@ -50,7 +50,7 @@
             | decode utf-8
             | str trim
         );
-        if $choice != "" { commandline edit --replace $choice }
+        if $choice != "" { commandline edit --${str} $choice }
       '';
     }];
     fzf_command_picker = [{
@@ -134,18 +134,18 @@
           mode = [ "emacs" "vi_normal" "vi_insert" ];
         }
         {
-          name = "fuzzy_history_normal";
+          name = "fuzzy_history_replace";
           modifier = "control";
-          keycode = "char_/";
-          mode = [ "vi_normal" ];
-          event = fzf_search_history;
+          keycode = "char_j";
+          mode = [ "vi_insert" ];
+          event = fzf_search_history "replace";
         }
         {
-          name = "fuzzy_history";
+          name = "fuzzy_history_add";
           modifier = "control";
-          keycode = "char_r";
-          mode = [ "emacs" "vi_normal" "vi_insert" ];
-          event = fzf_search_history;
+          keycode = "char_k";
+          mode = [ "vi_insert" ];
+          event = fzf_search_history "insert";
         }
         {
           name = "fuzzy_history";

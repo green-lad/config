@@ -236,4 +236,12 @@ in {
     updateInterval = interval;
     definedAliases = [ "@fd" ];
   };
+
+  "dict" = {
+    urls =
+      [{ template = "https://www.dict.cc/?s={searchTerms}"; }];
+    icon = "https://www4.dict.cc/img/favicons/favicon4.png";
+    updateInterval = interval;
+    definedAliases = [ "@d" ];
+  };
 }
