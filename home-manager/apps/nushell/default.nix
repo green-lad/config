@@ -137,14 +137,14 @@
           name = "fuzzy_history_replace";
           modifier = "control";
           keycode = "char_j";
-          mode = [ "vi_insert" ];
+          mode = [ "emacs" "vi_normal" "vi_insert" ];
           event = fzf_search_history "replace";
         }
         {
           name = "fuzzy_history_add";
           modifier = "control";
           keycode = "char_k";
-          mode = [ "vi_insert" ];
+          mode = [ "emacs" "vi_normal" "vi_insert" ];
           event = fzf_search_history "insert";
         }
         {
