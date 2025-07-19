@@ -29,6 +29,8 @@ In the future I might want to switch to librewolf (currently some stuff does not
     - Make a search engine which can query multiple arguments (for example github search engine: searchTerm, language)
 
 - nushell:
+    - make scrolling easier by being able to collapse outputs of commands
+    - make every command work (prefer) piped input: `ls ../**/* | get name | where {$in =~ xil_cache.h} | get 1 | path dirname | ls`
     - anonymous named pipes would be nice for something like: `diff <(foo | bar) <(baz | quux)`
     - ctrl-? to view help info about the nearest command in the pipe (ie: for cursor "_" in "ls | where name == _" it shows "help -f where")
     - visualize whitespace characters like helix does

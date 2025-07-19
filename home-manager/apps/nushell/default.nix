@@ -94,7 +94,7 @@
 
       keybindings = [
         {
-          name = "reload_config";
+          name = "copy_working_directory";
           modifier = "control";
           keycode = "char_d";
           mode = [ "emacs" "vi_normal" "vi_insert" ];
@@ -104,7 +104,7 @@
           };
         }
         {
-          name = "reload_config";
+          name = "copy_commandline";
           modifier = "control";
           keycode = "char_e";
           mode = [ "emacs" "vi_normal" "vi_insert" ];
@@ -167,6 +167,29 @@
           | insert help {|r| help $"($r.name)"}
           | save "~/.nu_help.json"
         )
+      }
+
+      def "str escape" [to_escape: list<string> = [
+          '\',
+          '.',
+          '+',
+          '*',
+          '?',
+          '(',
+          ')',
+          '|',
+          '[',
+          ']',
+          '{',
+          '}',
+          '^',
+          '$',
+          '#',
+          '&',
+          '-',
+          '~',
+          ]]: [string -> string, list<string> -> list<string>] {
+          each { split chars | each {let c = $in; if ($to_escape | any {|el| $el == $c}) {$'\($c)'} else {$c}} | str join }
       }
 
       def rd [name: string, n_remote = 100: int] {

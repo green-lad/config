@@ -79,3 +79,9 @@ xrandr --fb 1366x768 --output LVDS-1 --scale 1 --output DP-3 --same-as LVDS-1 --
 ```
 xrandr --output LVDS-1 --scale 1x1 --output DP-3 --right-of LVDS-1 --scale 1x1
 ```
+
+- firefox / librewolf increase scaling
+```
+about:config
+layout.css.devPixelsPerPx
+```

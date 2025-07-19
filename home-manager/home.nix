@@ -56,6 +56,7 @@
       pulseaudio
       pulsemixer
       python3
+      rustup
       songrec
       unzip
       xsel
