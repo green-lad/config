@@ -61,17 +61,23 @@
         });
 
       systems = {
-        x230 = {
-          hostname = "x230";
-          system = "x86_64-linux";
-          users = [ "markus" ];
-          unfreePackages = [ "lightburn" ];
-        };
         nuc = {
           hostname = "nuc";
           system = "x86_64-linux";
           users = [ "markus" ];
           unfreePackages = [ "lightburn" "steam" ];
+        };
+        x13 = {
+          hostname = "x13";
+          system = "x86_64-linux";
+          users = [ "markus" ];
+          unfreePackages = [ "lightburn" "steam" ];
+        };
+        x230 = {
+          hostname = "x230";
+          system = "x86_64-linux";
+          users = [ "markus" ];
+          unfreePackages = [ "lightburn" ];
         };
       };
 
