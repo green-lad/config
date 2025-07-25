@@ -14,6 +14,11 @@ In [commands.md](./commands.md) is a list of usefule commands.
 - change hostname to desired name (<host>)
 - deploy system: (add "--generate-hardware-config nixos-generate-config ./host_hardware/<host>/default.nix" to generate initial hardware config)
 > sudo nix --experimental-features 'nix-command flakes' run github:nix-community/nixos-anywhere -- --flake 'github:green-lad/config?ref=nixos#<host>' --target-host root@<host>
+- install manually:
+    - setup wireless connection (start wpa_supplicant service and use wpa_cli to configure)
+    - add host configuration to remote flake
+    - install via disko:
+    > sudo nix --experimental-features 'nix-command flakes' run github:nix-community/disko#disko-install -- --flake 'github:green-lad/config?ref=nixos#<host>' --write-efi-boot-entries --disk main '<disk>'
 - (sops-nix won't work, you need to create your own secrets)
 
 # Program info
