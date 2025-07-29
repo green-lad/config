@@ -4,6 +4,28 @@ environmentFile:
 {
   environmentFiles = [ environmentFile ];
   profiles = {
+    home_wlan = {
+      connection = {
+        id = "home_wlan";
+        type = "wifi";
+      };
+      ipv4 = {
+        method = "auto";
+      };
+      ipv6 = {
+        addr-gen-mode = "default";
+        method = "auto";
+      };
+      wifi = {
+        mode = "infrastructure";
+        ssid = "$home_wlan_ssid";
+      };
+      wifi-security = {
+        auth-alg = "open";
+        key-mgmt = "wpa-psk";
+        psk = "$home_wlan_psk";
+      };
+    };
     eduroam = {
       connection = {
         id = "eduroam";
@@ -22,7 +44,7 @@ environmentFile:
       };
       wifi-security = {
         group = "ccmp;tkip;";
-        key-mgmt= "wpa-eap";
+        key-mgmt = "wpa-eap";
         pairwise = "ccmp;";
         proto = "rsn;";
       };
@@ -53,7 +75,7 @@ environmentFile:
       };
       wifi-security = {
         group = "ccmp;tkip;";
-        key-mgmt= "wpa-eap";
+        key-mgmt = "wpa-eap";
         pairwise = "ccmp;";
         proto = "rsn;";
       };
@@ -64,27 +86,6 @@ environmentFile:
         identity = "$fau_user";
         password = "$fau_password";
         phase2-auth = "mschapv2";
-      };
-    };
-    home_wlan = {
-      connection = {
-        id = "home_wlan";
-        type = "wifi";
-      };
-      ipv4 = { method = "auto"; };
-      ipv6 = {
-        addr-gen-mode = "default";
-        method = "auto";
-      };
-      proxy = { };
-      wifi = {
-        mode = "infrastructure";
-        ssid = "$home_wlan_ssid";
-      };
-      wifi-security = {
-        auth-alg = "open";
-        key-mgmt = "wpa-psk";
-        psk = "$home_wlan_psk";
       };
     };
   };

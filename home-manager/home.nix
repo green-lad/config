@@ -48,7 +48,7 @@
       lazygit
       libreoffice
       lightburn
-      moc
+      # moc
       mplayer
       obs-cmd
       obs-studio
