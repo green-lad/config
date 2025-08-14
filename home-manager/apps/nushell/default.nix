@@ -164,7 +164,7 @@
         (
           help commands
           | select name description
-          | insert help {|r| help $"($r.name)"}
+          | insert help {|r| try {help $"($r.name)"} catch {""}}
           | save "~/.nu_help.json"
         )
       }
