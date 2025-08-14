@@ -46,10 +46,18 @@
     helix.url = "github:helix-editor/helix/master";
 
     wezterm.url = "github:wez/wezterm?dir=nix";
+
+    additional-fonts = {
+      url = "github:green-lad/fonts";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { nixpkgs, home-manager, disko, sops-nix, ... }@inputs:
+  outputs = { nixpkgs, additional-fonts, home-manager, disko, sops-nix, ... }@inputs:
     let
+      fonts-overlay = final: prev: system: {
+        astetica-font = additional-fonts.packages.${system}.astetica;
+      };
       pkgsWithUnfree = unfreePackages: system:
         (import nixpkgs {
           inherit system;
@@ -118,7 +126,10 @@
       homeConfigurations = builtins.mapAttrs (n: v:
         home-manager.lib.homeManagerConfiguration {
           pkgs = pkgsWithUnfree v.unfreePackages v.system;
-          modules = [ ./home-manager/home.nix ];
+          modules = [
+            # {nixpkgs.overlays = [fonts-overlay v.system];}
+            ./home-manager/home.nix
+          ];
           extraSpecialArgs = {
             inherit inputs;
             user = builtins.head v.users;
